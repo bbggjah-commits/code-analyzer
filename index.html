@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🛠️ محلل الكود المتعدد اللغات</title>
+    <title>Code Analyzer</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -12,11 +14,19 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Source Code Pro', monospace;
+            background: linear-gradient(-45deg, #000000, #1a1a1a, #333333, #000000);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
             min-height: 100vh;
-            color: #333;
+            color: #ffffff;
             line-height: 1.6;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
@@ -28,89 +38,110 @@
         header {
             text-align: center;
             margin-bottom: 40px;
-            color: white;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
 
         header h1 {
-            font-size: 2.5em;
+            font-size: 2.8em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 600;
+            background: linear-gradient(45deg, #fff, #ccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
 
         header p {
             font-size: 1.2em;
-            opacity: 0.9;
+            opacity: 0.8;
+            font-weight: 300;
         }
 
         .analyzer-form {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             margin-bottom: 30px;
         }
 
         .language-selector, .code-input {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #ffffff;
             font-size: 1.1em;
         }
 
         select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             font-size: 16px;
-            background: white;
-            transition: border-color 0.3s;
+            background: rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            font-family: 'Source Code Pro', monospace;
+            transition: all 0.3s ease;
         }
 
         select:focus {
-            border-color: #667eea;
+            border-color: #ffffff;
             outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
         }
 
         textarea {
             width: 100%;
-            height: 250px;
-            padding: 15px;
-            border: 2px solid #ddd;
+            height: 300px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
-            font-family: 'Courier New', monospace;
+            font-family: 'Source Code Pro', monospace;
             font-size: 14px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #ffffff;
             resize: vertical;
-            transition: border-color 0.3s;
             line-height: 1.4;
+            transition: all 0.3s ease;
         }
 
         textarea:focus {
-            border-color: #667eea;
+            border-color: #ffffff;
             outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
         }
 
         button {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #000, #333);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 15px 30px;
             border-radius: 8px;
             font-size: 18px;
             cursor: pointer;
             width: 100%;
-            transition: all 0.3s;
-            font-weight: bold;
+            transition: all 0.3s ease;
+            font-family: 'Source Code Pro', monospace;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         button:hover {
+            background: linear-gradient(45deg, #333, #000);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         button:active {
@@ -119,74 +150,79 @@
 
         .loading {
             text-align: center;
-            padding: 30px;
-            background: white;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             margin-bottom: 20px;
             display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .loading p {
             font-size: 1.2em;
-            color: #667eea;
+            color: #ffffff;
         }
 
         .results {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             display: none;
             margin-bottom: 30px;
         }
 
         .results h2 {
-            color: #333;
-            margin-bottom: 20px;
+            color: #ffffff;
+            margin-bottom: 25px;
             text-align: center;
+            font-weight: 600;
+            font-size: 1.8em;
         }
 
         .issue {
-            padding: 15px;
-            margin: 10px 0;
+            padding: 15px 20px;
+            margin: 12px 0;
             border-radius: 8px;
-            border-right: 5px solid;
+            border-left: 4px solid;
             font-size: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .security { 
-            border-color: #e74c3c; 
-            background: #fdf2f2; 
+            border-left-color: #ff4444; 
         }
         .performance { 
-            border-color: #f39c12; 
-            background: #fef9f3; 
+            border-left-color: #ffaa00; 
         }
         .complexity { 
-            border-color: #3498db; 
-            background: #f4f8fe; 
+            border-left-color: #44aaff; 
         }
         .best-practice { 
-            border-color: #27ae60; 
-            background: #f2fcf5; 
+            border-left-color: #44ff44; 
         }
 
         .summary {
-            background: #f8f9fa;
-            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
             border-radius: 10px;
             margin-bottom: 25px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .summary h3 {
-            color: #333;
+            color: #ffffff;
             margin-bottom: 15px;
+            font-weight: 600;
         }
 
         .summary p {
-            margin: 8px 0;
+            margin: 10px 0;
             font-size: 16px;
+            opacity: 0.9;
         }
 
         .category {
@@ -194,71 +230,88 @@
         }
 
         .category h4 {
-            color: #555;
+            color: #ffffff;
             margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            font-weight: 500;
         }
 
         .success {
-            background: #d4edda;
-            color: #155724;
-            padding: 20px;
+            background: rgba(68, 255, 68, 0.1);
+            color: #44ff44;
+            padding: 25px;
             border-radius: 10px;
             text-align: center;
-            border: 1px solid #c3e6cb;
+            border: 1px solid rgba(68, 255, 68, 0.3);
         }
 
         .error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 20px;
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+            padding: 25px;
             border-radius: 10px;
             text-align: center;
-            border: 1px solid #f5c6cb;
+            border: 1px solid rgba(255, 68, 68, 0.3);
         }
 
         .features {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
 
         .features h3 {
             text-align: center;
             margin-bottom: 25px;
-            color: #333;
+            color: #ffffff;
+            font-weight: 600;
         }
 
         .language-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
 
         .card {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #000, #333);
             color: white;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            font-weight: bold;
-            transition: transform 0.3s;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .card:hover {
             transform: translateY(-3px);
+            background: linear-gradient(45deg, #333, #000);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .code-example {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'Source Code Pro', monospace;
+            font-size: 12px;
+            line-height: 1.4;
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 10px;
+                padding: 15px;
             }
             
             header h1 {
-                font-size: 2em;
+                font-size: 2.2em;
             }
             
             .analyzer-form {
@@ -266,35 +319,49 @@
             }
             
             .language-cards {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+            
+            textarea {
+                height: 250px;
             }
         }
 
-        /* أحرف متحركة */
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .fade-in {
-            animation: fadeIn 0.5s ease-in;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="fade-in">
-            <h1>🛠️ محلل الكود البرمجي</h1>
-            <p>حلل كودك بأي لغة برمجة وحسن من جودته</p>
+            <h1>CODE ANALYZER</h1>
+            <p>Multi-language code analysis and quality assessment</p>
         </header>
 
         <div class="analyzer-form fade-in">
             <div class="language-selector">
-                <label for="language">اختر لغة البرمجة:</label>
+                <label for="language">SELECT PROGRAMMING LANGUAGE:</label>
                 <select id="language">
-                    <option value="python">🐍 Python</option>
-                    <option value="lua">🌙 Lua</option>
-                    <option value="luau">🎮 Luau (Roblox)</option>
+                    <option value="python">🐍 PYTHON</option>
+                    <option value="lua">🌙 LUA</option>
+                    <option value="luau">🎮 LUAU (ROBLOX)</option>
                     <option value="c">🔧 C</option>
                     <option value="cpp">⚡ C++</option>
                     <option value="csharp">💠 C#</option>
@@ -302,28 +369,41 @@
             </div>
 
             <div class="code-input">
-                <label for="code">الصق كودك هنا:</label>
-                <textarea id="code" placeholder="// الصق كودك هنا...&#10;// مثال:&#10;function example() {&#10;    return 'Hello World';&#10;}"></textarea>
+                <label for="code">PASTE YOUR CODE HERE:</label>
+                <textarea id="code" placeholder="// Paste your code here...&#10;// Example:&#10;function example() {&#10;    return 'Hello World';&#10;}"></textarea>
             </div>
 
-            <button id="analyze-btn" onclick="analyzeCode()">🔍 تحليل الكود</button>
+            <button id="analyze-btn" onclick="analyzeCode()">🔍 ANALYZE CODE</button>
+        </div>
+
+        <div class="code-example fade-in">
+            <strong>EXAMPLE CODE WITH ISSUES:</strong><br>
+            <code>
+def get_user_data(user_id):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;query = "SELECT * FROM users WHERE id = " + user_id<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return query<br>
+<br>
+def login(username, password):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;db_password = "123456"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return password == db_password
+            </code>
         </div>
 
         <div id="loading" class="loading">
-            <p>🔄 جاري تحليل الكود...</p>
+            <p>🔄 ANALYZING CODE...</p>
         </div>
 
         <div id="results" class="results">
-            <h2>📊 نتائج التحليل</h2>
+            <h2>ANALYSIS RESULTS</h2>
             <div id="results-content"></div>
         </div>
 
         <div class="features fade-in">
-            <h3>🚀 اللغات المدعومة</h3>
+            <h3>SUPPORTED LANGUAGES</h3>
             <div class="language-cards">
-                <div class="card">🐍 Python</div>
-                <div class="card">🌙 Lua</div>
-                <div class="card">🎮 Luau</div>
+                <div class="card">🐍 PYTHON</div>
+                <div class="card">🌙 LUA</div>
+                <div class="card">🎮 LUAU</div>
                 <div class="card">🔧 C</div>
                 <div class="card">⚡ C++</div>
                 <div class="card">💠 C#</div>
@@ -332,36 +412,35 @@
     </div>
 
     <script>
-        // أمثلة كود تلقائية
+        // Code examples with issues
         const examples = {
-            python: `def calculate_sum(numbers):\n    total = 0\n    for num in numbers:\n        total += num\n    return total\n\n# مثال على مشكلة أمنية\npassword = "secret123"\n\n# مثال على مشكلة أداء\nresult = ""\nfor i in range(1000):\n    result += str(i)`,
+            python: `def get_user_data(user_id):\n    query = "SELECT * FROM users WHERE id = " + user_id\n    return query\n\ndef login(username, password):\n    db_password = "123456"\n    \n    # Performance issue\n    result = ""\n    for i in range(1000):\n        result += str(i)\n    \n    return password == db_password`,
             
-            lua: `function factorial(n)\n    if n == 0 then\n        return 1\n    else\n        return n * factorial(n-1)\n    end\nend\n\n-- مثال على مشكلة\nlocal password = "mysecret"`,
+            lua: `function getUserData(userId)\n    local query = "SELECT * FROM users WHERE id = " .. userId\n    \n    -- Security issue\n    local password = "secret123"\n    \n    return query\nend`,
             
-            luau: `function onPlayerJoin(player)\n    -- مثال على كود Roblox\n    local humanoid = player.Character:FindFirstChild("Humanoid")\n    if humanoid then\n        humanoid.Health = 100\n    end\nend`,
+            luau: `function onPlayerJoin(player)\n    -- Hardcoded credentials\n    local adminPassword = "admin123"\n    \n    -- Performance issue\n    local message = ""\n    for i = 1, 100 do\n        message = message .. tostring(i)\n    end\nend`,
             
-            c: `#include <stdio.h>\n\nint main() {\n    int x = 10;\n    printf("Hello World\\n");\n    \n    // مثال على مشكلة\n    char password[] = "secret";\n    return 0;\n}`,
+            c: `#include <stdio.h>\n\nvoid getUserData(char* userId) {\n    char query[100];\n    sprintf(query, "SELECT * FROM users WHERE id = %s", userId);\n    \n    // Security issue\n    char* password = "mysecret";\n}`,
             
-            cpp: `#include <iostream>\nusing namespace std;\n\nint main() {\n    int x = 10;\n    cout << "Hello World" << endl;\n    \n    // مثال على مشكلة\n    string api_key = "12345";\n    return 0;\n}`,
+            cpp: `#include <iostream>\n#include <string>\n\nstd::string getUserData(std::string userId) {\n    std::string query = "SELECT * FROM users WHERE id = " + userId;\n    \n    // Hardcoded API key\n    std::string apiKey = "sk-1234567890";\n    \n    return query;\n}`,
             
-            csharp: `using System;\n\nclass Program {\n    static void Main() {\n        Console.WriteLine("Hello World");\n        \n        // مثال على مشكلة\n        string password = "mysecret";\n    }\n}`
+            csharp: `using System;\n\nclass Program {\n    static string GetUserData(string userId) {\n        string query = "SELECT * FROM users WHERE id = " + userId;\n        \n        // Security issue\n        string connectionString = "Server=...;Password=secret123";\n        \n        return query;\n    }\n}`
         };
 
-        // محلل الكود المحلي (يعمل بدون خادم)
         function analyzeCode() {
             const code = document.getElementById('code').value;
             const language = document.getElementById('language').value;
             
             if (!code.trim()) {
-                alert('⚠️ الرجاء إدخال كود لتحليله');
+                alert('⚠️ PLEASE ENTER CODE TO ANALYZE');
                 return;
             }
 
-            // إظهار loading
+            // Show loading
             document.getElementById('loading').style.display = 'block';
             document.getElementById('results').style.display = 'none';
 
-            // محاكاة تحميل الخادم
+            // Simulate server processing
             setTimeout(() => {
                 const result = localCodeAnalysis(code, language);
                 displayResults(result);
@@ -369,7 +448,7 @@
             }, 1500);
         }
 
-        // تحليل محلي بدون خادم
+        // Local code analysis (no server needed)
         function localCodeAnalysis(code, language) {
             const issues = {
                 security_issues: [],
@@ -378,12 +457,14 @@
                 best_practice_issues: []
             };
 
-            // تحليل أمني عام
+            // Security analysis
             const securityPatterns = [
-                { pattern: /password\s*=\s*["']/, message: 'كلمة سر مخزنة في الكود - استخدم متغيرات البيئة' },
-                { pattern: /api_key\s*=\s*["']/, message: 'مفتاح API مخزن في الكود - استخدم متغيرات البيئة' },
-                { pattern: /secret\s*=\s*["']/, message: 'بيانات سرية مخزنة في الكود' },
-                { pattern: /token\s*=\s*["']/, message: 'توكن مخزن في الكود' }
+                { pattern: /password\s*=\s*["']/, message: 'Hardcoded password detected - Use environment variables' },
+                { pattern: /api_key\s*=\s*["']/, message: 'API key exposed in code - Use secure storage' },
+                { pattern: /secret\s*=\s*["']/, message: 'Sensitive data stored in code' },
+                { pattern: /token\s*=\s*["']/, message: 'Token exposed in source code' },
+                { pattern: /SELECT.*\+/, message: 'Potential SQL Injection vulnerability' },
+                { pattern: /sprintf.*%s/, message: 'Format string vulnerability detected' }
             ];
 
             securityPatterns.forEach(({pattern, message}) => {
@@ -392,16 +473,16 @@
                 }
             });
 
-            // تحليل أداء
+            // Performance analysis
             const lines = code.split('\n');
             lines.forEach((line, index) => {
                 if ((line.includes('for') || line.includes('while')) && 
                     line.includes('+=') && (line.includes('"') || line.includes("'"))) {
-                    issues.performance_issues.push(`سطر ${index + 1}: تجنب concatenation النصوص في الحلقات - استخدم list مع join`);
+                    issues.performance_issues.push(`Line ${index + 1}: String concatenation in loop - Use StringBuilder`);
                 }
             });
 
-            // تحليل التعقيد
+            // Complexity analysis
             const functionCount = (code.match(/function|def|class|void|int\s+main/g) || []).length;
             const loopCount = (code.match(/for|while/g) || []).length;
             const conditionCount = (code.match(/if|else|switch/g) || []).length;
@@ -409,19 +490,19 @@
             const complexityScore = functionCount * 2 + loopCount * 3 + conditionCount;
             
             if (complexityScore > 20) {
-                issues.complexity_issues.push(`تعقيد عالي (${complexityScore}) - حاول تقسيم الكود إلى دوال أصغر`);
+                issues.complexity_issues.push(`High complexity (${complexityScore}) - Refactor into smaller functions`);
             }
 
-            // تحليل أفضل الممارسات
+            // Best practices analysis
             if (code.split('\n').length > 50 && functionCount < 3) {
-                issues.best_practice_issues.push('كود طويل بدون دوال كافية - قسم الكود إلى دوال متخصصة');
+                issues.best_practice_issues.push('Long code without proper function separation');
             }
 
             if (!code.includes('//') && !code.includes('#') && !code.includes('--')) {
-                issues.best_practice_issues.push('أضف تعليقات لتوضيح الكود');
+                issues.best_practice_issues.push('Add comments for better code documentation');
             }
 
-            // إحصائيات
+            // Statistics
             const totalIssues = issues.security_issues.length + issues.performance_issues.length + 
                               issues.complexity_issues.length + issues.best_practice_issues.length;
 
@@ -435,25 +516,25 @@
             };
         }
 
-        // عرض النتائج
+        // Display results
         function displayResults(result) {
             const resultsDiv = document.getElementById('results-content');
             
             let html = `
                 <div class="summary">
-                    <h3>📈 ملخص التحليل</h3>
-                    <p><strong>جودة الكود:</strong> ${result.statistics.estimated_quality}%</p>
-                    <p><strong>عدد المشاكل:</strong> ${result.statistics.total_issues}</p>
-                    <p><strong>عدد الأسطر:</strong> ${result.statistics.total_lines}</p>
+                    <h3>ANALYSIS SUMMARY</h3>
+                    <p><strong>Code Quality:</strong> ${result.statistics.estimated_quality}%</p>
+                    <p><strong>Total Issues:</strong> ${result.statistics.total_issues}</p>
+                    <p><strong>Lines of Code:</strong> ${result.statistics.total_lines}</p>
                 </div>
             `;
 
-            // إظهار المشاكل حسب التصنيف
+            // Display issues by category
             const categories = [
-                { key: 'security_issues', title: '🔒 المشاكل الأمنية', className: 'security' },
-                { key: 'performance_issues', title: '🐢 مشاكل الأداء', className: 'performance' },
-                { key: 'complexity_issues', title: '📊 مشاكل التعقيد', className: 'complexity' },
-                { key: 'best_practice_issues', title: '💡 أفضل الممارسات', className: 'best-practice' }
+                { key: 'security_issues', title: '🔒 SECURITY ISSUES', className: 'security' },
+                { key: 'performance_issues', title: '🐢 PERFORMANCE ISSUES', className: 'performance' },
+                { key: 'complexity_issues', title: '📊 COMPLEXITY ISSUES', className: 'complexity' },
+                { key: 'best_practice_issues', title: '💡 BEST PRACTICES', className: 'best-practice' }
             ];
 
             categories.forEach(category => {
@@ -467,22 +548,20 @@
                 }
             });
 
-            // إذا لم توجد مشاكل
+            // If no issues found
             if (result.statistics.total_issues === 0) {
                 html += `<div class="success">
-                    <h3>🎉 ممتاز!</h3>
-                    <p>كودك نظيف ولا توجد مشاكل كبيرة</p>
+                    <h3>🎉 EXCELLENT CODE!</h3>
+                    <p>No major issues detected in your code</p>
                 </div>`;
             }
 
             resultsDiv.innerHTML = html;
             document.getElementById('results').style.display = 'block';
-            
-            // تأثير ظهور النتائج
             document.getElementById('results').classList.add('fade-in');
         }
 
-        // تحميل الأمثلة التلقائية
+        // Load examples automatically
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('language').addEventListener('change', function() {
                 const lang = this.value;
@@ -491,9 +570,9 @@
                 }
             });
             
-            // تحميل مثال افتراضي
+            // Load default example
             document.getElementById('code').value = examples.python;
         });
     </script>
 </body>
-  </html>
+</html>
