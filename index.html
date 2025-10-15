@@ -1,433 +1,166 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>VX.Scripts — Monochrome Showcase</title>
-
-  <!-- Elegant display font -->
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
-  <!-- Font Awesome (icons not emojis) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stellar Showcase</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root{
-      --bg-dark: #050505;
-      --white:#ffffff;
-      --muted:#cfcfcf;
-      --glass: rgba(255,255,255,0.04);
-      --glass-2: rgba(255,255,255,0.06);
-      --font: 'Unbounded', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
-    }
+    * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif;}
+    body {
+      background: radial-gradient(circle at top, #000 20%, #111);
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+    }header {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+header h1 {
+  font-size: 3rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #fff, #aaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;padding:0;
-      font-family:var(--font);
-      background:linear-gradient(180deg,var(--bg-dark),#0b0b0b);
-      color:var(--muted);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      overflow-x:hidden;
-    }
+/* Floating stars */
+.stars {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0; left: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: white;
+  animation: twinkle 5s infinite ease-in-out;
+}
+@keyframes twinkle {
+  0%, 100% {opacity: 0.2; transform: scale(1);}
+  50% {opacity: 1; transform: scale(1.5);}
+}
 
-    /* Starfield canvas under everything */
-    #starfield{
-      position:fixed;inset:0;z-index:0;
-      display:block;
-      background: radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.2) 60%);
-    }
+/* Floating balloons */
+.balloon {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  animation: float 12s infinite ease-in-out;
+}
+@keyframes float {
+  0% {transform: translateY(0) scale(1);}
+  50% {transform: translateY(-40px) scale(1.1);}
+  100% {transform: translateY(0) scale(1);}
+}
+.balloon.white {background: #fff;}
+.balloon.black {background: #000; border: 1px solid #fff;}
 
-    header{
-      position:fixed;top:0;left:0;width:100%;z-index:30;
-      padding:18px 28px;display:flex;justify-content:space-between;align-items:center;
-      backdrop-filter: blur(8px);
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-bottom:1px solid rgba(255,255,255,0.03);
-    }
-    .brand{display:flex;align-items:center;gap:14px}
-    .logo{
-      width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,#fff,#ddd);
-      display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;
-      font-size:20px;box-shadow:0 10px 30px rgba(0,0,0,0.6);transform:rotate(-6deg);
-    }
-    nav{display:flex;gap:14px;align-items:center}
-    nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:700}
-    nav a:hover{background:var(--glass-2);transform:translateY(-3px)}
+.container {
+  padding: 2rem;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-    main.container{
-      position:relative;z-index:5;max-width:1200px;margin:120px auto;padding:40px 20px;
-    }
+.card {
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  text-align: center;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 25px rgba(255,255,255,0.1);
+}
 
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:18px;padding:28px;backdrop-filter: blur(8px);
-      border:1px solid rgba(255,255,255,0.04);box-shadow:0 18px 50px rgba(0,0,0,0.7);
-      overflow:hidden;
-    }
+.card i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
 
-    .grid{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start}
-    .left h1{font-size:40px;color:#fff;margin:0 0 10px 0;line-height:1.02}
-    .left p{color:var(--muted);margin:0 0 18px}
-    .cta{display:flex;gap:12px}
-    .btn{
-      display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;
-      font-weight:800;text-decoration:none;border:none;cursor:pointer;
-    }
-    .btn.primary{background:#fff;color:#000;box-shadow:0 12px 30px rgba(0,0,0,0.45)}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+.card img {
+  width: 100%;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  filter: none;
+  transition: transform 0.5s ease;
+}
+.card img:hover {
+  transform: scale(1.05);
+}
 
-    /* Demo panel */
-    .demo{
-      position:relative;min-height:360px;border-radius:14px;padding:22px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
-      display:flex;align-items:center;justify-content:center;overflow:hidden;
-    }
+.card h3 {font-size: 1.3rem; margin-bottom: .5rem;}
+.card p {font-size: 0.9rem; color: #ddd;}
 
-    /* Balloons */
-    .balloon{position:absolute;border-radius:50%;width:96px;height:116px;display:flex;align-items:center;justify-content:center;transform-origin:center bottom}
-    .balloon.white{background:linear-gradient(180deg,#fff,#efefef);left:8%;bottom:8%;box-shadow:0 16px 40px rgba(0,0,0,0.55)}
-    .balloon.black{background:linear-gradient(180deg,#0b0b0b,#1a1a1a);right:8%;bottom:6%;box-shadow:0 16px 40px rgba(0,0,0,0.55)}
-    .balloon svg{width:60px;height:60px}
-    .balloon .string{position:absolute;bottom:-64px;left:50%;width:2px;height:64px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.06));transform:translateX(-50%)}
+footer {
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.9rem;
+  color: #aaa;
+}
 
-    @keyframes floaty{0%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-28px) rotate(3deg)}100%{transform:translateY(0) rotate(-2deg)}}
-    .balloon.white{animation:floaty 6.6s ease-in-out infinite}
-    .balloon.black{animation:floaty 8.2s ease-in-out infinite;animation-delay:0.6s}
+@media (max-width: 768px) {
+  header h1 {font-size: 2.2rem;}
+  .container {padding: 1rem; gap: 1rem;}
+  .card {padding: 1rem;}
+  .card h3 {font-size: 1.1rem;}
+}
 
-    .glass-info{
-      position:absolute;right:18px;top:18px;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.04);width:220px;
-    }
-    .glass-info h3{margin:0 0 6px 0;color:#fff;font-size:15px}
-    .glass-info p{margin:0;font-size:13px;color:var(--muted)}
+@media (orientation: landscape) and (max-width: 900px) {
+  .container {grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));}
+  header h1 {font-size: 2rem;}
+}
 
-    /* Script cards (adapted from your structure) */
-    .script-card{background:transparent;border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:16px}
-    .script-header{display:flex;gap:22px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.03);padding-bottom:12px}
-    .script-thumb{width:320px;height:160px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);flex-shrink:0}
-    .script-thumb img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05)}
-    .script-title{display:flex;flex-direction:column;gap:6px}
-    .script-title h2{margin:0;font-size:24px;color:#fff}
-    .script-title .subtitle{font-size:13px;color:var(--muted);font-style:italic}
-
-    .details-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .panel{background:rgba(255,255,255,0.02);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
-    .panel h4{margin:0 0 8px 0;color:#fff}
-    .panel ul{list-style:none;padding-left:0;margin:0}
-    .panel li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;gap:10px;align-items:center}
-    .panel li:last-child{border-bottom:none}
-    .panel li i{width:24px;text-align:center}
-
-    .view-btn{
-      padding:14px;border-radius:12px;border:none;font-weight:800;cursor:pointer;
-      background:linear-gradient(180deg,#fff,#e8e8e8);color:#000;box-shadow:0 10px 30px rgba(0,0,0,0.5)
-    }
-
-    /* Modal */
-    .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:80;backdrop-filter:blur(6px)}
-    .modal{
-      position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:90;
-      width:92%;max-width:880px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,0.04);display:none;max-height:85vh;overflow:auto;
-    }
-    .modal .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.03);padding-bottom:12px}
-    .code-block{background:#0f0f0f;padding:16px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);position:relative;color:#eaeaea;font-family:monospace;white-space:pre-wrap}
-
-    .copy-btn{position:absolute;top:12px;right:12px;padding:8px 10px;border-radius:8px;border:none;background:rgba(255,255,255,0.04);color:var(--muted);cursor:pointer}
-    .copy-btn:hover{background:rgba(255,255,255,0.06)}
-
-    /* Toast */
-    .toast{position:fixed;right:20px;bottom:20px;padding:12px 18px;border-radius:8px;color:#fff;font-weight:700;z-index:120;opacity:0;transform:translateY(10px);transition:all .28s}
-    .toast.show{opacity:1;transform:translateY(0)}
-    .toast.success{background:#2ecc71}
-    .toast.error{background:#e74c3c}
-
-    /* small decorative sparkles inside demo */
-    .sparkle{position:absolute;width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg,#fff,#ddd);box-shadow:0 0 10px rgba(255,255,255,0.5);filter:blur(.4px);}
-
-    /* responsive */
-    @media (max-width:980px){
-      .grid{grid-template-columns:1fr}
-      .script-thumb{width:100%;height:200px}
-      nav{display:none}
-    }
   </style>
 </head>
 <body>
-  <canvas id="starfield"></canvas>
+  <div class="stars"></div>
+  <div class="balloon white" style="width:80px; height:80px; top:60%; left:10%; animation-delay:0s;"></div>
+  <div class="balloon black" style="width:100px; height:100px; top:30%; left:70%; animation-delay:3s;"></div>
+  <div class="balloon white" style="width:50px; height:50px; top:80%; left:50%; animation-delay:5s;"></div>  <header>
+    <h1>Stellar Showcase</h1>
+    <p>Experience smooth elegance, powerful visuals, and responsive design.</p>
+  </header>  <section class="container">
+    <div class="card">
+      <i class="fa-solid fa-code"></i>
+      <img src="https://picsum.photos/400/250?random=1" alt="script example">
+      <h3>Clean Code</h3>
+      <p>Organized and optimized scripts that run smoothly on any platform.</p>
+    </div><div class="card">
+  <i class="fa-solid fa-bolt"></i>
+  <img src="https://picsum.photos/400/250?random=2" alt="script example">
+  <h3>Fast Performance</h3>
+  <p>Optimized animations and transitions for a seamless experience.</p>
+</div>
 
-  <header>
-    <div class="brand">
-      <div class="logo">VX</div>
-      <div style="line-height:1">
-        <div style="font-weight:800;color:#fff">VX.Scripts</div>
-        <div style="font-size:12px;color:var(--muted)">Monochrome showcase • HTML · CSS · JS</div>
-      </div>
-    </div>
+<div class="card">
+  <i class="fa-solid fa-star"></i>
+  <img src="https://picsum.photos/400/250?random=3" alt="script example">
+  <h3>Elegant Effects</h3>
+  <p>Subtle animations and starry backgrounds create immersive visuals.</p>
+</div>
 
-    <nav>
-      <a href="https://inggroupkeyless.vercel.app/" target="_blank">Home</a>
-      <a href="https://inggroup.vercel.app/" target="_blank">Scripts</a>
-      <a href="https://vxcommunityexecutors.vercel.app/" target="_blank">Executors</a>
-    </nav>
-  </header>
-
-  <main class="container" role="main">
-    <div class="card grid">
-      <div class="left">
-        <h1>Powerful scripts — clean monochrome UI</h1>
-        <p>Elegant black & white presentation with starfield and subtle motion. Icons are Font Awesome — no emojis. Click a script to view its code and copy quickly.</p>
-
-        <div style="display:flex;gap:12px;margin-bottom:18px">
-          <button class="btn primary"><i class="fa-solid fa-meteor"></i> Live demo</button>
-          <button class="btn ghost"><i class="fa-solid fa-palette"></i> Effects</button>
-        </div>
-
-        <!-- Script cards list -->
-        <section style="display:flex;flex-direction:column;gap:18px">
-          <!-- Chiyo -->
-          <div class="script-card">
-            <div class="script-header">
-              <div class="script-thumb">
-                <img src="https://imagizer.imageshack.com/v2/320xq70/r/922/4jPP5a.jpg" alt="Chiyo">
-              </div>
-              <div class="script-title">
-                <h2>Chiyo</h2>
-                <div class="subtitle">[Hntey Zombies]</div>
-                <div style="color:var(--muted);max-width:640px">A powerful and efficient farming script with beautiful interface for enhanced gaming experience.</div>
-              </div>
-            </div>
-
-            <div class="details-grid" style="margin-top:12px">
-              <div class="panel">
-                <h4><i class="fa-solid fa-check"></i> Positives</h4>
-                <ul>
-                  <li><i class="fa-solid fa-star"></i> Excellent in farming</li>
-                  <li><i class="fa-solid fa-eye"></i> Beautiful and clear interface</li>
-                </ul>
-              </div>
-              <div class="panel">
-                <h4><i class="fa-solid fa-exclamation-triangle"></i> Disadvantages</h4>
-                <ul>
-                  <li><i class="fa-solid fa-key"></i> Keyless system is used</li>
-                </ul>
-              </div>
-            </div>
-
-            <div style="display:flex;justify-content:flex-end">
-              <button class="view-btn" onclick="openModal('chiyo')"><i class="fa-regular fa-file-code"></i> View Script</button>
-            </div>
-          </div>
-
-          <!-- Hitbox -->
-          <div class="script-card">
-            <div class="script-header">
-              <div class="script-thumb">
-                <img src="https://imagizer.imageshack.com/v2/320xq70/r/922/zUWXMx.jpg" alt="Hitbox">
-              </div>
-              <div class="script-title">
-                <h2>Hitbox Expander</h2>
-                <div class="subtitle">[Combat Enhancement]</div>
-                <div style="color:var(--muted);max-width:640px">Advanced hitbox expansion script with customizable colors and sizes for improved combat experience.</div>
-              </div>
-            </div>
-
-            <div class="details-grid" style="margin-top:12px">
-              <div class="panel">
-                <h4><i class="fa-solid fa-gear"></i> Features</h4>
-                <ul>
-                  <li><i class="fa-solid fa-sliders"></i> Customizable sizes and colors</li>
-                  <li><i class="fa-solid fa-bolt"></i> Lightweight & responsive</li>
-                </ul>
-              </div>
-              <div class="panel">
-                <h4><i class="fa-solid fa-exclamation"></i> Disadvantages</h4>
-                <ul>
-                  <li><i class="fa-solid fa-lightbulb"></i> Idea is simple</li>
-                </ul>
-              </div>
-            </div>
-
-            <div style="display:flex;justify-content:flex-end">
-              <button class="view-btn" onclick="openModal('hitbox')"><i class="fa-regular fa-file-code"></i> View Script</button>
-            </div>
-          </div>
-        </section>
-
-      </div>
-
-      <!-- Right demo panel -->
-      <aside class="demo" aria-hidden="false">
-        <div class="balloon white">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C9.2 2 7 4.2 7 7c0 2.9 2 5.4 4.7 6.6.2.1.3.3.3.5v3.2" stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div class="string"></div>
-        </div>
-
-        <div class="balloon black">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C9.24 3 7 5.24 7 8c0 2.87 2.15 5.33 4.85 6.46.2.08.35.27.35.48v2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div class="string"></div>
-        </div>
-
-        <div class="glass-info">
-          <h3><i class="fa-solid fa-magnifying-glass"></i> Live preview</h3>
-          <p>Monochrome theme • Font: Unbounded • Icons: Font Awesome</p>
-        </div>
-      </aside>
-    </div>
-  </main>
-
-  <!-- Modal backdrops & modals -->
-  <div class="modal-backdrop" id="modalBackdrop" onclick="closeAllModals()"></div>
-
-  <div class="modal" id="chiyoModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-header">
-      <h3 style="margin:0;color:#fff">Chiyo Script Code</h3>
-      <button class="copy-btn" onclick="copyScriptText('chiyoScriptText')"><i class="fa-solid fa-copy"></i></button>
-    </div>
-    <div class="code-block" id="chiyoScriptText">
-loadstring(game:HttpGet("https://raw.githubusercontent.com/kaisenlmao/loader/refs/heads/main/chiyo.lua"))()
-    </div>
-  </div>
-
-  <div class="modal" id="hitboxModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-header">
-      <h3 style="margin:0;color:#fff">Hitbox Expander Script Code</h3>
-      <button class="copy-btn" onclick="copyScriptText('hitboxScriptText')"><i class="fa-solid fa-copy"></i></button>
-    </div>
-    <div class="code-block" id="hitboxScriptText">
-loadstring(game:HttpGet("https://pastebin.com/raw/2hNBFrxE"))()
-    </div>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
-    /* Starfield canvas */
-    const canvas = document.getElementById('starfield');
-    const ctx = canvas.getContext('2d');
-    let W = canvas.width = innerWidth;
-    let H = canvas.height = innerHeight;
-    let stars = [];
-    const STAR_COUNT = Math.max(80, Math.floor((W*H)/70000));
-
-    function rand(min,max){ return Math.random()*(max-min)+min }
-
-    function initStars(){
-      stars = [];
-      for(let i=0;i<STAR_COUNT;i++){
-        stars.push({
-          x: Math.random()*W,
-          y: Math.random()*H,
-          r: Math.random()*1.8 + 0.2,
-          a: Math.random()*0.8 + 0.2,
-          vy: Math.random()*0.3 + 0.02,
-          vx: (Math.random()-0.5)*0.03
-        });
-      }
+  </section>  <footer>© 2025 Stellar Showcase. Crafted with passion and precision.</footer>  <script>
+    // Generate random stars
+    const starsContainer = document.querySelector('.stars');
+    for (let i = 0; i < 120; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.top = Math.random() * 100 + '%';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 5 + 's';
+      starsContainer.appendChild(star);
     }
-
-    function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; initStars(); }
-    addEventListener('resize', resize);
-
-    function draw(){
-      ctx.clearRect(0,0,W,H);
-      // dark background base
-      ctx.fillStyle = '#050505';
-      ctx.fillRect(0,0,W,H);
-
-      for(const s of stars){
-        s.y -= s.vy;
-        s.x += s.vx;
-        if(s.y < -10){ s.y = H + 10; s.x = Math.random()*W; }
-        ctx.beginPath();
-        ctx.globalAlpha = s.a;
-        ctx.fillStyle = '#ffffff';
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-        ctx.fill();
-      }
-
-      // subtle twinkles
-      ctx.globalCompositeOperation = 'lighter';
-      for(let i=0;i<3;i++){
-        const tx = Math.random()*W;
-        const ty = Math.random()*H*0.6;
-        const sr = Math.random()*1.4 + 0.6;
-        ctx.beginPath(); ctx.globalAlpha = Math.random()*0.18; ctx.arc(tx,ty,sr,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.fill();
-      }
-      ctx.globalCompositeOperation = 'source-over';
-      requestAnimationFrame(draw);
-    }
-
-    initStars(); draw();
-
-    // small interactive shimmer on pointer move
-    addEventListener('pointermove', (e)=>{
-      const x = e.clientX, y = e.clientY;
-      for(let i=0;i<4;i++){
-        const p = {x: x + rand(-40,40), y: y + rand(-40,40), r: rand(0.6,1.6), a: rand(0.2,0.9)};
-        ctx.beginPath(); ctx.globalAlpha = p.a; ctx.fillStyle = '#fff'; ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1;
-      }
-    });
-
-    /* Decorative sparkles inside demo area */
-    setInterval(()=>{
-      const demo = document.querySelector('.demo');
-      if(!demo) return;
-      const s = document.createElement('div');
-      s.className = 'sparkle';
-      s.style.left = (Math.random()*70 + 10) + '%';
-      s.style.top = (Math.random()*60 + 10) + '%';
-      s.style.opacity = Math.random();
-      s.style.transform = 'scale(' + (Math.random()*1.4 + 0.4) + ')';
-      demo.appendChild(s);
-      setTimeout(()=>{ s.style.transition='opacity 900ms'; s.style.opacity='0'; setTimeout(()=>s.remove(),1000)},1400);
-    },900);
-
-    /* Modal logic */
-    function openModal(type){
-      document.getElementById('modalBackdrop').style.display = 'block';
-      const m = document.getElementById(type + 'Modal');
-      if(m){ m.style.display = 'block'; m.setAttribute('aria-hidden','false'); }
-    }
-    function closeAllModals(){
-      document.getElementById('modalBackdrop').style.display = 'none';
-      document.querySelectorAll('.modal').forEach(m => { m.style.display = 'none'; m.setAttribute('aria-hidden','true'); });
-    }
-
-    /* Copy to clipboard with toast */
-    async function copyScriptText(id){
-      const el = document.getElementById(id);
-      if(!el) return showToast('No code found', 'error');
-      const text = el.textContent.trim();
-      try{
-        await navigator.clipboard.writeText(text);
-        showToast('Copied to clipboard', 'success');
-      }catch(e){
-        // fallback
-        const ta = document.createElement('textarea');
-        ta.value = text; document.body.appendChild(ta); ta.select();
-        try{ document.execCommand('copy'); showToast('Copied to clipboard', 'success'); }catch(err){ showToast('Copy failed', 'error'); }
-        ta.remove();
-      }
-    }
-
-    function showToast(msg, type){
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.className = 'toast show ' + (type === 'success' ? 'success' : 'error');
-      setTimeout(()=>{ t.className = 'toast'; }, 2800);
-    }
-
-    // close modals when clicking outside or pressing Esc
-    document.addEventListener('keydown', e => { if(e.key === 'Escape') closeAllModals(); });
-    document.getElementById('modalBackdrop').addEventListener('click', closeAllModals);
-
-    // prevent selecting code (like original)
-    document.querySelectorAll('.code-block').forEach(el => {
-      el.addEventListener('mousedown', e => e.preventDefault());
-    });
-  </script>
-</body>
+  </script></body>
 </html>
