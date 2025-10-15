@@ -1,106 +1,92 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>النجوم المتحركة</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            overflow-x: hidden;
-            height: 100vh;
-            position: relative;
-        }
-        
-        .stars-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        
-        .star {
-            position: absolute;
-            background-color: #fff;
-            border-radius: 50%;
-            animation: moveStars linear infinite;
-        }
-        
-        @keyframes moveStars {
-            from {
-                transform: translateX(100vw);
-            }
-            to {
-                transform: translateX(-100vw);
-            }
-        }
-        
-        .content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .center-image {
-            max-width: 80%;
-            max-height: 80%;
-            border: 2px solid #fff;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Krnl Landing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="stars-container" id="stars"></div>
-    
-    <div class="content">
-        <img src="https://imagizer.imageshack.com/v2/320xq70/r/921/TXgq6O.jpg" alt="الصورة المركزية" class="center-image">
+<body class="min-h-screen relative overflow-hidden font-sans bg-gradient-to-b from-[#0b0710] via-[#0f0820] to-[#09050b] text-white">
+
+  <!-- Header -->
+  <header class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center justify-center w-10 h-10 bg-white/10 rounded-md backdrop-blur-md">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 18L14 6L18 10L10 22L6 18Z" fill="white" />
+        </svg>
+      </div>
+      <div class="text-lg font-medium">Krnl</div>
+    </div>
+    <button class="px-4 py-2 rounded-full bg-white text-black font-semibold shadow-lg shadow-black/30 hover:scale-[1.02] transition transform">
+      Download
+    </button>
+  </header>
+
+  <!-- Hero -->
+  <main class="max-w-3xl mx-auto px-6 text-center mt-8">
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
+      Krnl's back, <br /> better than ever
+    </h1>
+    <p class="mt-4 text-lg sm:text-xl text-white/70 max-w-2xl mx-auto">
+      A powerful multi-platform Luau scripting engine, complete with a text editor and built-in script database.
+    </p>
+    <div class="mt-8 flex flex-col sm:flex-row gap-4 items-center justify-center">
+      <button class="px-8 py-3 rounded-xl bg-white text-black font-semibold shadow-lg hover:scale-[1.02] transition">Download</button>
+      <button class="px-8 py-3 rounded-xl bg-transparent border border-white/10 text-white/90 font-medium backdrop-blur-sm">Join Discord</button>
     </div>
 
-    <script>
-        // إنشاء النجوم المتحركة
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            const starCount = 200; // عدد النجوم
-            
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                
-                // حجم عشوائي للنجوم
-                const size = Math.random() * 3 + 1;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                
-                // موقع عشوائي للنجوم
-                star.style.top = `${Math.random() * 100}vh`;
-                star.style.left = `${Math.random() * 100}vw`;
-                
-                // سرعة عشوائية للنجوم
-                const duration = Math.random() * 20 + 10; // بين 10 و30 ثانية
-                star.style.animationDuration = `${duration}s`;
-                
-                // تأخير عشوائي لبدء الحركة
-                star.style.animationDelay = `${Math.random() * 20}s`;
-                
-                starsContainer.appendChild(star);
-            }
-        }
-        
-        // تشغيل إنشاء النجوم عند تحميل الصفحة
-        window.onload = createStars;
-    </script>
+    <!-- Preview card -->
+    <div class="mt-10 relative">
+      <div class="mx-auto w-full max-w-3xl rounded-2xl p-6 bg-gradient-to-b from-[#13061a]/60 to-[#24102e]/40 border border-white/6 shadow-[0_10px_40px_rgba(124,58,237,0.12)]">
+        <div class="rounded-lg overflow-hidden bg-[#0b0b0d] p-4">
+          <div class="flex gap-4">
+            <div class="w-48 bg-gradient-to-b from-[#0f0720] to-[#120824] rounded-md p-3">
+              <div class="text-sm font-semibold text-white/90">Editor</div>
+              <ul class="mt-3 text-sm text-white/60 space-y-2">
+                <li class="bg-white/3 px-3 py-1 rounded">New tab</li>
+                <li class="bg-white/3 px-3 py-1 rounded">Console</li>
+                <li class="bg-white/3 px-3 py-1 rounded">Hooks</li>
+              </ul>
+            </div>
+            <div class="flex-1 bg-[#000] rounded-md p-4">
+              <div class="h-36 bg-gradient-to-r from-[#0b1220] to-[#2a0233] rounded-md p-3 text-xs font-mono text-green-300 overflow-auto">
+                -- sample code<br>
+                local function hello()<br>
+                &nbsp;&nbsp;print("hello world")<br>
+                end
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="absolute -inset-1 rounded-2xl pointer-events-none" style="box-shadow:0 0 40px 6px rgba(128,60,231,0.12)"></div>
+    </div>
+  </main>
+
+  <!-- Platform Cards -->
+  <section class="max-w-4xl mx-auto px-6 mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6">
+    <div class="rounded-2xl p-5 bg-gradient-to-b from-[#0f0818] to-[#10061a] border border-white/6 backdrop-blur-md">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-lg bg-white/6 flex items-center justify-center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-opacity="0.06"/></svg>
+        </div>
+        <div>
+          <div class="text-lg font-semibold">Android</div>
+          <div class="text-sm text-white/60">All Android devices</div>
+        </div>
+      </div>
+      <div class="mt-4 flex flex-col gap-3">
+        <button class="w-full py-3 rounded-lg bg-white text-black font-semibold">Download Regular</button>
+        <button class="w-full py-3 rounded-lg bg-transparent border border-white/10 text-white/80">Download VNG</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-16 pb-16 text-center text-white/60">
+    © 2025 Krnl Inc.
+  </footer>
+
 </body>
 </html>
