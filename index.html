@@ -1,231 +1,346 @@
 <!doctype html>
-
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Stellar — Black & White Design Showcase</title>  <!-- Google Font (heroic, stylish) -->  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
-  <!-- Font Awesome Icons (use icons not emojis) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />  <style>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VX.Scripts — Monochrome Showcase</title>
+
+  <!-- Elegant display font -->
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome (icons not emojis) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
     :root{
-      --bg-1:#0b0b0b;
-      --bg-2:#ffffff;
-      --accent:#e6e6e6;
+      --bg-dark: #050505;
+      --white:#ffffff;
+      --muted:#cfcfcf;
       --glass: rgba(255,255,255,0.04);
       --glass-2: rgba(255,255,255,0.06);
-      --font: 'Unbounded', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      --font: 'Unbounded', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
     }
+
     *{box-sizing:border-box}
-    html,body{height:100%;}
+    html,body{height:100%}
     body{
-      margin:0;
-      padding:0;
+      margin:0;padding:0;
       font-family:var(--font);
-      background: linear-gradient(180deg,var(--bg-1) 0%, #070707 100%);
-      color:var(--accent);
-      overflow-x:hidden;
+      background:linear-gradient(180deg,var(--bg-dark),#0b0b0b);
+      color:var(--muted);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
     }
 
-    /* STARFIELD (canvas sits under everything) */
+    /* Starfield canvas under everything */
     #starfield{
-      position:fixed;inset:0;z-index:0;display:block;
+      position:fixed;inset:0;z-index:0;
+      display:block;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.2) 60%);
     }
 
-    /* Header */
     header{
-      position:relative;z-index:5;padding:28px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;
+      position:fixed;top:0;left:0;width:100%;z-index:30;
+      padding:18px 28px;display:flex;justify-content:space-between;align-items:center;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-bottom:1px solid rgba(255,255,255,0.03);
     }
     .brand{display:flex;align-items:center;gap:14px}
     .logo{
-      width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,#fff,#bbb);display:flex;align-items:center;justify-content:center;color:#000;font-weight:800;font-size:22px;box-shadow:0 8px 30px rgba(0,0,0,0.6);
-      transform:rotate(-8deg);
+      width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,#fff,#ddd);
+      display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;
+      font-size:20px;box-shadow:0 10px 30px rgba(0,0,0,0.6);transform:rotate(-6deg);
     }
-    nav{display:flex;gap:18px;align-items:center}
-    nav a{color:var(--accent);text-decoration:none;padding:10px 14px;border-radius:10px;transition:all .22s;font-weight:600}
+    nav{display:flex;gap:14px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:700}
     nav a:hover{background:var(--glass-2);transform:translateY(-3px)}
 
-    /* Hero */
-    .hero{
-      position:relative;z-index:3;min-height:72vh;display:flex;align-items:center;justify-content:center;padding:40px;gap:40px;
+    main.container{
+      position:relative;z-index:5;max-width:1200px;margin:120px auto;padding:40px 20px;
     }
+
     .card{
-      width:1100px;max-width:95%;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:20px;padding:36px;backdrop-filter: blur(8px);box-shadow:0 12px 40px rgba(0,0,0,0.6);position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:18px;padding:28px;backdrop-filter: blur(8px);
+      border:1px solid rgba(255,255,255,0.04);box-shadow:0 18px 50px rgba(0,0,0,0.7);
+      overflow:hidden;
     }
 
-    .hero-grid{display:grid;grid-template-columns:1fr 420px;gap:30px;align-items:center}
-    .hero-left h1{font-size:44px;line-height:1.02;margin:0;color:#fff}
-    .hero-left p{margin-top:12px;color: #d6d6d6;font-size:16px}
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start}
+    .left h1{font-size:40px;color:#fff;margin:0 0 10px 0;line-height:1.02}
+    .left p{color:var(--muted);margin:0 0 18px}
+    .cta{display:flex;gap:12px}
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;
+      font-weight:800;text-decoration:none;border:none;cursor:pointer;
+    }
+    .btn.primary{background:#fff;color:#000;box-shadow:0 12px 30px rgba(0,0,0,0.45)}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
 
-    .cta{margin-top:20px;display:flex;gap:14px}
-    .btn{background:#fff;color:#000;padding:12px 18px;border-radius:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,0.4)}
-    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)}
+    /* Demo panel */
+    .demo{
+      position:relative;min-height:360px;border-radius:14px;padding:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+    }
 
-    /* Demo panel with animated elements */
-    .demo-panel{position:relative;padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));min-height:320px;display:flex;align-items:center;justify-content:center}
+    /* Balloons */
+    .balloon{position:absolute;border-radius:50%;width:96px;height:116px;display:flex;align-items:center;justify-content:center;transform-origin:center bottom}
+    .balloon.white{background:linear-gradient(180deg,#fff,#efefef);left:8%;bottom:8%;box-shadow:0 16px 40px rgba(0,0,0,0.55)}
+    .balloon.black{background:linear-gradient(180deg,#0b0b0b,#1a1a1a);right:8%;bottom:6%;box-shadow:0 16px 40px rgba(0,0,0,0.55)}
+    .balloon svg{width:60px;height:60px}
+    .balloon .string{position:absolute;bottom:-64px;left:50%;width:2px;height:64px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.06));transform:translateX(-50%)}
 
-    /* Floating balloons (black & white) */
-    .balloon{position:absolute;border-radius:50%;width:90px;height:120px;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,0.45);transform-origin:center bottom}
-    .balloon.white{background:linear-gradient(180deg,#fff,#f0f0f0);left:8%;bottom:10%;}
-    .balloon.black{background:linear-gradient(180deg,#0f0f0f,#222);right:10%;bottom:6%;}
-    .balloon svg{width:60px;height:60px;opacity:.92}
-    .string{position:absolute;bottom:-60px;left:50%;width:2px;height:60px;background:linear-gradient(180deg,rgba(255,255,255,0.55),rgba(255,255,255,0.08));transform:translateX(-50%);}
-
-    /* Balloon animations */
     @keyframes floaty{0%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-28px) rotate(3deg)}100%{transform:translateY(0) rotate(-2deg)}}
-    .balloon.white{animation:floaty 6.8s ease-in-out infinite}
+    .balloon.white{animation:floaty 6.6s ease-in-out infinite}
     .balloon.black{animation:floaty 8.2s ease-in-out infinite;animation-delay:0.6s}
 
-    /* some featured cards */
-    .features{display:flex;flex-direction:column;gap:18px}
-    .feature{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:12px}
-    .icon-wrap{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);font-size:22px}
-    .feature h4{margin:0;color:#fff}
-    .feature p{margin:6px 0 0;color:#cfcfcf;font-size:14px}
+    .glass-info{
+      position:absolute;right:18px;top:18px;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);width:220px;
+    }
+    .glass-info h3{margin:0 0 6px 0;color:#fff;font-size:15px}
+    .glass-info p{margin:0;font-size:13px;color:var(--muted)}
 
-    /* footer */
-    footer{margin-top:30px;padding:24px 40px;color:#a9a9a9;display:flex;justify-content:space-between;align-items:center;gap:20px}
+    /* Script cards (adapted from your structure) */
+    .script-card{background:transparent;border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:16px}
+    .script-header{display:flex;gap:22px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.03);padding-bottom:12px}
+    .script-thumb{width:320px;height:160px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);flex-shrink:0}
+    .script-thumb img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05)}
+    .script-title{display:flex;flex-direction:column;gap:6px}
+    .script-title h2{margin:0;font-size:24px;color:#fff}
+    .script-title .subtitle{font-size:13px;color:var(--muted);font-style:italic}
 
-    /* RESPONSIVE */
-    @media (max-width:900px){
-      .hero-grid{grid-template-columns:1fr}
-      nav{display:none}
-      .logo{width:56px;height:56px}
-      .hero-left h1{font-size:32px}
+    .details-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .panel{background:rgba(255,255,255,0.02);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .panel h4{margin:0 0 8px 0;color:#fff}
+    .panel ul{list-style:none;padding-left:0;margin:0}
+    .panel li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;gap:10px;align-items:center}
+    .panel li:last-child{border-bottom:none}
+    .panel li i{width:24px;text-align:center}
+
+    .view-btn{
+      padding:14px;border-radius:12px;border:none;font-weight:800;cursor:pointer;
+      background:linear-gradient(180deg,#fff,#e8e8e8);color:#000;box-shadow:0 10px 30px rgba(0,0,0,0.5)
     }
 
-    /* small sparkle / decorative */
-    .sparkle{position:absolute;width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg,#fff,#ddd);box-shadow:0 0 14px rgba(255,255,255,0.5);filter:blur(0.4px);}
+    /* Modal */
+    .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:80;backdrop-filter:blur(6px)}
+    .modal{
+      position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:90;
+      width:92%;max-width:880px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,0.04);display:none;max-height:85vh;overflow:auto;
+    }
+    .modal .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.03);padding-bottom:12px}
+    .code-block{background:#0f0f0f;padding:16px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);position:relative;color:#eaeaea;font-family:monospace;white-space:pre-wrap}
 
-    /* cool glassy card inside demo with icons */
-    .glass-info{position:absolute;right:18px;top:18px;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);width:200px}
-    .glass-info h3{margin:0 0 8px 0;font-size:16px}
-    .glass-info p{margin:0;font-size:13px;color:#cfcfcf}
+    .copy-btn{position:absolute;top:12px;right:12px;padding:8px 10px;border-radius:8px;border:none;background:rgba(255,255,255,0.04);color:var(--muted);cursor:pointer}
+    .copy-btn:hover{background:rgba(255,255,255,0.06)}
 
-  </style></head>
+    /* Toast */
+    .toast{position:fixed;right:20px;bottom:20px;padding:12px 18px;border-radius:8px;color:#fff;font-weight:700;z-index:120;opacity:0;transform:translateY(10px);transition:all .28s}
+    .toast.show{opacity:1;transform:translateY(0)}
+    .toast.success{background:#2ecc71}
+    .toast.error{background:#e74c3c}
+
+    /* small decorative sparkles inside demo */
+    .sparkle{position:absolute;width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg,#fff,#ddd);box-shadow:0 0 10px rgba(255,255,255,0.5);filter:blur(.4px);}
+
+    /* responsive */
+    @media (max-width:980px){
+      .grid{grid-template-columns:1fr}
+      .script-thumb{width:100%;height:200px}
+      nav{display:none}
+    }
+  </style>
+</head>
 <body>
-  <canvas id="starfield"></canvas>  <header>
+  <canvas id="starfield"></canvas>
+
+  <header>
     <div class="brand">
-      <div class="logo">S</div>
-      <div>
-        <div style="font-weight:800;font-size:18px">Stellar</div>
-        <div style="font-size:12px;color:var(--accent);margin-top:4px">Black & White UI Showcase</div>
+      <div class="logo">VX</div>
+      <div style="line-height:1">
+        <div style="font-weight:800;color:#fff">VX.Scripts</div>
+        <div style="font-size:12px;color:var(--muted)">Monochrome showcase • HTML · CSS · JS</div>
       </div>
     </div>
+
     <nav>
-      <a href="#">Home</a>
-      <a href="#features">Features</a>
-      <a href="#demo">Demo</a>
-      <a href="#contact">Contact</a>
+      <a href="https://inggroupkeyless.vercel.app/" target="_blank">Home</a>
+      <a href="https://inggroup.vercel.app/" target="_blank">Scripts</a>
+      <a href="https://vxcommunityexecutors.vercel.app/" target="_blank">Executors</a>
     </nav>
-  </header>  <main class="hero">
-    <div class="card">
-      <div class="hero-grid">
-        <div class="hero-left">
-          <h1>Beautiful dark & light-themed UI — animated to life</h1>
-          <p>Stellar is an experimental design showcase combining subtle starfield background, floating balloons, smooth animation and modern iconography. Everything is crafted in pure HTML, CSS & vanilla JS.</p>
-          <div class="cta">
-            <a class="btn" href="#demo"><i class="fa-solid fa-meteor"></i> View demo</a>
-            <a class="btn secondary" href="#features"><i class="fa-solid fa-palette"></i> See effects</a>
-          </div><section id="features" style="margin-top:20px">
-        <div class="features">
-          <div class="feature">
-            <div class="icon-wrap"><i class="fa-solid fa-star"></i></div>
-            <div>
-              <h4>Starfield background</h4>
-              <p>Procedural stars animated on a canvas that give a subtle parallax depth.</p>
-            </div>
-          </div>
-          <div class="feature">
-            <div class="icon-wrap"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-            <div>
-              <h4>Modern effects</h4>
-              <p>Glassmorphism, soft shadows, and layered gradients create a premium visual tone.</p>
-            </div>
-          </div>
+  </header>
+
+  <main class="container" role="main">
+    <div class="card grid">
+      <div class="left">
+        <h1>Powerful scripts — clean monochrome UI</h1>
+        <p>Elegant black & white presentation with starfield and subtle motion. Icons are Font Awesome — no emojis. Click a script to view its code and copy quickly.</p>
+
+        <div style="display:flex;gap:12px;margin-bottom:18px">
+          <button class="btn primary"><i class="fa-solid fa-meteor"></i> Live demo</button>
+          <button class="btn ghost"><i class="fa-solid fa-palette"></i> Effects</button>
         </div>
-      </section>
 
+        <!-- Script cards list -->
+        <section style="display:flex;flex-direction:column;gap:18px">
+          <!-- Chiyo -->
+          <div class="script-card">
+            <div class="script-header">
+              <div class="script-thumb">
+                <img src="https://imagizer.imageshack.com/v2/320xq70/r/922/4jPP5a.jpg" alt="Chiyo">
+              </div>
+              <div class="script-title">
+                <h2>Chiyo</h2>
+                <div class="subtitle">[Hntey Zombies]</div>
+                <div style="color:var(--muted);max-width:640px">A powerful and efficient farming script with beautiful interface for enhanced gaming experience.</div>
+              </div>
+            </div>
+
+            <div class="details-grid" style="margin-top:12px">
+              <div class="panel">
+                <h4><i class="fa-solid fa-check"></i> Positives</h4>
+                <ul>
+                  <li><i class="fa-solid fa-star"></i> Excellent in farming</li>
+                  <li><i class="fa-solid fa-eye"></i> Beautiful and clear interface</li>
+                </ul>
+              </div>
+              <div class="panel">
+                <h4><i class="fa-solid fa-exclamation-triangle"></i> Disadvantages</h4>
+                <ul>
+                  <li><i class="fa-solid fa-key"></i> Keyless system is used</li>
+                </ul>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end">
+              <button class="view-btn" onclick="openModal('chiyo')"><i class="fa-regular fa-file-code"></i> View Script</button>
+            </div>
+          </div>
+
+          <!-- Hitbox -->
+          <div class="script-card">
+            <div class="script-header">
+              <div class="script-thumb">
+                <img src="https://imagizer.imageshack.com/v2/320xq70/r/922/zUWXMx.jpg" alt="Hitbox">
+              </div>
+              <div class="script-title">
+                <h2>Hitbox Expander</h2>
+                <div class="subtitle">[Combat Enhancement]</div>
+                <div style="color:var(--muted);max-width:640px">Advanced hitbox expansion script with customizable colors and sizes for improved combat experience.</div>
+              </div>
+            </div>
+
+            <div class="details-grid" style="margin-top:12px">
+              <div class="panel">
+                <h4><i class="fa-solid fa-gear"></i> Features</h4>
+                <ul>
+                  <li><i class="fa-solid fa-sliders"></i> Customizable sizes and colors</li>
+                  <li><i class="fa-solid fa-bolt"></i> Lightweight & responsive</li>
+                </ul>
+              </div>
+              <div class="panel">
+                <h4><i class="fa-solid fa-exclamation"></i> Disadvantages</h4>
+                <ul>
+                  <li><i class="fa-solid fa-lightbulb"></i> Idea is simple</li>
+                </ul>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end">
+              <button class="view-btn" onclick="openModal('hitbox')"><i class="fa-regular fa-file-code"></i> View Script</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right demo panel -->
+      <aside class="demo" aria-hidden="false">
+        <div class="balloon white">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C9.2 2 7 4.2 7 7c0 2.9 2 5.4 4.7 6.6.2.1.3.3.3.5v3.2" stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="string"></div>
+        </div>
+
+        <div class="balloon black">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C9.24 3 7 5.24 7 8c0 2.87 2.15 5.33 4.85 6.46.2.08.35.27.35.48v2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="string"></div>
+        </div>
+
+        <div class="glass-info">
+          <h3><i class="fa-solid fa-magnifying-glass"></i> Live preview</h3>
+          <p>Monochrome theme • Font: Unbounded • Icons: Font Awesome</p>
+        </div>
+      </aside>
     </div>
+  </main>
 
-    <div class="demo-panel" id="demo">
-      <!-- Balloons -->
-      <div class="balloon white" style="--i:1">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C9.2 2 7 4.2 7 7c0 2.9 2 5.4 4.7 6.6.2.1.3.3.3.5v3.2" stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="string"></div>
-      </div>
-      <div class="balloon black">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C9.24 3 7 5.24 7 8c0 2.87 2.15 5.33 4.85 6.46.2.08.35.27.35.48v2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="string"></div>
-      </div>
+  <!-- Modal backdrops & modals -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeAllModals()"></div>
 
-      <!-- Glass info -->
-      <div class="glass-info">
-        <h3><i class="fa-solid fa-magnifying-glass"></i> Live preview</h3>
-        <p>Icons from Font Awesome. Font: Unbounded (Google Fonts). No emojis — only icons.</p>
-      </div>
-
-      <!-- Decorative sparkles -->
-      <div class="sparkle" style="left:22%;top:18%;opacity:.9"></div>
-      <div class="sparkle" style="left:40%;top:12%;width:6px;height:6px;opacity:.6"></div>
-
+  <div class="modal" id="chiyoModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-header">
+      <h3 style="margin:0;color:#fff">Chiyo Script Code</h3>
+      <button class="copy-btn" onclick="copyScriptText('chiyoScriptText')"><i class="fa-solid fa-copy"></i></button>
+    </div>
+    <div class="code-block" id="chiyoScriptText">
+loadstring(game:HttpGet("https://raw.githubusercontent.com/kaisenlmao/loader/refs/heads/main/chiyo.lua"))()
     </div>
   </div>
 
-  <footer>
-    <div>© <strong>Stellar</strong> • Crafted with HTML · CSS · JS</div>
-    <div style="display:flex;gap:14px;align-items:center">
-      <a style="color:var(--accent);text-decoration:none" href="#"><i class="fa-brands fa-github"></i></a>
-      <a style="color:var(--accent);text-decoration:none" href="#"><i class="fa-brands fa-dribbble"></i></a>
-      <a style="color:var(--accent);text-decoration:none" href="#contact"><i class="fa-solid fa-envelope"></i></a>
+  <div class="modal" id="hitboxModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-header">
+      <h3 style="margin:0;color:#fff">Hitbox Expander Script Code</h3>
+      <button class="copy-btn" onclick="copyScriptText('hitboxScriptText')"><i class="fa-solid fa-copy"></i></button>
     </div>
-  </footer>
+    <div class="code-block" id="hitboxScriptText">
+loadstring(game:HttpGet("https://pastebin.com/raw/2hNBFrxE"))()
+    </div>
+  </div>
 
-</div>
+  <div class="toast" id="toast"></div>
 
-  </main>  <script>
-    // Starfield canvas — lightweight, animated
+  <script>
+    /* Starfield canvas */
     const canvas = document.getElementById('starfield');
     const ctx = canvas.getContext('2d');
     let W = canvas.width = innerWidth;
     let H = canvas.height = innerHeight;
+    let stars = [];
+    const STAR_COUNT = Math.max(80, Math.floor((W*H)/70000));
 
-    const stars = [];
-    const STAR_COUNT = Math.max(60, Math.floor((W*H)/60000));
-
-    function rand(min,max){return Math.random()*(max-min)+min}
+    function rand(min,max){ return Math.random()*(max-min)+min }
 
     function initStars(){
-      stars.length=0;
+      stars = [];
       for(let i=0;i<STAR_COUNT;i++){
         stars.push({
-          x:Math.random()*W,
-          y:Math.random()*H,
-          r:Math.random()*1.6+0.2,
-          a:Math.random()*0.8+0.2,
-          vx: (Math.random()-0.5)*0.02,
-          vy: (Math.random()*0.3)+0.02
+          x: Math.random()*W,
+          y: Math.random()*H,
+          r: Math.random()*1.8 + 0.2,
+          a: Math.random()*0.8 + 0.2,
+          vy: Math.random()*0.3 + 0.02,
+          vx: (Math.random()-0.5)*0.03
         });
       }
     }
 
-    function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;initStars()}
+    function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; initStars(); }
     addEventListener('resize', resize);
 
     function draw(){
       ctx.clearRect(0,0,W,H);
-      // subtle gradient overlay
-      const g = ctx.createLinearGradient(0,0,0,H);
-      g.addColorStop(0,'rgba(255,255,255,0.02)');
-      g.addColorStop(1,'rgba(0,0,0,0.1)');
-      ctx.fillStyle = '#070707';
+      // dark background base
+      ctx.fillStyle = '#050505';
       ctx.fillRect(0,0,W,H);
 
-      for(let s of stars){
+      for(const s of stars){
         s.y -= s.vy;
         s.x += s.vx;
-        if(s.y < -10) { s.y = H + 10; s.x = Math.random()*W }
+        if(s.y < -10){ s.y = H + 10; s.x = Math.random()*W; }
         ctx.beginPath();
         ctx.globalAlpha = s.a;
         ctx.fillStyle = '#ffffff';
@@ -233,41 +348,86 @@
         ctx.fill();
       }
 
-      // twinkle layer
+      // subtle twinkles
       ctx.globalCompositeOperation = 'lighter';
-      for(let i=0;i<4;i++){
+      for(let i=0;i<3;i++){
         const tx = Math.random()*W;
         const ty = Math.random()*H*0.6;
-        const sr = Math.random()*1.2+0.8;
-        ctx.beginPath();ctx.globalAlpha = Math.random()*0.25;ctx.arc(tx,ty,sr,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,0.6)';ctx.fill();
+        const sr = Math.random()*1.4 + 0.6;
+        ctx.beginPath(); ctx.globalAlpha = Math.random()*0.18; ctx.arc(tx,ty,sr,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.fill();
       }
       ctx.globalCompositeOperation = 'source-over';
       requestAnimationFrame(draw);
     }
 
-    initStars();draw();
+    initStars(); draw();
 
-    // small interactive shimmer when pointer moves
+    // small interactive shimmer on pointer move
     addEventListener('pointermove', (e)=>{
       const x = e.clientX, y = e.clientY;
-      for(let i=0;i<5;i++){
-        const p = {x:x + rand(-40,40), y:y + rand(-40,40), r:rand(0.6,1.6), a:rand(0.2,0.9)};
-        ctx.beginPath(); ctx.globalAlpha = p.a; ctx.fillStyle='#fff'; ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+      for(let i=0;i<4;i++){
+        const p = {x: x + rand(-40,40), y: y + rand(-40,40), r: rand(0.6,1.6), a: rand(0.2,0.9)};
+        ctx.beginPath(); ctx.globalAlpha = p.a; ctx.fillStyle = '#fff'; ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1;
       }
-    })
+    });
 
-    // small sparkle generator to add tiny decorative dots inside demo panel
+    /* Decorative sparkles inside demo area */
     setInterval(()=>{
-      const demo = document.querySelector('.demo-panel');
+      const demo = document.querySelector('.demo');
+      if(!demo) return;
       const s = document.createElement('div');
-      s.className='sparkle';
-      s.style.left = (Math.random()*70+10)+'%';
-      s.style.top = (Math.random()*60+10)+'%';
+      s.className = 'sparkle';
+      s.style.left = (Math.random()*70 + 10) + '%';
+      s.style.top = (Math.random()*60 + 10) + '%';
       s.style.opacity = Math.random();
-      s.style.transform = 'scale('+ (Math.random()*1.2 + 0.4) +')';
+      s.style.transform = 'scale(' + (Math.random()*1.4 + 0.4) + ')';
       demo.appendChild(s);
-      setTimeout(()=>{ s.style.transition='opacity 900ms'; s.style.opacity='0'; setTimeout(()=>s.remove(),1000)},1500);
+      setTimeout(()=>{ s.style.transition='opacity 900ms'; s.style.opacity='0'; setTimeout(()=>s.remove(),1000)},1400);
     },900);
 
-  </script></body>
+    /* Modal logic */
+    function openModal(type){
+      document.getElementById('modalBackdrop').style.display = 'block';
+      const m = document.getElementById(type + 'Modal');
+      if(m){ m.style.display = 'block'; m.setAttribute('aria-hidden','false'); }
+    }
+    function closeAllModals(){
+      document.getElementById('modalBackdrop').style.display = 'none';
+      document.querySelectorAll('.modal').forEach(m => { m.style.display = 'none'; m.setAttribute('aria-hidden','true'); });
+    }
+
+    /* Copy to clipboard with toast */
+    async function copyScriptText(id){
+      const el = document.getElementById(id);
+      if(!el) return showToast('No code found', 'error');
+      const text = el.textContent.trim();
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast('Copied to clipboard', 'success');
+      }catch(e){
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try{ document.execCommand('copy'); showToast('Copied to clipboard', 'success'); }catch(err){ showToast('Copy failed', 'error'); }
+        ta.remove();
+      }
+    }
+
+    function showToast(msg, type){
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show ' + (type === 'success' ? 'success' : 'error');
+      setTimeout(()=>{ t.className = 'toast'; }, 2800);
+    }
+
+    // close modals when clicking outside or pressing Esc
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') closeAllModals(); });
+    document.getElementById('modalBackdrop').addEventListener('click', closeAllModals);
+
+    // prevent selecting code (like original)
+    document.querySelectorAll('.code-block').forEach(el => {
+      el.addEventListener('mousedown', e => e.preventDefault());
+    });
+  </script>
+</body>
 </html>
