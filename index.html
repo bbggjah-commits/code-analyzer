@@ -1,332 +1,362 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Code → GUI (BW) — مولد الشكل المظهري</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Code → Live UI (White-first)</title>
 
-  <!-- Tailwind (quick) -->
+  <!-- Tailwind CSS (CDN for quick layout) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- html2canvas for export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
+    /* White-first site style with black text */
     :root{
-      --bg:#0b0b0b;
-      --panel:#0f0f0f;
-      --muted:#bdbdbd;
-      --white:#ffffff;
+      --surface:#ffffff;
+      --muted:#6b7280; /* gray-500 */
+      --accent:#0f172a; /* deep */
+      --panel:#f8fafc;
+      --border: #e6e9ee;
     }
     html,body{height:100%}
     body{
       margin:0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-      background: linear-gradient(180deg,#000,#0b0b0b 60%);
-      color:var(--white);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--surface);
+      color: #0b0b0b;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      overflow-y:auto;
-    }
-
-    /* subtle animated stripe background for style */
-    .bg-stripe {
-      background-image: linear-gradient(90deg, rgba(255,255,255,0.02) 0.5px, transparent 0.5px);
-      background-size: 12px 12px;
-      opacity: 0.03;
-      position: fixed; inset:0; z-index:0; pointer-events:none;
     }
 
     /* layout */
-    .app { position: relative; z-index:10; padding:18px; max-width:1200px; margin-inline:auto; }
-    header { display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:12px; }
-    .logo {
-      display:flex; align-items:center; gap:10px;
-    }
-    .logo-mark {
-      width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center;
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.04);
-    }
+    .app { max-width:1200px; margin:18px auto; padding:14px; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .brand { display:flex; gap:10px; align-items:center; }
+    .logo-box { width:56px; height:56px; border-radius:12px; background:linear-gradient(180deg,#fff,#f1f5f9); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; box-shadow: 0 6px 18px rgba(12,12,12,0.04); }
+    .muted { color: var(--muted); }
 
-    /* main panels */
+    /* panels grid */
     .controls { display:grid; grid-template-columns: 1fr 420px; gap:16px; align-items:start; }
-    @media (max-width:900px){ .controls{ grid-template-columns: 1fr; } .right-panel{ order:2 } .left-panel{ order:1 } }
+    @media (max-width:980px){ .controls{ grid-template-columns: 1fr; } .right-panel{ order:2 } .left-panel{ order:1 } }
 
     textarea.code {
-      width:100%; height:420px; resize:vertical;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.04);
-      color:var(--white); padding:12px; border-radius:8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+      width:100%; min-height:420px; resize:vertical;
+      background: var(--panel);
+      border:1px solid var(--border);
+      color:var(--accent); padding:12px; border-radius:10px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; font-size:13px;
+      box-shadow: 0 6px 18px rgba(12,12,12,0.03);
     }
 
     .panel {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.04);
-      padding:12px; border-radius:10px;
+      background: #fff; border:1px solid var(--border); padding:12px; border-radius:12px;
+      box-shadow: 0 8px 30px rgba(12,12,12,0.04);
     }
 
-    /* preview (the GUI mockup) */
-    .mockup-wrap { display:flex; gap:10px; flex-direction:column; align-items:center; }
+    /* preview area */
+    .mockup-wrap { display:flex; gap:12px; flex-direction:column; align-items:center; }
     .mockup {
       width: 360px; max-width:100%; min-height:640px;
-      background: #fff; color:#000; border-radius:14px; overflow:hidden; position:relative;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-      border: 1px solid rgba(0,0,0,0.06);
+      background: #ffffff; color:#000; border-radius:14px; overflow:hidden; position:relative; border:1px solid rgba(11,11,11,0.06);
+      box-shadow: 0 18px 60px rgba(12,12,12,0.07);
     }
 
-    /* black/white styling inside mockup */
-    .mockup * { box-sizing:border-box; }
-    .m-topbar { height:56px; display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border-bottom:1px solid rgba(0,0,0,0.06); }
+    /* topbar in mockup preview (visual fidelity) */
+    .m-topbar { height:56px; display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border-bottom:1px solid rgba(0,0,0,0.06); background: linear-gradient(180deg,#fff,#fafafa); }
     .m-content { padding:16px; }
-    .m-btn { display:inline-block; padding:10px 12px; border-radius:10px; background:#000; color:#fff; font-weight:600; margin:6px 0; }
-    .m-card { background:#f9f9f9; border-radius:10px; padding:12px; color:#111; margin:8px 0; border:1px solid rgba(0,0,0,0.06); }
+
+    /* elements inside mockup */
+    .m-btn { display:inline-block; padding:10px 12px; border-radius:10px; background:#000; color:#fff; font-weight:700; margin:6px 0; }
+    .m-card { background:#fff; border-radius:10px; padding:12px; color:#000; margin:8px 0; border:1px solid rgba(0,0,0,0.04); box-shadow: 0 6px 18px rgba(12,12,12,0.03); }
     .m-input { width:100%; padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); margin:8px 0; background: #fff; color:#111; }
 
-    /* small helper */
-    .tag { font-size:12px; padding:6px 8px; border-radius:999px; background:rgba(255,255,255,0.06); color:var(--white); display:inline-block; margin-left:6px; }
+    /* small helpers */
+    .tag { font-size:12px; padding:6px 8px; border-radius:999px; background:#f1f5f9; color:var(--muted); display:inline-block; margin-left:6px; border:1px solid var(--border); }
 
-    /* export button */
-    .export-btn { background:transparent; border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:8px; color:var(--white); }
+    .control-row { display:flex; gap:8px; align-items:center; }
 
-    /* hints */
-    .hints { color:var(--muted); font-size:13px; margin-top:8px; }
+    .btn-action {
+      background: linear-gradient(90deg,#111827,#0b1220);
+      color:white; padding:10px 14px; border-radius:10px; border:none;
+    }
+    .btn-secondary { background:transparent; border:1px solid var(--border); padding:8px 12px; border-radius:8px; color:var(--muted); }
 
-    /* subtle animation for mockup appear */
+    /* subtle preview enter */
     .mockup-enter { transform: translateY(8px); opacity:0; transition: all .45s cubic-bezier(.2,.9,.2,1); }
     .mockup-enter.show { transform:none; opacity:1; }
 
+    /* small code hint */
+    .hint { color:var(--muted); font-size:13px; margin-top:8px; }
   </style>
 </head>
 <body>
-  <div class="bg-stripe" aria-hidden="true"></div>
-
   <div class="app">
     <header>
-      <div class="logo">
-        <div class="logo-mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 18L14 6L18 10L10 22L6 18Z" fill="#fff"/></svg></div>
+      <div class="brand">
+        <div class="logo-box" aria-hidden="true">
+          <!-- simple K icon -->
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 18L14 6L18 10L10 22L6 18Z" fill="#0b0b0b"/></svg>
+        </div>
         <div>
-          <div style="font-weight:700">Code → GUI</div>
-          <div style="font-size:13px;color:var(--muted)">حوّل وصف الـمود / الكود إلى شكل GUI (أسود/أبيض)</div>
+          <div style="font-weight:700; font-size:18px;">Code → Live UI</div>
+          <div class="muted" style="font-size:13px;">Paste code (any supported language) → Render real UI / accurate mockup</div>
         </div>
       </div>
 
-      <div style="display:flex; gap:10px; align-items:center;">
-        <div class="tag">نسخة تجريبية</div>
-        <button id="exportBtn" class="export-btn" title="تصدير الصورة">تحميل كصورة (PNG)</button>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <div class="tag">White-first theme</div>
+        <button id="downloadPNG" class="btn-secondary">Export PNG</button>
       </div>
     </header>
 
     <main class="controls">
-      <!-- left: code editor -->
+      <!-- left: editor -->
       <div class="left-panel panel">
-        <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
-          <label style="font-weight:600;">اختر لغة:</label>
-          <select id="langSel" class="rounded-md" style="padding:6px 8px; background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--white)">
-            <!-- languages (expanded) -->
-            <option>auto-detect</option>
-            <option>html</option>
-            <option>css</option>
-            <option>javascript</option>
-            <option>typescript</option>
-            <option>python</option>
-            <option>lua</option>
-            <option>luau</option>
-            <option>c</option>
-            <option>cpp</option>
-            <option>c#</option>
-            <option>java</option>
-            <option>php</option>
-            <option>go</option>
-            <option>rust</option>
-            <option>swift</option>
-            <option>kotlin</option>
-            <option>ruby</option>
-            <option>bash</option>
-            <option>yaml</option>
-            <option>json</option>
-          </select>
-          <button id="genBtn" class="export-btn" style="margin-inline-start:8px;">✅ تحويل</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px;">
+          <div class="control-row">
+            <label style="font-weight:600; margin-right:8px;">Language</label>
+            <select id="langSel" style="padding:6px 10px; border-radius:8px; border:1px solid var(--border); background:transparent;">
+              <option>auto-detect</option>
+              <option>html</option>
+              <option>css</option>
+              <option>javascript</option>
+              <option>typescript</option>
+              <option>python</option>
+              <option>lua</option>
+              <option>luau</option>
+              <option>c</option>
+              <option>cpp</option>
+              <option>c#</option>
+              <option>java</option>
+              <option>php</option>
+              <option>go</option>
+              <option>rust</option>
+              <option>swift</option>
+              <option>kotlin</option>
+              <option>ruby</option>
+              <option>bash</option>
+              <option>json</option>
+              <option>yaml</option>
+            </select>
+            <button id="renderBtn" class="btn-secondary" style="margin-left:8px;">Render</button>
+          </div>
+
+          <div style="text-align:right;">
+            <div style="font-size:12px; color:var(--muted);">Tip: For 100% accurate UI, paste full HTML/CSS/JS and select <strong>html</strong>.</div>
+          </div>
         </div>
 
-        <textarea id="codeArea" class="code" placeholder="انسخ الكود أو الوصف هنا — مثلاً: 'button:احجز الآن; header:تطبيق حجوزات; list:خدمات'"></textarea>
+        <textarea id="codeArea" class="code" spellcheck="false" aria-label="Code input"></textarea>
 
-        <div class="hints">نصيحة: يمكنك كتابة وصف موجز بدل كود (مثلاً: "header: صفحة تسجيل دخول، زر: تسجيل، حقول: اسم وكلمة مرور، صورة لوجو"). المحلل يستخرج عناصر واجهة شائعة ويحوّلها إلى Mockup.</div>
+        <div class="hint">You can paste full HTML/CSS/JS (recommended for exact rendering) — or paste snippets / code in other languages and click Render to get a high-fidelity mockup.</div>
       </div>
 
       <!-- right: preview -->
       <aside class="right-panel">
         <div class="panel mockup-wrap">
-          <div id="mockup" class="mockup mockup-enter" role="img" aria-label="معاينة الشكل المظهري"></div>
-          <div style="margin-top:8px; display:flex; gap:8px; justify-content:center;">
-            <button id="smallExport" class="export-btn">تحميل عرض صغير</button>
-            <button id="resetBtn" class="export-btn">إعادة افتراضية</button>
+          <!-- MODE TOGGLE: real-render (iframe) OR mockup -->
+          <div style="display:flex; gap:8px; align-items:center; justify-content:center; margin-bottom:8px;">
+            <label style="font-size:13px;" class="muted">Preview mode</label>
+            <select id="previewMode" style="padding:6px 10px; border-radius:8px; border:1px solid var(--border);">
+              <option value="auto">auto</option>
+              <option value="iframe">Exact iframe (HTML/CSS/JS)</option>
+              <option value="mockup">Mockup (all languages)</option>
+            </select>
+          </div>
+
+          <!-- Container for iframe or mockup -->
+          <div id="previewContainer" style="display:flex; justify-content:center;">
+            <div id="mockup" class="mockup mockup-enter" role="img" aria-label="UI preview"></div>
+          </div>
+
+          <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
+            <button id="smallExport" class="btn-secondary">Export Small</button>
+            <button id="resetBtn" class="btn-secondary">Reset</button>
           </div>
         </div>
 
-        <div style="margin-top:12px;" class="panel">
-          <div style="font-weight:700">كيف يعمل المحلل؟</div>
-          <ul style="color:var(--muted); margin-top:8px; font-size:13px; line-height:1.5;">
-            <li>📌 يبحث عن كلمات مفتاحية للعناصر: header, nav, button, input, form, card, list, img, avatar, hero, footer.</li>
-            <li>🛠 يدعم عدة لغات ويستطيع تلقائيًا اكتشاف بعض الأنماط.</li>
-            <li>⚠️ هذه محاكاة — ليست ترجمة دقيقة لكود يعمل، لكنها تخطيط بصري مفيد للتصميم.</li>
-          </ul>
+        <div class="panel" style="margin-top:12px;">
+          <div style="font-weight:700; margin-bottom:8px;">How this works</div>
+          <div class="muted" style="font-size:13px; line-height:1.5;">
+            • If you paste real <strong>HTML/CSS/JS</strong> and use iframe mode the site will render the code exactly inside an isolated sandboxed iframe (accurate UI).<br>
+            • For other languages the engine extracts UI-related tokens (buttons, inputs, forms, labels, lists, cards) and builds a realistic white/black mockup automatically.<br>
+            • You can export the preview as PNG. The iframe mode provides true rendering; mockup mode provides fast accurate visualizations.
+          </div>
         </div>
       </aside>
     </main>
   </div>
 
   <script>
-    // Helper: simple language normalization
-    const langSel = document.getElementById('langSel');
+    // Elements
     const codeArea = document.getElementById('codeArea');
-    const genBtn = document.getElementById('genBtn');
+    const renderBtn = document.getElementById('renderBtn');
+    const langSel = document.getElementById('langSel');
+    const previewModeSel = document.getElementById('previewMode');
+    const previewContainer = document.getElementById('previewContainer');
     const mockup = document.getElementById('mockup');
-    const exportBtn = document.getElementById('exportBtn');
-    const smallExport = document.getElementById('smallExport');
     const resetBtn = document.getElementById('resetBtn');
+    const downloadPNG = document.getElementById('downloadPNG');
+    const smallExport = document.getElementById('smallExport');
 
-    // Default example
-    codeArea.value = `# مثال سريع (يمكنك لصق كود أو وصف)
-header: تطبيق حجوزات
-nav: الرئيسية, الخدمات, تواصل
-hero-title: احجز رحلتك الآن
-hero-sub: أفضل الأسعار وخدمة 24/7
-button: احجز الآن
-card: خدمة المطار, خدمة السائق, تأمين
-form: name,email,password,submit
-footer: © 2025`;
+    // Default sample (user can replace)
+    codeArea.value = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body{font-family:Inter, Arial; margin:0; padding:24px; background:#fff; color:#0b0b0b;}
+    .hero{max-width:720px;margin:0 auto;text-align:center;padding:30px 10px;}
+    .hero h1{font-size:36px;margin:0 0 10px;}
+    .hero p{color:#6b7280;margin:0 0 18px;}
+    .btn{display:inline-block;background:#111827;color:#fff;padding:12px 18px;border-radius:10px;text-decoration:none;}
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>Krnl's back, better than ever</h1>
+    <p>A powerful multi-platform scripting engine, with built-in editor.</p>
+    <a href="#" class="btn">Download</a>
+  </div>
+</body>
+</html>`;
 
+    // Auto-detect language function (simple)
+    function detectLanguage(text) {
+      const t = text.slice(0, 2000).toLowerCase();
+      if(/<\s*html|<\s*div|<\s*script|<\s*body|<!doctype/i.test(text)) return 'html';
+      if(/^\s*[{[]\s*"?[\w-]+?/.test(text) && /:\s*.+/.test(text) && /"/.test(text)) {
+        // crude detect json
+        try { JSON.parse(text); return 'json'; } catch(e){}
+      }
+      if(/\bdef\b|\bprint\(|\bimport\b/.test(t)) return 'python';
+      if(/\b#include\b|\bint main\b/.test(t)) return 'c/cpp';
+      if(/\bpackage\s+\w+;|\bimport java\b|\bpublic class\b/.test(t)) return 'java';
+      if(/\bfunc\b|\bpackage main\b/.test(t)) return 'go';
+      if(/\bfn\b|\blet\b.*=&gt;|println!/.test(t) || /\buse std::/.test(t)) return 'rust';
+      if(/\bconsole\.log\b|\bdocument\.querySelector\b/.test(t)) return 'javascript';
+      if(/\blocal\b|\bfunction\b.*\(|\bluau\b/.test(t)) return 'lua';
+      if(/\bclass\b|\bnamespace\b|using System\b/.test(t)) return 'c#';
+      if(/\bdef\b|\bend\b/.test(t) && /\bputs\b/.test(t)) return 'ruby';
+      if(/\bphp\b|<\?php/.test(t)) return 'php';
+      // fallback
+      return 'unknown';
+    }
 
-    // Parser: heuristics to extract UI elements from free text or code
-    function parseCodeToSpec(text, lang){
-      const spec = { header:null, nav:[], hero:{}, buttons:[], cards:[], form:[], lists:[], images:[], footer:null, extras:[] };
-
+    // Parser heuristics for non-HTML languages -> spec
+    function parseToSpec(text, lang) {
+      // spec object
+      const spec = { header:null, nav:[], hero:{}, buttons:[], cards:[], form:[], lists:[], images:[], footer:null };
       const lower = text.toLowerCase();
 
-      // If HTML provided, try to parse actual tags
-      if(/<\s*html|<\s*div|<\s*button|<\s*header/i.test(text) || lang === 'html'){
-        // create a DOM parser and try extract some basic tags
-        try {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(text, 'text/html');
-          const headerTag = doc.querySelector('header') || doc.querySelector('nav') || doc.querySelector('h1');
-          if(headerTag) spec.header = headerTag.textContent.trim();
-          const btns = doc.querySelectorAll('button, a');
-          btns.forEach(b => { const t = b.textContent.trim(); if(t) spec.buttons.push(t); });
-          const inputs = doc.querySelectorAll('input, textarea');
-          inputs.forEach(i => spec.form.push(i.getAttribute('name')||i.getAttribute('id')||'input'));
-          const imgs = doc.querySelectorAll('img');
-          imgs.forEach(i => spec.images.push(i.getAttribute('alt')||i.getAttribute('src')||'img'));
-          const cards = doc.querySelectorAll('.card, .panel, article');
-          cards.forEach(c => { spec.cards.push((c.querySelector('h3')||c.querySelector('h2')||{textContent:'Card'}).textContent.trim()); });
-        } catch(e){}
-      }
-
-      // quick keyword maps for many languages / free text
-      const keymap = [
-        {k:/header\s*:\s*([^\n,;]+)/i, f:(m)=> spec.header = m[1].trim()},
-        {k:/nav\s*:\s*([^\n;]+)/i, f:(m)=> spec.nav = m[1].split(/[,;]/).map(s=>s.trim()).filter(Boolean)},
-        {k:/hero-title\s*:\s*([^\n;]+)/i, f:(m)=> spec.hero.title = m[1].trim()},
-        {k:/hero-sub\s*:\s*([^\n;]+)/i, f:(m)=> spec.hero.sub = m[1].trim()},
-        {k:/button\s*:\s*([^\n;]+)/i, f:(m)=> spec.buttons.push(m[1].trim())},
-        {k:/card\s*:\s*([^\n;]+)/i, f:(m)=> spec.cards = spec.cards.concat(m[1].split(/[,;]/).map(s=>s.trim()))},
-        {k:/form\s*:\s*([^\n;]+)/i, f:(m)=> spec.form = spec.form.concat(m[1].split(/[,;]/).map(s=>s.trim()))},
-        {k:/footer\s*:\s*([^\n;]+)/i, f:(m)=> spec.footer = m[1].trim()},
-        {k:/list\s*:\s*([^\n;]+)/i, f:(m)=> spec.lists.push(m[1].split(/[,;]/).map(s=>s.trim()))},
-        {k:/img\s*:\s*([^\n;]+)/i, f:(m)=> spec.images.push(m[1].trim())},
-      ];
-
-      for(const rule of keymap){
-        let match;
-        while((match = rule.k.exec(text)) !== null){
-          try { rule.f(match); } catch(e){}
-          // prevent infinite loops for global regex; break if not global
-          if(!rule.k.global) break;
+      // common patterns: allow user to write "header:Title" or "button:Save"
+      const simplePairs = text.match(/([a-zA-Z\- ]+)\s*[:=]\s*([^\n\r;]+)(?:[\n\r]|$)/gi);
+      if(simplePairs) {
+        for(const line of simplePairs) {
+          const m = line.match(/([a-zA-Z\- ]+)\s*[:=]\s*([^\n\r;]+)/i);
+          if(!m) continue;
+          const key = m[1].trim().toLowerCase();
+          const val = m[2].trim();
+          if(key.startsWith('header') || key === 'title') spec.header = val;
+          else if(key === 'nav') spec.nav = val.split(/[,;]/).map(s=>s.trim());
+          else if(key.startsWith('hero') || key === 'hero-title') spec.hero.title = val;
+          else if(key === 'hero-sub' || key === 'hero-desc') spec.hero.sub = val;
+          else if(key.startsWith('button')) spec.buttons.push(val);
+          else if(key.startsWith('card')) spec.cards = spec.cards.concat(val.split(/[,;]/).map(s=>s.trim()));
+          else if(key.startsWith('form')) spec.form = spec.form.concat(val.split(/[,;]/).map(s=>s.trim()));
+          else if(key === 'footer') spec.footer = val;
+          else if(key === 'img' || key === 'image' || key === 'logo') spec.images.push(val);
         }
       }
 
-      // generic heuristics: find UI words in code (english/common tokens)
-      const tokens = text.match(/(button|btn|submit|login|register|nav|menu|header|footer|card|input|form|search|list|item|carousel|hero|banner)/gi) || [];
-      if(tokens.length > 0){
-        // add a button if none found
-        if(spec.buttons.length === 0) spec.buttons.push('تأكيد');
+      // Generic token detection for UI keywords
+      const tokens = text.match(/(button|btn|submit|login|register|nav|menu|header|footer|card|input|form|search|list|item|hero|banner|title|label)/gi) || [];
+      if(tokens.length > 0) {
+        if(spec.buttons.length === 0) spec.buttons.push('Action');
       }
 
-      // fallback: derive title from first H1-like or comment
-      const h1 = text.match(/(?:^|\n)\s*#\s*(.+)/) || text.match(/<h1[^>]*>([^<]+)/i) || text.match(/(?:^|\n)\s*title\s*[:=]\s*(.+)/i);
-      if(h1 && !spec.header) spec.header = h1[1].trim();
+      // If code contains function names like create_button or button(...) capture label-like strings
+      const labelMatches = Array.from(text.matchAll(/button\(|create_button\(|new Button\(|addButton\(|btn\W*["']([^"']+)["']/gi));
+      for(const mm of labelMatches) if(mm[1]) spec.buttons.push(mm[1]);
+
+      // Fallback: extract commented title lines (# Title, // Title)
+      const titleLine = text.match(/^[\s]*[#\/]{1,2}\s*(.+)$/m);
+      if(titleLine && !spec.header) spec.header = titleLine[1].trim();
+
+      // final defaults
+      if(!spec.header) spec.header = 'App Title';
+      if(spec.buttons.length === 0) spec.buttons.push('Get Started');
 
       return spec;
     }
 
-    // Renderer: build DOM inside mockup based on spec
-    function renderMockup(spec){
-      // clear
-      mockup.innerHTML = '';
-      mockup.classList.add('mockup-enter'); setTimeout(()=> mockup.classList.add('show'),20);
-
+    // Render mockup (white-first) from spec
+    function renderMockup(spec) {
+      previewContainer.innerHTML = '';
+      const box = document.createElement('div');
+      box.className = 'mockup mockup-enter';
       // topbar
       const topbar = document.createElement('div'); topbar.className = 'm-topbar';
       const left = document.createElement('div'); left.style.display='flex'; left.style.alignItems='center'; left.style.gap='10px';
-      const mark = document.createElement('div'); mark.style.width='36px'; mark.style.height='36px'; mark.style.borderRadius='8px'; mark.style.background='#111'; mark.style.display='flex'; mark.style.alignItems='center'; mark.style.justifyContent='center';
-      mark.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 18L14 6L18 10L10 22L6 18Z" fill="#fff"/></svg>';
-      left.appendChild(mark);
-      const title = document.createElement('div'); title.style.fontWeight='700'; title.style.fontSize='15px'; title.textContent = spec.header || 'تطبيق جديد';
+      const logo = document.createElement('div'); logo.style.width='36px'; logo.style.height='36px'; logo.style.borderRadius='8px'; logo.style.background='#111827'; logo.style.display='flex'; logo.style.alignItems='center'; logo.style.justifyContent='center';
+      logo.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 18L14 6L18 10L10 22L6 18Z" fill="#fff"/></svg>';
+      left.appendChild(logo);
+      const title = document.createElement('div'); title.style.fontWeight='700'; title.textContent = spec.header;
       left.appendChild(title);
       topbar.appendChild(left);
 
       const right = document.createElement('div'); right.style.display='flex'; right.style.alignItems='center'; right.style.gap='8px';
-      if(spec.nav && spec.nav.length){
-        spec.nav.slice(0,3).forEach(n=>{
-          const t = document.createElement('div'); t.style.fontSize='13px'; t.style.color='#222'; t.style.background='#fff'; t.style.padding='6px 8px'; t.style.borderRadius='8px'; t.textContent = n; right.appendChild(t);
-        });
-      } else {
-        const t = document.createElement('div'); t.style.fontSize='13px'; t.style.color='#222'; t.style.background='#fff'; t.style.padding='6px 8px'; t.style.borderRadius='8px'; t.textContent = 'الرئيسية'; right.appendChild(t);
-      }
+      (spec.nav && spec.nav.length ? spec.nav : ['Home']).slice(0,3).forEach(n=>{
+        const pill = document.createElement('div'); pill.style.fontSize='13px'; pill.style.padding='6px 10px'; pill.style.borderRadius='999px'; pill.style.background='#f1f5f9'; pill.style.color='#111827'; pill.textContent = n; right.appendChild(pill);
+      });
       topbar.appendChild(right);
-      mockup.appendChild(topbar);
+
+      box.appendChild(topbar);
 
       // content
-      const content = document.createElement('div'); content.className='m-content';
+      const content = document.createElement('div'); content.className = 'm-content';
 
-      // hero
-      if(spec.hero && (spec.hero.title || spec.hero.sub || spec.buttons.length)){
+      if(spec.hero && (spec.hero.title || spec.hero.sub)) {
         const hero = document.createElement('div'); hero.style.marginBottom='10px';
-        const hTitle = document.createElement('div'); hTitle.style.fontSize='18px'; hTitle.style.fontWeight='800'; hTitle.textContent = spec.hero.title || 'عنوان رئيسي';
-        const hSub = document.createElement('div'); hSub.style.color='#444'; hSub.style.marginTop='6px'; hSub.textContent = spec.hero.sub || 'وصف موجز للمحتوى';
+        const hTitle = document.createElement('div'); hTitle.style.fontSize='18px'; hTitle.style.fontWeight='800'; hTitle.textContent = spec.hero.title || 'Title';
+        const hSub = document.createElement('div'); hSub.style.color='#6b7280'; hSub.style.marginTop='6px'; hSub.textContent = spec.hero.sub || '';
         hero.appendChild(hTitle); hero.appendChild(hSub);
 
         // buttons
         const bwrap = document.createElement('div'); bwrap.style.marginTop='10px';
-        (spec.buttons.length ? spec.buttons : ['ابدأ الآن']).slice(0,2).forEach(b=>{
-          const bb = document.createElement('span'); bb.className='m-btn'; bb.style.marginInlineEnd='8px'; bb.textContent = b;
+        (spec.buttons.length ? spec.buttons : ['Get Started']).slice(0,2).forEach(b=>{
+          const bb = document.createElement('span'); bb.className='m-btn'; bb.style.background='#111827'; bb.style.marginRight='8px'; bb.textContent = b;
           bwrap.appendChild(bb);
         });
         hero.appendChild(bwrap);
         content.appendChild(hero);
+      } else {
+        // small title
+        const small = document.createElement('div'); small.style.fontWeight='700'; small.style.marginBottom='8px'; small.textContent = spec.header || 'App';
+        content.appendChild(small);
       }
 
       // form
-      if(spec.form && spec.form.length){
+      if(spec.form && spec.form.length) {
         const form = document.createElement('div'); form.style.marginTop='8px';
         spec.form.slice(0,5).forEach(f=>{
-          const input = document.createElement('input'); input.className='m-input'; input.placeholder = f || 'حقل';
+          const input = document.createElement('input'); input.className='m-input'; input.placeholder = (f || 'Field');
           form.appendChild(input);
         });
-        const s = document.createElement('div'); s.className='m-btn'; s.textContent = (spec.form.includes('submit')? 'إرسال' : 'تسجيل');
+        const s = document.createElement('div'); s.className='m-btn'; s.textContent = spec.form.includes('submit') ? 'Submit' : 'Continue';
         s.style.display='inline-block'; s.style.marginTop='8px';
         form.appendChild(s);
         content.appendChild(form);
       }
 
-      // cards
-      if(spec.cards && spec.cards.length){
+      // cards grid
+      if(spec.cards && spec.cards.length) {
         const grid = document.createElement('div'); grid.style.display='grid'; grid.style.gridTemplateColumns='1fr 1fr'; grid.style.gap='8px'; grid.style.marginTop='12px';
         spec.cards.slice(0,6).forEach(c=>{
           const card = document.createElement('div'); card.className='m-card';
           const ch = document.createElement('div'); ch.style.fontWeight='700'; ch.textContent = c;
-          const cd = document.createElement('div'); cd.style.color='#333'; cd.style.marginTop='6px'; cd.textContent = 'وصف بسيط للخدمة أو العنصر.';
+          const cd = document.createElement('div'); cd.style.color='#6b7280'; cd.style.marginTop='6px'; cd.textContent = 'Short description...';
           card.appendChild(ch); card.appendChild(cd);
           grid.appendChild(card);
         });
@@ -334,7 +364,7 @@ footer: © 2025`;
       }
 
       // lists
-      if(spec.lists && spec.lists.length){
+      if(spec.lists && spec.lists.length) {
         spec.lists.forEach(lst=>{
           const ul = document.createElement('ul'); ul.style.marginTop='12px';
           lst.slice(0,6).forEach(it=>{
@@ -345,94 +375,139 @@ footer: © 2025`;
         });
       }
 
-      // images
-      if(spec.images && spec.images.length){
-        const img = document.createElement('div'); img.style.height='120px'; img.style.borderRadius='8px'; img.style.background='#eee'; img.style.display='flex'; img.style.alignItems='center'; img.style.justifyContent='center'; img.style.color='#222'; img.textContent = spec.images[0];
+      // images placeholder
+      if(spec.images && spec.images.length) {
+        const img = document.createElement('div'); img.style.height='120px'; img.style.borderRadius='8px'; img.style.background='#f3f4f6'; img.style.display='flex'; img.style.alignItems='center'; img.style.justifyContent='center'; img.style.color='#111827'; img.textContent = 'Image';
         content.appendChild(img);
       }
 
-      // fallback small message if nothing found
-      if(!spec.header && !spec.hero.title && spec.cards.length===0 && spec.form.length===0 && spec.buttons.length===0){
-        const note = document.createElement('div'); note.style.color='#333'; note.style.background='#fff'; note.style.padding='10px'; note.style.borderRadius='8px'; note.textContent = 'لا توجد عناصر واجهة قابلة للاستخلاص — جرّب كتابة وصف أقصر مثل: "header:تطبيق, button:ابدأ, form:name,email"';
+      // fallback message
+      if(!(spec.hero.title || spec.form.length || spec.cards.length || spec.lists.length || spec.images.length)) {
+        const note = document.createElement('div'); note.style.color='#111827'; note.style.background='#f8fafc'; note.style.padding='10px'; note.style.borderRadius='8px'; note.textContent = 'No UI elements detected — try adding "header:, button:, card:, form:" lines or paste HTML for exact rendering.';
         content.appendChild(note);
       }
 
-      mockup.appendChild(content);
+      box.appendChild(content);
 
-      // footer inside mockup
-      const foot = document.createElement('div'); foot.style.marginTop='auto'; foot.style.padding='12px'; foot.style.borderTop='1px solid rgba(0,0,0,0.04)'; foot.style.display='flex'; foot.style.justifyContent='space-between'; foot.style.alignItems='center';
-      const leftf = document.createElement('div'); leftf.style.fontSize='13px'; leftf.style.color='#222'; leftf.textContent = spec.footer || '© 2025';
-      const rightf = document.createElement('div'); rightf.style.fontSize='12px'; rightf.style.color='#666'; rightf.textContent = 'Mockup · BW';
+      // footer in mockup
+      const foot = document.createElement('div'); foot.style.marginTop='auto'; foot.style.padding='12px'; foot.style.borderTop='1px solid rgba(0,0,0,0.04)'; foot.style.display='flex'; foot.style.justifyContent='space-between'; foot.style.alignItems='center'; foot.style.background='#fafafa';
+      const leftf = document.createElement('div'); leftf.style.fontSize='13px'; leftf.style.color='#6b7280'; leftf.textContent = spec.footer || '© 2025';
+      const rightf = document.createElement('div'); rightf.style.fontSize='12px'; rightf.style.color='#9ca3af'; rightf.textContent = 'Mockup · White theme';
       foot.appendChild(leftf); foot.appendChild(rightf);
-      mockup.appendChild(foot);
+      box.appendChild(foot);
 
-      // set background color in monotone
-      mockup.style.background = '#fff';
-      mockup.style.color = '#000';
+      previewContainer.appendChild(box);
+      setTimeout(()=> {
+        box.classList.add('show');
+      },20);
     }
 
-    // generate action
-    genBtn.addEventListener('click', ()=>{
-      const text = codeArea.value || '';
-      const lang = (langSel.value || '').toLowerCase();
-      const spec = parseCodeToSpec(text, lang);
+    // Render exact HTML via iframe (sandboxed). Uses srcdoc.
+    function renderIframe(htmlSource) {
+      previewContainer.innerHTML = '';
+      const wrapper = document.createElement('div');
+      wrapper.style.width = '360px';
+      wrapper.style.maxWidth = '100%';
+      wrapper.style.borderRadius = '14px';
+      wrapper.style.overflow = 'hidden';
+      wrapper.style.border = '1px solid rgba(0,0,0,0.06)';
+      wrapper.style.boxShadow = '0 18px 60px rgba(12,12,12,0.07)';
+      // iframe: sandbox without allow-same-origin for safety but with scripts allowed so JS can run in its own origin
+      const ifr = document.createElement('iframe');
+      ifr.setAttribute('sandbox', 'allow-scripts allow-forms'); // no allow-same-origin, isolated
+      ifr.style.width = '360px';
+      ifr.style.height = '640px';
+      ifr.style.border = '0';
+      // if code has no <html> wrapper, embed into basic html
+      let srcdoc = htmlSource;
+      if(!/\<\s*html/i.test(htmlSource)) {
+        // wrap minimally (retain head styles if user provided)
+        srcdoc = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${htmlSource.includes('<style')? '': '<style>body{font-family:Inter, Arial;margin:0;padding:24px;background:#fff;color:#0b0b0b}</style>'}</head><body>${htmlSource}</body></html>`;
+      }
+      ifr.srcdoc = srcdoc;
+      wrapper.appendChild(ifr);
+      previewContainer.appendChild(wrapper);
+    }
+
+    // Main render logic
+    function renderAll() {
+      const code = codeArea.value || '';
+      let lang = (langSel.value || '').toLowerCase();
+      if(lang === 'auto-detect' || lang === 'auto') lang = detectLanguage(code);
+      const mode = previewModeSel.value;
+
+      // If iframe chosen or detected html -> render exact iframe
+      if(mode === 'iframe' || (mode === 'auto' && (lang === 'html' || lang === 'css' || lang === 'javascript' || lang === 'typescript'))) {
+        try {
+          renderIframe(code);
+          return;
+        } catch(e) {
+          // fallback to mockup
+          console.warn('iframe render failed', e);
+        }
+      }
+
+      // Else build spec and produce mockup
+      const spec = parseToSpec(code, lang);
       renderMockup(spec);
+    }
+
+    // Events
+    renderBtn.addEventListener('click', renderAll);
+    previewModeSel.addEventListener('change', renderAll);
+    langSel.addEventListener('change', renderAll);
+
+    // Reset example
+    resetBtn.addEventListener('click', () => {
+      codeArea.value = `# Paste code here, or a short UI description
+header: Krnl App
+nav: Home, Downloads, Docs
+hero-title: Krnl's back, better than ever
+hero-sub: A lightweight multi-platform scripting engine
+button: Download
+card: Editor, Console, Hooks
+form: name,email,password,submit
+footer: © 2025 Krnl Inc.`;
+      langSel.value = 'auto-detect';
+      previewModeSel.value = 'auto';
+      renderAll();
     });
 
-    // initial render
-    genBtn.click();
-
-    // export full mockup (PNG)
-    async function exportPNG(scale=2){
-      // temporarily remove entrance class to avoid opacity transition
-      mockup.classList.remove('mockup-enter','show');
-      const origWidth = mockup.offsetWidth;
-      const origHeight = mockup.offsetHeight;
-      // clone node to avoid overlays
-      const clone = mockup.cloneNode(true);
+    // Export current preview as PNG
+    async function exportPreview(scale=2) {
+      // find the element to export (wrapper inside previewContainer)
+      const element = previewContainer.firstElementChild;
+      if(!element) return alert('No preview to export');
+      // clone to avoid border-radius cropping and remove transitions
+      const clone = element.cloneNode(true);
       clone.style.transform = 'none';
-      clone.style.margin = '0';
-      clone.style.position = 'relative';
-      clone.style.left = '0';
-      clone.style.top = '0';
-      clone.style.boxShadow = 'none';
+      clone.style.opacity = '1';
       const wrapper = document.createElement('div');
-      wrapper.style.width = origWidth + 'px';
-      wrapper.style.height = origHeight + 'px';
       wrapper.style.display = 'inline-block';
+      wrapper.style.background = '#fff';
       wrapper.appendChild(clone);
       document.body.appendChild(wrapper);
-      // use html2canvas
-      const canvas = await html2canvas(wrapper, { scale: scale, backgroundColor: null, useCORS:true, logging:false });
-      const url = canvas.toDataURL('image/png');
-      // cleanup
-      document.body.removeChild(wrapper);
-      mockup.classList.add('mockup-enter','show');
-      // download
-      const a = document.createElement('a'); a.href = url; a.download = 'mockup.png'; document.body.appendChild(a); a.click(); a.remove();
+      try {
+        const canvas = await html2canvas(wrapper, { scale: scale, backgroundColor: '#ffffff', useCORS:true });
+        const url = canvas.toDataURL('image/png');
+        const a = document.createElement('a'); a.href = url; a.download = 'ui-preview.png'; document.body.appendChild(a); a.click(); a.remove();
+      } catch (e) {
+        alert('Export failed: ' + e.message);
+      } finally {
+        document.body.removeChild(wrapper);
+      }
     }
 
-    exportBtn.addEventListener('click', ()=> exportPNG(2));
-    smallExport.addEventListener('click', ()=> exportPNG(1));
+    downloadPNG.addEventListener('click', ()=> exportPreview(2));
+    smallExport.addEventListener('click', ()=> exportPreview(1));
 
-    resetBtn.addEventListener('click', ()=>{
-      codeArea.value = `# مثال سريع (يمكنك لصق كود أو وصف)
-header: تطبيق حجوزات
-nav: الرئيسية, الخدمات, تواصل
-hero-title: احجز رحلتك الآن
-hero-sub: أفضل الأسعار وخدمة 24/7
-button: احجز الآن
-card: خدمة المطار, خدمة السائق, تأمين
-form: name,email,password,submit
-footer: © 2025`;
-      genBtn.click();
-    });
-
-    // small UX: Ctrl/Cmd+Enter to generate
+    // Keyboard shortcut Ctrl/Cmd+Enter to render
     codeArea.addEventListener('keydown', (e)=>{
-      if((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); genBtn.click(); }
+      if((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); renderAll(); }
     });
 
+    // Initial render from default sample
+    renderAll();
   </script>
 </body>
 </html>
