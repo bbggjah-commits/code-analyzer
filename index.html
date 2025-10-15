@@ -1,513 +1,273 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!doctype html>
+
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Code → Live UI (White-first)</title>
-
-  <!-- Tailwind CSS (CDN for quick layout) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- html2canvas for export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-  <style>
-    /* White-first site style with black text */
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stellar — Black & White Design Showcase</title>  <!-- Google Font (heroic, stylish) -->  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons (use icons not emojis) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />  <style>
     :root{
-      --surface:#ffffff;
-      --muted:#6b7280; /* gray-500 */
-      --accent:#0f172a; /* deep */
-      --panel:#f8fafc;
-      --border: #e6e9ee;
+      --bg-1:#0b0b0b;
+      --bg-2:#ffffff;
+      --accent:#e6e6e6;
+      --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.06);
+      --font: 'Unbounded', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
     }
-    html,body{height:100%}
+    *{box-sizing:border-box}
+    html,body{height:100%;}
     body{
       margin:0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: var(--surface);
-      color: #0b0b0b;
+      padding:0;
+      font-family:var(--font);
+      background: linear-gradient(180deg,var(--bg-1) 0%, #070707 100%);
+      color:var(--accent);
+      overflow-x:hidden;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
     }
 
-    /* layout */
-    .app { max-width:1200px; margin:18px auto; padding:14px; }
-    header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
-    .brand { display:flex; gap:10px; align-items:center; }
-    .logo-box { width:56px; height:56px; border-radius:12px; background:linear-gradient(180deg,#fff,#f1f5f9); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; box-shadow: 0 6px 18px rgba(12,12,12,0.04); }
-    .muted { color: var(--muted); }
-
-    /* panels grid */
-    .controls { display:grid; grid-template-columns: 1fr 420px; gap:16px; align-items:start; }
-    @media (max-width:980px){ .controls{ grid-template-columns: 1fr; } .right-panel{ order:2 } .left-panel{ order:1 } }
-
-    textarea.code {
-      width:100%; min-height:420px; resize:vertical;
-      background: var(--panel);
-      border:1px solid var(--border);
-      color:var(--accent); padding:12px; border-radius:10px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; font-size:13px;
-      box-shadow: 0 6px 18px rgba(12,12,12,0.03);
+    /* STARFIELD (canvas sits under everything) */
+    #starfield{
+      position:fixed;inset:0;z-index:0;display:block;
     }
 
-    .panel {
-      background: #fff; border:1px solid var(--border); padding:12px; border-radius:12px;
-      box-shadow: 0 8px 30px rgba(12,12,12,0.04);
+    /* Header */
+    header{
+      position:relative;z-index:5;padding:28px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;
+    }
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{
+      width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,#fff,#bbb);display:flex;align-items:center;justify-content:center;color:#000;font-weight:800;font-size:22px;box-shadow:0 8px 30px rgba(0,0,0,0.6);
+      transform:rotate(-8deg);
+    }
+    nav{display:flex;gap:18px;align-items:center}
+    nav a{color:var(--accent);text-decoration:none;padding:10px 14px;border-radius:10px;transition:all .22s;font-weight:600}
+    nav a:hover{background:var(--glass-2);transform:translateY(-3px)}
+
+    /* Hero */
+    .hero{
+      position:relative;z-index:3;min-height:72vh;display:flex;align-items:center;justify-content:center;padding:40px;gap:40px;
+    }
+    .card{
+      width:1100px;max-width:95%;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:20px;padding:36px;backdrop-filter: blur(8px);box-shadow:0 12px 40px rgba(0,0,0,0.6);position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04);
     }
 
-    /* preview area */
-    .mockup-wrap { display:flex; gap:12px; flex-direction:column; align-items:center; }
-    .mockup {
-      width: 360px; max-width:100%; min-height:640px;
-      background: #ffffff; color:#000; border-radius:14px; overflow:hidden; position:relative; border:1px solid rgba(11,11,11,0.06);
-      box-shadow: 0 18px 60px rgba(12,12,12,0.07);
+    .hero-grid{display:grid;grid-template-columns:1fr 420px;gap:30px;align-items:center}
+    .hero-left h1{font-size:44px;line-height:1.02;margin:0;color:#fff}
+    .hero-left p{margin-top:12px;color: #d6d6d6;font-size:16px}
+
+    .cta{margin-top:20px;display:flex;gap:14px}
+    .btn{background:#fff;color:#000;padding:12px 18px;border-radius:12px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,0.4)}
+    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)}
+
+    /* Demo panel with animated elements */
+    .demo-panel{position:relative;padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));min-height:320px;display:flex;align-items:center;justify-content:center}
+
+    /* Floating balloons (black & white) */
+    .balloon{position:absolute;border-radius:50%;width:90px;height:120px;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,0.45);transform-origin:center bottom}
+    .balloon.white{background:linear-gradient(180deg,#fff,#f0f0f0);left:8%;bottom:10%;}
+    .balloon.black{background:linear-gradient(180deg,#0f0f0f,#222);right:10%;bottom:6%;}
+    .balloon svg{width:60px;height:60px;opacity:.92}
+    .string{position:absolute;bottom:-60px;left:50%;width:2px;height:60px;background:linear-gradient(180deg,rgba(255,255,255,0.55),rgba(255,255,255,0.08));transform:translateX(-50%);}
+
+    /* Balloon animations */
+    @keyframes floaty{0%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-28px) rotate(3deg)}100%{transform:translateY(0) rotate(-2deg)}}
+    .balloon.white{animation:floaty 6.8s ease-in-out infinite}
+    .balloon.black{animation:floaty 8.2s ease-in-out infinite;animation-delay:0.6s}
+
+    /* some featured cards */
+    .features{display:flex;flex-direction:column;gap:18px}
+    .feature{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:12px}
+    .icon-wrap{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);font-size:22px}
+    .feature h4{margin:0;color:#fff}
+    .feature p{margin:6px 0 0;color:#cfcfcf;font-size:14px}
+
+    /* footer */
+    footer{margin-top:30px;padding:24px 40px;color:#a9a9a9;display:flex;justify-content:space-between;align-items:center;gap:20px}
+
+    /* RESPONSIVE */
+    @media (max-width:900px){
+      .hero-grid{grid-template-columns:1fr}
+      nav{display:none}
+      .logo{width:56px;height:56px}
+      .hero-left h1{font-size:32px}
     }
 
-    /* topbar in mockup preview (visual fidelity) */
-    .m-topbar { height:56px; display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border-bottom:1px solid rgba(0,0,0,0.06); background: linear-gradient(180deg,#fff,#fafafa); }
-    .m-content { padding:16px; }
+    /* small sparkle / decorative */
+    .sparkle{position:absolute;width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg,#fff,#ddd);box-shadow:0 0 14px rgba(255,255,255,0.5);filter:blur(0.4px);}
 
-    /* elements inside mockup */
-    .m-btn { display:inline-block; padding:10px 12px; border-radius:10px; background:#000; color:#fff; font-weight:700; margin:6px 0; }
-    .m-card { background:#fff; border-radius:10px; padding:12px; color:#000; margin:8px 0; border:1px solid rgba(0,0,0,0.04); box-shadow: 0 6px 18px rgba(12,12,12,0.03); }
-    .m-input { width:100%; padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); margin:8px 0; background: #fff; color:#111; }
+    /* cool glassy card inside demo with icons */
+    .glass-info{position:absolute;right:18px;top:18px;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);width:200px}
+    .glass-info h3{margin:0 0 8px 0;font-size:16px}
+    .glass-info p{margin:0;font-size:13px;color:#cfcfcf}
 
-    /* small helpers */
-    .tag { font-size:12px; padding:6px 8px; border-radius:999px; background:#f1f5f9; color:var(--muted); display:inline-block; margin-left:6px; border:1px solid var(--border); }
-
-    .control-row { display:flex; gap:8px; align-items:center; }
-
-    .btn-action {
-      background: linear-gradient(90deg,#111827,#0b1220);
-      color:white; padding:10px 14px; border-radius:10px; border:none;
-    }
-    .btn-secondary { background:transparent; border:1px solid var(--border); padding:8px 12px; border-radius:8px; color:var(--muted); }
-
-    /* subtle preview enter */
-    .mockup-enter { transform: translateY(8px); opacity:0; transition: all .45s cubic-bezier(.2,.9,.2,1); }
-    .mockup-enter.show { transform:none; opacity:1; }
-
-    /* small code hint */
-    .hint { color:var(--muted); font-size:13px; margin-top:8px; }
-  </style>
-</head>
+  </style></head>
 <body>
-  <div class="app">
-    <header>
-      <div class="brand">
-        <div class="logo-box" aria-hidden="true">
-          <!-- simple K icon -->
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 18L14 6L18 10L10 22L6 18Z" fill="#0b0b0b"/></svg>
+  <canvas id="starfield"></canvas>  <header>
+    <div class="brand">
+      <div class="logo">S</div>
+      <div>
+        <div style="font-weight:800;font-size:18px">Stellar</div>
+        <div style="font-size:12px;color:var(--accent);margin-top:4px">Black & White UI Showcase</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#features">Features</a>
+      <a href="#demo">Demo</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>  <main class="hero">
+    <div class="card">
+      <div class="hero-grid">
+        <div class="hero-left">
+          <h1>Beautiful dark & light-themed UI — animated to life</h1>
+          <p>Stellar is an experimental design showcase combining subtle starfield background, floating balloons, smooth animation and modern iconography. Everything is crafted in pure HTML, CSS & vanilla JS.</p>
+          <div class="cta">
+            <a class="btn" href="#demo"><i class="fa-solid fa-meteor"></i> View demo</a>
+            <a class="btn secondary" href="#features"><i class="fa-solid fa-palette"></i> See effects</a>
+          </div><section id="features" style="margin-top:20px">
+        <div class="features">
+          <div class="feature">
+            <div class="icon-wrap"><i class="fa-solid fa-star"></i></div>
+            <div>
+              <h4>Starfield background</h4>
+              <p>Procedural stars animated on a canvas that give a subtle parallax depth.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="icon-wrap"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div>
+              <h4>Modern effects</h4>
+              <p>Glassmorphism, soft shadows, and layered gradients create a premium visual tone.</p>
+            </div>
+          </div>
         </div>
-        <div>
-          <div style="font-weight:700; font-size:18px;">Code → Live UI</div>
-          <div class="muted" style="font-size:13px;">Paste code (any supported language) → Render real UI / accurate mockup</div>
-        </div>
+      </section>
+
+    </div>
+
+    <div class="demo-panel" id="demo">
+      <!-- Balloons -->
+      <div class="balloon white" style="--i:1">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C9.2 2 7 4.2 7 7c0 2.9 2 5.4 4.7 6.6.2.1.3.3.3.5v3.2" stroke="#111" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="string"></div>
+      </div>
+      <div class="balloon black">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C9.24 3 7 5.24 7 8c0 2.87 2.15 5.33 4.85 6.46.2.08.35.27.35.48v2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="string"></div>
       </div>
 
-      <div style="display:flex; gap:8px; align-items:center;">
-        <div class="tag">White-first theme</div>
-        <button id="downloadPNG" class="btn-secondary">Export PNG</button>
-      </div>
-    </header>
-
-    <main class="controls">
-      <!-- left: editor -->
-      <div class="left-panel panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px;">
-          <div class="control-row">
-            <label style="font-weight:600; margin-right:8px;">Language</label>
-            <select id="langSel" style="padding:6px 10px; border-radius:8px; border:1px solid var(--border); background:transparent;">
-              <option>auto-detect</option>
-              <option>html</option>
-              <option>css</option>
-              <option>javascript</option>
-              <option>typescript</option>
-              <option>python</option>
-              <option>lua</option>
-              <option>luau</option>
-              <option>c</option>
-              <option>cpp</option>
-              <option>c#</option>
-              <option>java</option>
-              <option>php</option>
-              <option>go</option>
-              <option>rust</option>
-              <option>swift</option>
-              <option>kotlin</option>
-              <option>ruby</option>
-              <option>bash</option>
-              <option>json</option>
-              <option>yaml</option>
-            </select>
-            <button id="renderBtn" class="btn-secondary" style="margin-left:8px;">Render</button>
-          </div>
-
-          <div style="text-align:right;">
-            <div style="font-size:12px; color:var(--muted);">Tip: For 100% accurate UI, paste full HTML/CSS/JS and select <strong>html</strong>.</div>
-          </div>
-        </div>
-
-        <textarea id="codeArea" class="code" spellcheck="false" aria-label="Code input"></textarea>
-
-        <div class="hint">You can paste full HTML/CSS/JS (recommended for exact rendering) — or paste snippets / code in other languages and click Render to get a high-fidelity mockup.</div>
+      <!-- Glass info -->
+      <div class="glass-info">
+        <h3><i class="fa-solid fa-magnifying-glass"></i> Live preview</h3>
+        <p>Icons from Font Awesome. Font: Unbounded (Google Fonts). No emojis — only icons.</p>
       </div>
 
-      <!-- right: preview -->
-      <aside class="right-panel">
-        <div class="panel mockup-wrap">
-          <!-- MODE TOGGLE: real-render (iframe) OR mockup -->
-          <div style="display:flex; gap:8px; align-items:center; justify-content:center; margin-bottom:8px;">
-            <label style="font-size:13px;" class="muted">Preview mode</label>
-            <select id="previewMode" style="padding:6px 10px; border-radius:8px; border:1px solid var(--border);">
-              <option value="auto">auto</option>
-              <option value="iframe">Exact iframe (HTML/CSS/JS)</option>
-              <option value="mockup">Mockup (all languages)</option>
-            </select>
-          </div>
+      <!-- Decorative sparkles -->
+      <div class="sparkle" style="left:22%;top:18%;opacity:.9"></div>
+      <div class="sparkle" style="left:40%;top:12%;width:6px;height:6px;opacity:.6"></div>
 
-          <!-- Container for iframe or mockup -->
-          <div id="previewContainer" style="display:flex; justify-content:center;">
-            <div id="mockup" class="mockup mockup-enter" role="img" aria-label="UI preview"></div>
-          </div>
-
-          <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
-            <button id="smallExport" class="btn-secondary">Export Small</button>
-            <button id="resetBtn" class="btn-secondary">Reset</button>
-          </div>
-        </div>
-
-        <div class="panel" style="margin-top:12px;">
-          <div style="font-weight:700; margin-bottom:8px;">How this works</div>
-          <div class="muted" style="font-size:13px; line-height:1.5;">
-            • If you paste real <strong>HTML/CSS/JS</strong> and use iframe mode the site will render the code exactly inside an isolated sandboxed iframe (accurate UI).<br>
-            • For other languages the engine extracts UI-related tokens (buttons, inputs, forms, labels, lists, cards) and builds a realistic white/black mockup automatically.<br>
-            • You can export the preview as PNG. The iframe mode provides true rendering; mockup mode provides fast accurate visualizations.
-          </div>
-        </div>
-      </aside>
-    </main>
+    </div>
   </div>
 
-  <script>
-    // Elements
-    const codeArea = document.getElementById('codeArea');
-    const renderBtn = document.getElementById('renderBtn');
-    const langSel = document.getElementById('langSel');
-    const previewModeSel = document.getElementById('previewMode');
-    const previewContainer = document.getElementById('previewContainer');
-    const mockup = document.getElementById('mockup');
-    const resetBtn = document.getElementById('resetBtn');
-    const downloadPNG = document.getElementById('downloadPNG');
-    const smallExport = document.getElementById('smallExport');
+  <footer>
+    <div>© <strong>Stellar</strong> • Crafted with HTML · CSS · JS</div>
+    <div style="display:flex;gap:14px;align-items:center">
+      <a style="color:var(--accent);text-decoration:none" href="#"><i class="fa-brands fa-github"></i></a>
+      <a style="color:var(--accent);text-decoration:none" href="#"><i class="fa-brands fa-dribbble"></i></a>
+      <a style="color:var(--accent);text-decoration:none" href="#contact"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+  </footer>
 
-    // Default sample (user can replace)
-    codeArea.value = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body{font-family:Inter, Arial; margin:0; padding:24px; background:#fff; color:#0b0b0b;}
-    .hero{max-width:720px;margin:0 auto;text-align:center;padding:30px 10px;}
-    .hero h1{font-size:36px;margin:0 0 10px;}
-    .hero p{color:#6b7280;margin:0 0 18px;}
-    .btn{display:inline-block;background:#111827;color:#fff;padding:12px 18px;border-radius:10px;text-decoration:none;}
-  </style>
-</head>
-<body>
-  <div class="hero">
-    <h1>Krnl's back, better than ever</h1>
-    <p>A powerful multi-platform scripting engine, with built-in editor.</p>
-    <a href="#" class="btn">Download</a>
-  </div>
-</body>
-</html>`;
+</div>
 
-    // Auto-detect language function (simple)
-    function detectLanguage(text) {
-      const t = text.slice(0, 2000).toLowerCase();
-      if(/<\s*html|<\s*div|<\s*script|<\s*body|<!doctype/i.test(text)) return 'html';
-      if(/^\s*[{[]\s*"?[\w-]+?/.test(text) && /:\s*.+/.test(text) && /"/.test(text)) {
-        // crude detect json
-        try { JSON.parse(text); return 'json'; } catch(e){}
-      }
-      if(/\bdef\b|\bprint\(|\bimport\b/.test(t)) return 'python';
-      if(/\b#include\b|\bint main\b/.test(t)) return 'c/cpp';
-      if(/\bpackage\s+\w+;|\bimport java\b|\bpublic class\b/.test(t)) return 'java';
-      if(/\bfunc\b|\bpackage main\b/.test(t)) return 'go';
-      if(/\bfn\b|\blet\b.*=&gt;|println!/.test(t) || /\buse std::/.test(t)) return 'rust';
-      if(/\bconsole\.log\b|\bdocument\.querySelector\b/.test(t)) return 'javascript';
-      if(/\blocal\b|\bfunction\b.*\(|\bluau\b/.test(t)) return 'lua';
-      if(/\bclass\b|\bnamespace\b|using System\b/.test(t)) return 'c#';
-      if(/\bdef\b|\bend\b/.test(t) && /\bputs\b/.test(t)) return 'ruby';
-      if(/\bphp\b|<\?php/.test(t)) return 'php';
-      // fallback
-      return 'unknown';
-    }
+  </main>  <script>
+    // Starfield canvas — lightweight, animated
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = innerWidth;
+    let H = canvas.height = innerHeight;
 
-    // Parser heuristics for non-HTML languages -> spec
-    function parseToSpec(text, lang) {
-      // spec object
-      const spec = { header:null, nav:[], hero:{}, buttons:[], cards:[], form:[], lists:[], images:[], footer:null };
-      const lower = text.toLowerCase();
+    const stars = [];
+    const STAR_COUNT = Math.max(60, Math.floor((W*H)/60000));
 
-      // common patterns: allow user to write "header:Title" or "button:Save"
-      const simplePairs = text.match(/([a-zA-Z\- ]+)\s*[:=]\s*([^\n\r;]+)(?:[\n\r]|$)/gi);
-      if(simplePairs) {
-        for(const line of simplePairs) {
-          const m = line.match(/([a-zA-Z\- ]+)\s*[:=]\s*([^\n\r;]+)/i);
-          if(!m) continue;
-          const key = m[1].trim().toLowerCase();
-          const val = m[2].trim();
-          if(key.startsWith('header') || key === 'title') spec.header = val;
-          else if(key === 'nav') spec.nav = val.split(/[,;]/).map(s=>s.trim());
-          else if(key.startsWith('hero') || key === 'hero-title') spec.hero.title = val;
-          else if(key === 'hero-sub' || key === 'hero-desc') spec.hero.sub = val;
-          else if(key.startsWith('button')) spec.buttons.push(val);
-          else if(key.startsWith('card')) spec.cards = spec.cards.concat(val.split(/[,;]/).map(s=>s.trim()));
-          else if(key.startsWith('form')) spec.form = spec.form.concat(val.split(/[,;]/).map(s=>s.trim()));
-          else if(key === 'footer') spec.footer = val;
-          else if(key === 'img' || key === 'image' || key === 'logo') spec.images.push(val);
-        }
-      }
+    function rand(min,max){return Math.random()*(max-min)+min}
 
-      // Generic token detection for UI keywords
-      const tokens = text.match(/(button|btn|submit|login|register|nav|menu|header|footer|card|input|form|search|list|item|hero|banner|title|label)/gi) || [];
-      if(tokens.length > 0) {
-        if(spec.buttons.length === 0) spec.buttons.push('Action');
-      }
-
-      // If code contains function names like create_button or button(...) capture label-like strings
-      const labelMatches = Array.from(text.matchAll(/button\(|create_button\(|new Button\(|addButton\(|btn\W*["']([^"']+)["']/gi));
-      for(const mm of labelMatches) if(mm[1]) spec.buttons.push(mm[1]);
-
-      // Fallback: extract commented title lines (# Title, // Title)
-      const titleLine = text.match(/^[\s]*[#\/]{1,2}\s*(.+)$/m);
-      if(titleLine && !spec.header) spec.header = titleLine[1].trim();
-
-      // final defaults
-      if(!spec.header) spec.header = 'App Title';
-      if(spec.buttons.length === 0) spec.buttons.push('Get Started');
-
-      return spec;
-    }
-
-    // Render mockup (white-first) from spec
-    function renderMockup(spec) {
-      previewContainer.innerHTML = '';
-      const box = document.createElement('div');
-      box.className = 'mockup mockup-enter';
-      // topbar
-      const topbar = document.createElement('div'); topbar.className = 'm-topbar';
-      const left = document.createElement('div'); left.style.display='flex'; left.style.alignItems='center'; left.style.gap='10px';
-      const logo = document.createElement('div'); logo.style.width='36px'; logo.style.height='36px'; logo.style.borderRadius='8px'; logo.style.background='#111827'; logo.style.display='flex'; logo.style.alignItems='center'; logo.style.justifyContent='center';
-      logo.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 18L14 6L18 10L10 22L6 18Z" fill="#fff"/></svg>';
-      left.appendChild(logo);
-      const title = document.createElement('div'); title.style.fontWeight='700'; title.textContent = spec.header;
-      left.appendChild(title);
-      topbar.appendChild(left);
-
-      const right = document.createElement('div'); right.style.display='flex'; right.style.alignItems='center'; right.style.gap='8px';
-      (spec.nav && spec.nav.length ? spec.nav : ['Home']).slice(0,3).forEach(n=>{
-        const pill = document.createElement('div'); pill.style.fontSize='13px'; pill.style.padding='6px 10px'; pill.style.borderRadius='999px'; pill.style.background='#f1f5f9'; pill.style.color='#111827'; pill.textContent = n; right.appendChild(pill);
-      });
-      topbar.appendChild(right);
-
-      box.appendChild(topbar);
-
-      // content
-      const content = document.createElement('div'); content.className = 'm-content';
-
-      if(spec.hero && (spec.hero.title || spec.hero.sub)) {
-        const hero = document.createElement('div'); hero.style.marginBottom='10px';
-        const hTitle = document.createElement('div'); hTitle.style.fontSize='18px'; hTitle.style.fontWeight='800'; hTitle.textContent = spec.hero.title || 'Title';
-        const hSub = document.createElement('div'); hSub.style.color='#6b7280'; hSub.style.marginTop='6px'; hSub.textContent = spec.hero.sub || '';
-        hero.appendChild(hTitle); hero.appendChild(hSub);
-
-        // buttons
-        const bwrap = document.createElement('div'); bwrap.style.marginTop='10px';
-        (spec.buttons.length ? spec.buttons : ['Get Started']).slice(0,2).forEach(b=>{
-          const bb = document.createElement('span'); bb.className='m-btn'; bb.style.background='#111827'; bb.style.marginRight='8px'; bb.textContent = b;
-          bwrap.appendChild(bb);
-        });
-        hero.appendChild(bwrap);
-        content.appendChild(hero);
-      } else {
-        // small title
-        const small = document.createElement('div'); small.style.fontWeight='700'; small.style.marginBottom='8px'; small.textContent = spec.header || 'App';
-        content.appendChild(small);
-      }
-
-      // form
-      if(spec.form && spec.form.length) {
-        const form = document.createElement('div'); form.style.marginTop='8px';
-        spec.form.slice(0,5).forEach(f=>{
-          const input = document.createElement('input'); input.className='m-input'; input.placeholder = (f || 'Field');
-          form.appendChild(input);
-        });
-        const s = document.createElement('div'); s.className='m-btn'; s.textContent = spec.form.includes('submit') ? 'Submit' : 'Continue';
-        s.style.display='inline-block'; s.style.marginTop='8px';
-        form.appendChild(s);
-        content.appendChild(form);
-      }
-
-      // cards grid
-      if(spec.cards && spec.cards.length) {
-        const grid = document.createElement('div'); grid.style.display='grid'; grid.style.gridTemplateColumns='1fr 1fr'; grid.style.gap='8px'; grid.style.marginTop='12px';
-        spec.cards.slice(0,6).forEach(c=>{
-          const card = document.createElement('div'); card.className='m-card';
-          const ch = document.createElement('div'); ch.style.fontWeight='700'; ch.textContent = c;
-          const cd = document.createElement('div'); cd.style.color='#6b7280'; cd.style.marginTop='6px'; cd.textContent = 'Short description...';
-          card.appendChild(ch); card.appendChild(cd);
-          grid.appendChild(card);
-        });
-        content.appendChild(grid);
-      }
-
-      // lists
-      if(spec.lists && spec.lists.length) {
-        spec.lists.forEach(lst=>{
-          const ul = document.createElement('ul'); ul.style.marginTop='12px';
-          lst.slice(0,6).forEach(it=>{
-            const li = document.createElement('li'); li.style.padding='8px 6px'; li.style.borderBottom='1px solid rgba(0,0,0,0.03)'; li.textContent = it;
-            ul.appendChild(li);
-          });
-          content.appendChild(ul);
+    function initStars(){
+      stars.length=0;
+      for(let i=0;i<STAR_COUNT;i++){
+        stars.push({
+          x:Math.random()*W,
+          y:Math.random()*H,
+          r:Math.random()*1.6+0.2,
+          a:Math.random()*0.8+0.2,
+          vx: (Math.random()-0.5)*0.02,
+          vy: (Math.random()*0.3)+0.02
         });
       }
-
-      // images placeholder
-      if(spec.images && spec.images.length) {
-        const img = document.createElement('div'); img.style.height='120px'; img.style.borderRadius='8px'; img.style.background='#f3f4f6'; img.style.display='flex'; img.style.alignItems='center'; img.style.justifyContent='center'; img.style.color='#111827'; img.textContent = 'Image';
-        content.appendChild(img);
-      }
-
-      // fallback message
-      if(!(spec.hero.title || spec.form.length || spec.cards.length || spec.lists.length || spec.images.length)) {
-        const note = document.createElement('div'); note.style.color='#111827'; note.style.background='#f8fafc'; note.style.padding='10px'; note.style.borderRadius='8px'; note.textContent = 'No UI elements detected — try adding "header:, button:, card:, form:" lines or paste HTML for exact rendering.';
-        content.appendChild(note);
-      }
-
-      box.appendChild(content);
-
-      // footer in mockup
-      const foot = document.createElement('div'); foot.style.marginTop='auto'; foot.style.padding='12px'; foot.style.borderTop='1px solid rgba(0,0,0,0.04)'; foot.style.display='flex'; foot.style.justifyContent='space-between'; foot.style.alignItems='center'; foot.style.background='#fafafa';
-      const leftf = document.createElement('div'); leftf.style.fontSize='13px'; leftf.style.color='#6b7280'; leftf.textContent = spec.footer || '© 2025';
-      const rightf = document.createElement('div'); rightf.style.fontSize='12px'; rightf.style.color='#9ca3af'; rightf.textContent = 'Mockup · White theme';
-      foot.appendChild(leftf); foot.appendChild(rightf);
-      box.appendChild(foot);
-
-      previewContainer.appendChild(box);
-      setTimeout(()=> {
-        box.classList.add('show');
-      },20);
     }
 
-    // Render exact HTML via iframe (sandboxed). Uses srcdoc.
-    function renderIframe(htmlSource) {
-      previewContainer.innerHTML = '';
-      const wrapper = document.createElement('div');
-      wrapper.style.width = '360px';
-      wrapper.style.maxWidth = '100%';
-      wrapper.style.borderRadius = '14px';
-      wrapper.style.overflow = 'hidden';
-      wrapper.style.border = '1px solid rgba(0,0,0,0.06)';
-      wrapper.style.boxShadow = '0 18px 60px rgba(12,12,12,0.07)';
-      // iframe: sandbox without allow-same-origin for safety but with scripts allowed so JS can run in its own origin
-      const ifr = document.createElement('iframe');
-      ifr.setAttribute('sandbox', 'allow-scripts allow-forms'); // no allow-same-origin, isolated
-      ifr.style.width = '360px';
-      ifr.style.height = '640px';
-      ifr.style.border = '0';
-      // if code has no <html> wrapper, embed into basic html
-      let srcdoc = htmlSource;
-      if(!/\<\s*html/i.test(htmlSource)) {
-        // wrap minimally (retain head styles if user provided)
-        srcdoc = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${htmlSource.includes('<style')? '': '<style>body{font-family:Inter, Arial;margin:0;padding:24px;background:#fff;color:#0b0b0b}</style>'}</head><body>${htmlSource}</body></html>`;
-      }
-      ifr.srcdoc = srcdoc;
-      wrapper.appendChild(ifr);
-      previewContainer.appendChild(wrapper);
-    }
+    function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;initStars()}
+    addEventListener('resize', resize);
 
-    // Main render logic
-    function renderAll() {
-      const code = codeArea.value || '';
-      let lang = (langSel.value || '').toLowerCase();
-      if(lang === 'auto-detect' || lang === 'auto') lang = detectLanguage(code);
-      const mode = previewModeSel.value;
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      // subtle gradient overlay
+      const g = ctx.createLinearGradient(0,0,0,H);
+      g.addColorStop(0,'rgba(255,255,255,0.02)');
+      g.addColorStop(1,'rgba(0,0,0,0.1)');
+      ctx.fillStyle = '#070707';
+      ctx.fillRect(0,0,W,H);
 
-      // If iframe chosen or detected html -> render exact iframe
-      if(mode === 'iframe' || (mode === 'auto' && (lang === 'html' || lang === 'css' || lang === 'javascript' || lang === 'typescript'))) {
-        try {
-          renderIframe(code);
-          return;
-        } catch(e) {
-          // fallback to mockup
-          console.warn('iframe render failed', e);
-        }
+      for(let s of stars){
+        s.y -= s.vy;
+        s.x += s.vx;
+        if(s.y < -10) { s.y = H + 10; s.x = Math.random()*W }
+        ctx.beginPath();
+        ctx.globalAlpha = s.a;
+        ctx.fillStyle = '#ffffff';
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fill();
       }
 
-      // Else build spec and produce mockup
-      const spec = parseToSpec(code, lang);
-      renderMockup(spec);
-    }
-
-    // Events
-    renderBtn.addEventListener('click', renderAll);
-    previewModeSel.addEventListener('change', renderAll);
-    langSel.addEventListener('change', renderAll);
-
-    // Reset example
-    resetBtn.addEventListener('click', () => {
-      codeArea.value = `# Paste code here, or a short UI description
-header: Krnl App
-nav: Home, Downloads, Docs
-hero-title: Krnl's back, better than ever
-hero-sub: A lightweight multi-platform scripting engine
-button: Download
-card: Editor, Console, Hooks
-form: name,email,password,submit
-footer: © 2025 Krnl Inc.`;
-      langSel.value = 'auto-detect';
-      previewModeSel.value = 'auto';
-      renderAll();
-    });
-
-    // Export current preview as PNG
-    async function exportPreview(scale=2) {
-      // find the element to export (wrapper inside previewContainer)
-      const element = previewContainer.firstElementChild;
-      if(!element) return alert('No preview to export');
-      // clone to avoid border-radius cropping and remove transitions
-      const clone = element.cloneNode(true);
-      clone.style.transform = 'none';
-      clone.style.opacity = '1';
-      const wrapper = document.createElement('div');
-      wrapper.style.display = 'inline-block';
-      wrapper.style.background = '#fff';
-      wrapper.appendChild(clone);
-      document.body.appendChild(wrapper);
-      try {
-        const canvas = await html2canvas(wrapper, { scale: scale, backgroundColor: '#ffffff', useCORS:true });
-        const url = canvas.toDataURL('image/png');
-        const a = document.createElement('a'); a.href = url; a.download = 'ui-preview.png'; document.body.appendChild(a); a.click(); a.remove();
-      } catch (e) {
-        alert('Export failed: ' + e.message);
-      } finally {
-        document.body.removeChild(wrapper);
+      // twinkle layer
+      ctx.globalCompositeOperation = 'lighter';
+      for(let i=0;i<4;i++){
+        const tx = Math.random()*W;
+        const ty = Math.random()*H*0.6;
+        const sr = Math.random()*1.2+0.8;
+        ctx.beginPath();ctx.globalAlpha = Math.random()*0.25;ctx.arc(tx,ty,sr,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,0.6)';ctx.fill();
       }
+      ctx.globalCompositeOperation = 'source-over';
+      requestAnimationFrame(draw);
     }
 
-    downloadPNG.addEventListener('click', ()=> exportPreview(2));
-    smallExport.addEventListener('click', ()=> exportPreview(1));
+    initStars();draw();
 
-    // Keyboard shortcut Ctrl/Cmd+Enter to render
-    codeArea.addEventListener('keydown', (e)=>{
-      if((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); renderAll(); }
-    });
+    // small interactive shimmer when pointer moves
+    addEventListener('pointermove', (e)=>{
+      const x = e.clientX, y = e.clientY;
+      for(let i=0;i<5;i++){
+        const p = {x:x + rand(-40,40), y:y + rand(-40,40), r:rand(0.6,1.6), a:rand(0.2,0.9)};
+        ctx.beginPath(); ctx.globalAlpha = p.a; ctx.fillStyle='#fff'; ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+      }
+    })
 
-    // Initial render from default sample
-    renderAll();
-  </script>
-</body>
+    // small sparkle generator to add tiny decorative dots inside demo panel
+    setInterval(()=>{
+      const demo = document.querySelector('.demo-panel');
+      const s = document.createElement('div');
+      s.className='sparkle';
+      s.style.left = (Math.random()*70+10)+'%';
+      s.style.top = (Math.random()*60+10)+'%';
+      s.style.opacity = Math.random();
+      s.style.transform = 'scale('+ (Math.random()*1.2 + 0.4) +')';
+      demo.appendChild(s);
+      setTimeout(()=>{ s.style.transition='opacity 900ms'; s.style.opacity='0'; setTimeout(()=>s.remove(),1000)},1500);
+    },900);
+
+  </script></body>
 </html>
