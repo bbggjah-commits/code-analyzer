@@ -2,508 +2,437 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Krnl — Landing (Enhanced)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Code → GUI (BW) — مولد الشكل المظهري</title>
 
-  <!-- Tailwind quick (for layout utilities). Optional for production: build Tailwind locally. -->
+  <!-- Tailwind (quick) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- GSAP for smooth UI animations -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="" crossorigin="anonymous"></script>
-
-  <!-- Three.js module for starfield (WebGL) -->
-  <script type="module" defer>
-    // We'll import inside the main script tag in body to keep head small.
-  </script>
+  <!-- html2canvas for export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     :root{
-      --bg-1: #090510;    /* dark */
-      --accent: #271a34;  /* deep purple */
-      --muted: #86719c;   /* soft purple */
-      --light: #f2f1f4;   /* light text */
-      --glass: rgba(255,255,255,0.04);
+      --bg:#0b0b0b;
+      --panel:#0f0f0f;
+      --muted:#bdbdbd;
+      --white:#ffffff;
     }
-
     html,body{height:100%}
     body{
       margin:0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,var(--bg-1), #06040a 120%);
-      color:var(--light);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: linear-gradient(180deg,#000,#0b0b0b 60%);
+      color:var(--white);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      overflow-x:hidden;
+      overflow-y:auto;
     }
 
-    /* Background canvas (Three.js or fallback) */
-    #bg-canvas, #bg-fallback { position: fixed; inset:0; z-index:0; pointer-events:none; display:block; }
-    #app { position: relative; z-index:10; }
-
-    /* header pill */
-    .nav-pill{
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      backdrop-filter: blur(8px);
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.06);
-      padding:8px 12px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    /* subtle animated stripe background for style */
+    .bg-stripe {
+      background-image: linear-gradient(90deg, rgba(255,255,255,0.02) 0.5px, transparent 0.5px);
+      background-size: 12px 12px;
+      opacity: 0.03;
+      position: fixed; inset:0; z-index:0; pointer-events:none;
     }
 
-    .logo-mark{
-      width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center;
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.06));
-      border: 1px solid rgba(255,255,255,0.03);
+    /* layout */
+    .app { position: relative; z-index:10; padding:18px; max-width:1200px; margin-inline:auto; }
+    header { display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .logo {
+      display:flex; align-items:center; gap:10px;
+    }
+    .logo-mark {
+      width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);
     }
 
-    /* neon frame for preview */
-    .neon-frame{
-      border-radius: 16px;
-      padding: 6px;
-      background: linear-gradient(90deg, rgba(128,60,231,0.06), rgba(90,40,160,0.03));
-      box-shadow: 0 20px 60px rgba(128,60,231,0.09), inset 0 1px 0 rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.03);
+    /* main panels */
+    .controls { display:grid; grid-template-columns: 1fr 420px; gap:16px; align-items:start; }
+    @media (max-width:900px){ .controls{ grid-template-columns: 1fr; } .right-panel{ order:2 } .left-panel{ order:1 } }
+
+    textarea.code {
+      width:100%; height:420px; resize:vertical;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);
+      color:var(--white); padding:12px; border-radius:8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
     }
 
-    .glass-card{
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.24));
-      border: 1px solid rgba(255,255,255,0.04);
-      padding:16px;
-      backdrop-filter: blur(6px);
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);
+      padding:12px; border-radius:10px;
     }
 
-    /* nice button */
-    .btn-primary{
-      background: linear-gradient(90deg,var(--light), #dcd9df);
-      color: #0b0b0b;
-      font-weight:700;
-      padding:10px 18px;
-      border-radius:12px;
-      box-shadow: 0 8px 30px rgba(16,12,20,0.6);
-      border: none;
-    }
-    .btn-ghost{
-      background: transparent;
-      border-radius:12px;
-      padding:10px 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--light);
+    /* preview (the GUI mockup) */
+    .mockup-wrap { display:flex; gap:10px; flex-direction:column; align-items:center; }
+    .mockup {
+      width: 360px; max-width:100%; min-height:640px;
+      background: #fff; color:#000; border-radius:14px; overflow:hidden; position:relative;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      border: 1px solid rgba(0,0,0,0.06);
     }
 
-    /* responsive & layout tweaks */
-    header .container, main .container { max-width: 1100px; margin-inline:auto; padding-inline:16px; }
+    /* black/white styling inside mockup */
+    .mockup * { box-sizing:border-box; }
+    .m-topbar { height:56px; display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border-bottom:1px solid rgba(0,0,0,0.06); }
+    .m-content { padding:16px; }
+    .m-btn { display:inline-block; padding:10px 12px; border-radius:10px; background:#000; color:#fff; font-weight:600; margin:6px 0; }
+    .m-card { background:#f9f9f9; border-radius:10px; padding:12px; color:#111; margin:8px 0; border:1px solid rgba(0,0,0,0.06); }
+    .m-input { width:100%; padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); margin:8px 0; background: #fff; color:#111; }
 
-    h1 { line-height:1.02; }
-    pre.codebox { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; font-size:13px; color:#9EE5B3; background: linear-gradient(90deg,#06121a,#13021b); padding:12px; border-radius:8px; overflow:auto; }
+    /* small helper */
+    .tag { font-size:12px; padding:6px 8px; border-radius:999px; background:rgba(255,255,255,0.06); color:var(--white); display:inline-block; margin-left:6px; }
 
-    /* small screens adjustments */
-    @media (max-width: 640px){
-      .logo-mark { width:36px; height:36px; }
-      .nav-pill { padding:8px; gap:8px; border-radius:12px; }
-      .btn-primary, .btn-ghost { padding:10px 14px; font-size:14px; }
-      main { padding-top: 28px; }
-    }
+    /* export button */
+    .export-btn { background:transparent; border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:8px; color:var(--white); }
 
-    /* decorative SVG icon sizes */
-    .icon { width:20px; height:20px; display:inline-block; vertical-align:middle; }
+    /* hints */
+    .hints { color:var(--muted); font-size:13px; margin-top:8px; }
 
-    /* subtle touch animation for buttons (GSAP will enhance) */
-    .btn-press { transform: translateZ(0); will-change: transform; }
+    /* subtle animation for mockup appear */
+    .mockup-enter { transform: translateY(8px); opacity:0; transition: all .45s cubic-bezier(.2,.9,.2,1); }
+    .mockup-enter.show { transform:none; opacity:1; }
+
   </style>
 </head>
 <body>
+  <div class="bg-stripe" aria-hidden="true"></div>
 
-  <!-- WebGL canvas (Three.js). We'll attempt to use it; fallback below -->
-  <canvas id="bg-canvas" aria-hidden="true"></canvas>
-
-  <!-- Fallback canvas if WebGL not available (2D starfield) -->
-  <canvas id="bg-fallback" aria-hidden="true" style="display:none"></canvas>
-
-  <div id="app" class="relative">
-    <!-- Header -->
-    <header class="py-6">
-      <div class="container flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="logo-mark" role="img" aria-label="Krnl logo">
-            <!-- inline SVG logo (crisp on mobile) -->
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M6 18L14 6L18 10L10 22L6 18Z" fill="white"/>
-            </svg>
-          </div>
-          <div class="text-lg font-semibold">Krnl</div>
+  <div class="app">
+    <header>
+      <div class="logo">
+        <div class="logo-mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 18L14 6L18 10L10 22L6 18Z" fill="#fff"/></svg></div>
+        <div>
+          <div style="font-weight:700">Code → GUI</div>
+          <div style="font-size:13px;color:var(--muted)">حوّل وصف الـمود / الكود إلى شكل GUI (أسود/أبيض)</div>
         </div>
+      </div>
 
-        <div class="nav-pill">
-          <button id="downloadTop" class="btn-primary btn-press" aria-label="Download">⬇ تحميل</button>
-          <button id="menuBtn" class="p-2 rounded-md" aria-label="Menu" title="القائمة">
-            <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
-          </button>
-        </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <div class="tag">نسخة تجريبية</div>
+        <button id="exportBtn" class="export-btn" title="تصدير الصورة">تحميل كصورة (PNG)</button>
       </div>
     </header>
 
-    <!-- Hero / Main -->
-    <main class="container text-center mt-2 px-2">
-      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold">Krnl's back — أفضل نسخة حتى الآن</h1>
-      <p class="mt-4 text-white/70 max-w-2xl mx-auto">محرك سكربتات قوي متعدد المنصات مع واجهة حديثة، محرّر نصوص، ومكتبة سكربتات مدمجة.</p>
+    <main class="controls">
+      <!-- left: code editor -->
+      <div class="left-panel panel">
+        <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+          <label style="font-weight:600;">اختر لغة:</label>
+          <select id="langSel" class="rounded-md" style="padding:6px 8px; background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--white)">
+            <!-- languages (expanded) -->
+            <option>auto-detect</option>
+            <option>html</option>
+            <option>css</option>
+            <option>javascript</option>
+            <option>typescript</option>
+            <option>python</option>
+            <option>lua</option>
+            <option>luau</option>
+            <option>c</option>
+            <option>cpp</option>
+            <option>c#</option>
+            <option>java</option>
+            <option>php</option>
+            <option>go</option>
+            <option>rust</option>
+            <option>swift</option>
+            <option>kotlin</option>
+            <option>ruby</option>
+            <option>bash</option>
+            <option>yaml</option>
+            <option>json</option>
+          </select>
+          <button id="genBtn" class="export-btn" style="margin-inline-start:8px;">✅ تحويل</button>
+        </div>
 
-      <div class="mt-6 flex flex-col sm:flex-row gap-4 items-center justify-center">
-        <button id="downloadHero" class="btn-primary btn-press">⬇ تحميل الآن</button>
-        <button id="discord" class="btn-ghost btn-press">انضم إلى ديسكورد</button>
+        <textarea id="codeArea" class="code" placeholder="انسخ الكود أو الوصف هنا — مثلاً: 'button:احجز الآن; header:تطبيق حجوزات; list:خدمات'"></textarea>
+
+        <div class="hints">نصيحة: يمكنك كتابة وصف موجز بدل كود (مثلاً: "header: صفحة تسجيل دخول، زر: تسجيل، حقول: اسم وكلمة مرور، صورة لوجو"). المحلل يستخرج عناصر واجهة شائعة ويحوّلها إلى Mockup.</div>
       </div>
 
-      <!-- Preview card with neon/glow -->
-      <div class="mt-8 mx-auto max-w-3xl relative">
-        <div class="neon-frame mx-auto">
-          <div class="glass-card flex gap-3 items-stretch">
-            <aside class="w-44 p-3 rounded-md bg-gradient-to-b from-[#0f0720] to-[#120824] hidden sm:block">
-              <div class="text-sm font-semibold text-white/90">Editor</div>
-              <ul class="mt-3 text-sm text-white/60 space-y-2">
-                <li class="bg-white/3 px-3 py-1 rounded">New tab</li>
-                <li class="bg-white/3 px-3 py-1 rounded">Console</li>
-                <li class="bg-white/3 px-3 py-1 rounded">Hooks</li>
-              </ul>
-            </aside>
-
-            <div class="flex-1 p-3">
-              <pre class="codebox h-36">
--- مثال سريع
-local function hello()
-  print("hello from krnl")
-end
-              </pre>
-            </div>
+      <!-- right: preview -->
+      <aside class="right-panel">
+        <div class="panel mockup-wrap">
+          <div id="mockup" class="mockup mockup-enter" role="img" aria-label="معاينة الشكل المظهري"></div>
+          <div style="margin-top:8px; display:flex; gap:8px; justify-content:center;">
+            <button id="smallExport" class="export-btn">تحميل عرض صغير</button>
+            <button id="resetBtn" class="export-btn">إعادة افتراضية</button>
           </div>
         </div>
 
-        <!-- purple halo (CSS only) -->
-        <div aria-hidden="true" style="position:absolute; inset:-10px; border-radius:18px; pointer-events:none; box-shadow:0 24px 80px rgba(128,60,231,0.12)"></div>
-      </div>
+        <div style="margin-top:12px;" class="panel">
+          <div style="font-weight:700">كيف يعمل المحلل؟</div>
+          <ul style="color:var(--muted); margin-top:8px; font-size:13px; line-height:1.5;">
+            <li>📌 يبحث عن كلمات مفتاحية للعناصر: header, nav, button, input, form, card, list, img, avatar, hero, footer.</li>
+            <li>🛠 يدعم عدة لغات ويستطيع تلقائيًا اكتشاف بعض الأنماط.</li>
+            <li>⚠️ هذه محاكاة — ليست ترجمة دقيقة لكود يعمل، لكنها تخطيط بصري مفيد للتصميم.</li>
+          </ul>
+        </div>
+      </aside>
     </main>
-
-    <!-- platform cards -->
-    <section class="container grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8 px-2 pb-12">
-      <!-- Card template -->
-      <article class="glass-card">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-lg bg-white/6 flex items-center justify-center">
-            <!-- inline icon -->
-            <svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-opacity="0.06"/></svg>
-          </div>
-          <div>
-            <div class="text-lg font-semibold">Android</div>
-            <div class="text-sm text-white/60">جميع أجهزة Android</div>
-          </div>
-        </div>
-        <div class="mt-4 flex flex-col gap-3">
-          <button class="btn-primary btn-press">⬇ تحميل APK</button>
-          <button class="btn-ghost">⬇ VNG</button>
-        </div>
-      </article>
-
-      <article class="glass-card">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-lg bg-white/6 flex items-center justify-center">🍎</div>
-          <div>
-            <div class="text-lg font-semibold">iOS</div>
-            <div class="text-sm text-white/60">iPhone & iPad</div>
-          </div>
-        </div>
-        <div class="mt-4 flex flex-col gap-3">
-          <button class="btn-primary btn-press">⬇ تحميل IPA</button>
-          <button class="btn-ghost">Direct Install</button>
-        </div>
-      </article>
-
-      <article class="glass-card">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-lg bg-white/6 flex items-center justify-center">🖥️</div>
-          <div>
-            <div class="text-lg font-semibold">Windows</div>
-            <div class="text-sm text-white/60">كل إصدارات Windows</div>
-          </div>
-        </div>
-        <div class="mt-4 flex flex-col gap-3">
-          <button class="btn-primary btn-press">⬇ تحميل New UI</button>
-          <button class="btn-ghost">⬇ Legacy</button>
-        </div>
-      </article>
-    </section>
-
-    <!-- Help / CTA -->
-    <section class="container mx-auto max-w-2xl px-2">
-      <div class="glass-card text-center py-8">
-        <h3 class="text-2xl font-bold">تحتاج مساعدة؟</h3>
-        <p class="mt-2 text-white/70">انضم لقناتنا على ديسكورد للمساعدة والتحديثات.</p>
-        <div class="mt-4">
-          <button class="btn-ghost">انضم الآن</button>
-        </div>
-      </div>
-    </section>
-
-    <footer class="mt-8 pb-10 text-center text-white/60">
-      <div>© 2025 Krnl Inc.</div>
-    </footer>
   </div>
 
-  <!-- Main script: Three.js starfield + GSAP UI anims + fallback Canvas -->
-  <script type="module">
-    import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
-    // small helper check for WebGL support
-    function webglAvailable() {
-      try {
-        const canvas = document.createElement('canvas');
-        return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
-      } catch(e) {
-        return false;
+  <script>
+    // Helper: simple language normalization
+    const langSel = document.getElementById('langSel');
+    const codeArea = document.getElementById('codeArea');
+    const genBtn = document.getElementById('genBtn');
+    const mockup = document.getElementById('mockup');
+    const exportBtn = document.getElementById('exportBtn');
+    const smallExport = document.getElementById('smallExport');
+    const resetBtn = document.getElementById('resetBtn');
+
+    // Default example
+    codeArea.value = `# مثال سريع (يمكنك لصق كود أو وصف)
+header: تطبيق حجوزات
+nav: الرئيسية, الخدمات, تواصل
+hero-title: احجز رحلتك الآن
+hero-sub: أفضل الأسعار وخدمة 24/7
+button: احجز الآن
+card: خدمة المطار, خدمة السائق, تأمين
+form: name,email,password,submit
+footer: © 2025`;
+
+
+    // Parser: heuristics to extract UI elements from free text or code
+    function parseCodeToSpec(text, lang){
+      const spec = { header:null, nav:[], hero:{}, buttons:[], cards:[], form:[], lists:[], images:[], footer:null, extras:[] };
+
+      const lower = text.toLowerCase();
+
+      // If HTML provided, try to parse actual tags
+      if(/<\s*html|<\s*div|<\s*button|<\s*header/i.test(text) || lang === 'html'){
+        // create a DOM parser and try extract some basic tags
+        try {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(text, 'text/html');
+          const headerTag = doc.querySelector('header') || doc.querySelector('nav') || doc.querySelector('h1');
+          if(headerTag) spec.header = headerTag.textContent.trim();
+          const btns = doc.querySelectorAll('button, a');
+          btns.forEach(b => { const t = b.textContent.trim(); if(t) spec.buttons.push(t); });
+          const inputs = doc.querySelectorAll('input, textarea');
+          inputs.forEach(i => spec.form.push(i.getAttribute('name')||i.getAttribute('id')||'input'));
+          const imgs = doc.querySelectorAll('img');
+          imgs.forEach(i => spec.images.push(i.getAttribute('alt')||i.getAttribute('src')||'img'));
+          const cards = doc.querySelectorAll('.card, .panel, article');
+          cards.forEach(c => { spec.cards.push((c.querySelector('h3')||c.querySelector('h2')||{textContent:'Card'}).textContent.trim()); });
+        } catch(e){}
       }
+
+      // quick keyword maps for many languages / free text
+      const keymap = [
+        {k:/header\s*:\s*([^\n,;]+)/i, f:(m)=> spec.header = m[1].trim()},
+        {k:/nav\s*:\s*([^\n;]+)/i, f:(m)=> spec.nav = m[1].split(/[,;]/).map(s=>s.trim()).filter(Boolean)},
+        {k:/hero-title\s*:\s*([^\n;]+)/i, f:(m)=> spec.hero.title = m[1].trim()},
+        {k:/hero-sub\s*:\s*([^\n;]+)/i, f:(m)=> spec.hero.sub = m[1].trim()},
+        {k:/button\s*:\s*([^\n;]+)/i, f:(m)=> spec.buttons.push(m[1].trim())},
+        {k:/card\s*:\s*([^\n;]+)/i, f:(m)=> spec.cards = spec.cards.concat(m[1].split(/[,;]/).map(s=>s.trim()))},
+        {k:/form\s*:\s*([^\n;]+)/i, f:(m)=> spec.form = spec.form.concat(m[1].split(/[,;]/).map(s=>s.trim()))},
+        {k:/footer\s*:\s*([^\n;]+)/i, f:(m)=> spec.footer = m[1].trim()},
+        {k:/list\s*:\s*([^\n;]+)/i, f:(m)=> spec.lists.push(m[1].split(/[,;]/).map(s=>s.trim()))},
+        {k:/img\s*:\s*([^\n;]+)/i, f:(m)=> spec.images.push(m[1].trim())},
+      ];
+
+      for(const rule of keymap){
+        let match;
+        while((match = rule.k.exec(text)) !== null){
+          try { rule.f(match); } catch(e){}
+          // prevent infinite loops for global regex; break if not global
+          if(!rule.k.global) break;
+        }
+      }
+
+      // generic heuristics: find UI words in code (english/common tokens)
+      const tokens = text.match(/(button|btn|submit|login|register|nav|menu|header|footer|card|input|form|search|list|item|carousel|hero|banner)/gi) || [];
+      if(tokens.length > 0){
+        // add a button if none found
+        if(spec.buttons.length === 0) spec.buttons.push('تأكيد');
+      }
+
+      // fallback: derive title from first H1-like or comment
+      const h1 = text.match(/(?:^|\n)\s*#\s*(.+)/) || text.match(/<h1[^>]*>([^<]+)/i) || text.match(/(?:^|\n)\s*title\s*[:=]\s*(.+)/i);
+      if(h1 && !spec.header) spec.header = h1[1].trim();
+
+      return spec;
     }
 
-    const canvas = document.getElementById('bg-canvas');
-    const fallback = document.getElementById('bg-fallback');
+    // Renderer: build DOM inside mockup based on spec
+    function renderMockup(spec){
+      // clear
+      mockup.innerHTML = '';
+      mockup.classList.add('mockup-enter'); setTimeout(()=> mockup.classList.add('show'),20);
 
-    // Colors derived from your video (dominant palette)
-    const COLORS = {
-      dark: 0x090510,
-      accent: 0x271a34,
-      soft: 0x86719c,
-      light: 0xf2f1f4
-    };
+      // topbar
+      const topbar = document.createElement('div'); topbar.className = 'm-topbar';
+      const left = document.createElement('div'); left.style.display='flex'; left.style.alignItems='center'; left.style.gap='10px';
+      const mark = document.createElement('div'); mark.style.width='36px'; mark.style.height='36px'; mark.style.borderRadius='8px'; mark.style.background='#111'; mark.style.display='flex'; mark.style.alignItems='center'; mark.style.justifyContent='center';
+      mark.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 18L14 6L18 10L10 22L6 18Z" fill="#fff"/></svg>';
+      left.appendChild(mark);
+      const title = document.createElement('div'); title.style.fontWeight='700'; title.style.fontSize='15px'; title.textContent = spec.header || 'تطبيق جديد';
+      left.appendChild(title);
+      topbar.appendChild(left);
 
-    // If WebGL is available — create Three.js starfield
-    if (webglAvailable()) {
-      fallback.style.display = 'none';
-      canvas.style.display = 'block';
-
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(window.innerWidth, window.innerHeight);
-
-      const scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x06030a, 0.0006);
-
-      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
-      camera.position.z = 90;
-
-      // star geometry
-      const STAR_COUNT = Math.min(1600, Math.floor((window.innerWidth * window.innerHeight) / 300)); // scale with screen
-      const positions = new Float32Array(STAR_COUNT * 3);
-      const sizes = new Float32Array(STAR_COUNT);
-
-      for (let i = 0; i < STAR_COUNT; i++) {
-        const i3 = i * 3;
-        positions[i3] = (Math.random() - 0.5) * 1400;
-        positions[i3 + 1] = (Math.random() - 0.5) * 900;
-        positions[i3 + 2] = -Math.random() * 1400;
-        sizes[i] = Math.random() * 1.6 + 0.4;
-      }
-
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-      // shader for twinkling stars
-      const material = new THREE.ShaderMaterial({
-        transparent: true,
-        depthWrite: false,
-        uniforms: {
-          time: { value: 0 },
-          color: { value: new THREE.Color(COLORS.light) }
-        },
-        vertexShader: `
-          attribute float size;
-          varying float vSize;
-          void main(){
-            vSize = size;
-            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-            gl_PointSize = size * (200.0 / -mvPosition.z);
-            gl_Position = projectionMatrix * mvPosition;
-          }
-        `,
-        fragmentShader: `
-          uniform float time;
-          uniform vec3 color;
-          varying float vSize;
-          void main(){
-            float d = distance(gl_PointCoord, vec2(0.5));
-            float alpha = smoothstep(0.5, 0.0, d);
-            float tw = 0.7 + 0.5 * sin(time * 2.0 + vSize * 10.0);
-            gl_FragColor = vec4(color * tw, alpha * 0.95);
-          }
-        `
-      });
-
-      const points = new THREE.Points(geometry, material);
-      scene.add(points);
-
-      // soft purple glow plane
-      const planeGeom = new THREE.PlaneGeometry(1600, 1000);
-      const planeMat = new THREE.MeshBasicMaterial({ color: COLORS.accent, opacity: 0.02, transparent: true });
-      const plane = new THREE.Mesh(planeGeom, planeMat);
-      plane.position.z = -800;
-      scene.add(plane);
-
-      // pointer parallax (touch and mouse)
-      let targetX = 0, targetY = 0;
-      const supportsTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      function onPointerMove(e){
-        const x = (e.clientX || (e.touches && e.touches[0].clientX)) / window.innerWidth - 0.5;
-        const y = (e.clientY || (e.touches && e.touches[0].clientY)) / window.innerHeight - 0.5;
-        targetX = x * 6;
-        targetY = -y * 5;
-      }
-      window.addEventListener('mousemove', onPointerMove, {passive:true});
-      window.addEventListener('touchmove', onPointerMove, {passive:true});
-
-      // responsive resize
-      function resize() {
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-      }
-      window.addEventListener('resize', resize);
-
-      // performance guard: lower update rate for low-power devices
-      const lowPower = (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 3) || /Mobi|Android/i.test(navigator.userAgent) && navigator.deviceMemory && navigator.deviceMemory < 2;
-
-      const clock = new THREE.Clock();
-      function animate() {
-        if (!lowPower) requestAnimationFrame(animate);
-        const t = clock.getElapsedTime();
-        material.uniforms.time.value = t;
-
-        // move stars toward camera slightly to create depth loop
-        const pos = geometry.attributes.position.array;
-        for (let i = 2; i < pos.length; i += 3) {
-          pos[i] += 0.45 * (0.3 + Math.sin((i / 3) * 0.001 + t * 0.2) * 0.05);
-          if (pos[i] > 20) pos[i] = -1400 * Math.random();
-        }
-        geometry.attributes.position.needsUpdate = true;
-
-        // camera lerp
-        camera.position.x += (targetX - camera.position.x) * 0.06;
-        camera.position.y += (targetY - camera.position.y) * 0.06;
-
-        points.rotation.y = Math.sin(t * 0.04) * 0.01;
-
-        renderer.render(scene, camera);
-      }
-
-      if (lowPower) {
-        // throttle frames for low-power devices
-        let last = 0;
-        function lowAnimate(now){
-          if (now - last > 70) {
-            last = now;
-            const t = clock.getElapsedTime();
-            material.uniforms.time.value = t;
-            const pos = geometry.attributes.position.array;
-            for (let i = 2; i < pos.length; i += 3) {
-              pos[i] += 0.35 * (0.3 + Math.sin((i / 3) * 0.001 + t * 0.18) * 0.04);
-              if (pos[i] > 20) pos[i] = -1400 * Math.random();
-            }
-            geometry.attributes.position.needsUpdate = true;
-            renderer.render(scene, camera);
-          }
-          requestAnimationFrame(lowAnimate);
-        }
-        lowAnimate(performance.now());
+      const right = document.createElement('div'); right.style.display='flex'; right.style.alignItems='center'; right.style.gap='8px';
+      if(spec.nav && spec.nav.length){
+        spec.nav.slice(0,3).forEach(n=>{
+          const t = document.createElement('div'); t.style.fontSize='13px'; t.style.color='#222'; t.style.background='#fff'; t.style.padding='6px 8px'; t.style.borderRadius='8px'; t.textContent = n; right.appendChild(t);
+        });
       } else {
-        animate();
+        const t = document.createElement('div'); t.style.fontSize='13px'; t.style.color='#222'; t.style.background='#fff'; t.style.padding='6px 8px'; t.style.borderRadius='8px'; t.textContent = 'الرئيسية'; right.appendChild(t);
+      }
+      topbar.appendChild(right);
+      mockup.appendChild(topbar);
+
+      // content
+      const content = document.createElement('div'); content.className='m-content';
+
+      // hero
+      if(spec.hero && (spec.hero.title || spec.hero.sub || spec.buttons.length)){
+        const hero = document.createElement('div'); hero.style.marginBottom='10px';
+        const hTitle = document.createElement('div'); hTitle.style.fontSize='18px'; hTitle.style.fontWeight='800'; hTitle.textContent = spec.hero.title || 'عنوان رئيسي';
+        const hSub = document.createElement('div'); hSub.style.color='#444'; hSub.style.marginTop='6px'; hSub.textContent = spec.hero.sub || 'وصف موجز للمحتوى';
+        hero.appendChild(hTitle); hero.appendChild(hSub);
+
+        // buttons
+        const bwrap = document.createElement('div'); bwrap.style.marginTop='10px';
+        (spec.buttons.length ? spec.buttons : ['ابدأ الآن']).slice(0,2).forEach(b=>{
+          const bb = document.createElement('span'); bb.className='m-btn'; bb.style.marginInlineEnd='8px'; bb.textContent = b;
+          bwrap.appendChild(bb);
+        });
+        hero.appendChild(bwrap);
+        content.appendChild(hero);
       }
 
-      // pause when tab hidden
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) renderer.setAnimationLoop(null);
-        else animate();
-      });
-    } else {
-      // fallback: simple 2D canvas starfield (very light)
-      canvas.style.display = 'none';
-      fallback.style.display = 'block';
-      const c = fallback;
-      const ctx = c.getContext('2d');
-      function fit() { c.width = innerWidth; c.height = innerHeight; }
-      window.addEventListener('resize', fit); fit();
+      // form
+      if(spec.form && spec.form.length){
+        const form = document.createElement('div'); form.style.marginTop='8px';
+        spec.form.slice(0,5).forEach(f=>{
+          const input = document.createElement('input'); input.className='m-input'; input.placeholder = f || 'حقل';
+          form.appendChild(input);
+        });
+        const s = document.createElement('div'); s.className='m-btn'; s.textContent = (spec.form.includes('submit')? 'إرسال' : 'تسجيل');
+        s.style.display='inline-block'; s.style.marginTop='8px';
+        form.appendChild(s);
+        content.appendChild(form);
+      }
 
-      const stars = [];
-      for (let i = 0; i < 200; i++) {
-        stars.push({ x: Math.random()*c.width, y: Math.random()*c.height, r: Math.random()*1.8+0.2, s: Math.random()*0.6+0.1 });
+      // cards
+      if(spec.cards && spec.cards.length){
+        const grid = document.createElement('div'); grid.style.display='grid'; grid.style.gridTemplateColumns='1fr 1fr'; grid.style.gap='8px'; grid.style.marginTop='12px';
+        spec.cards.slice(0,6).forEach(c=>{
+          const card = document.createElement('div'); card.className='m-card';
+          const ch = document.createElement('div'); ch.style.fontWeight='700'; ch.textContent = c;
+          const cd = document.createElement('div'); cd.style.color='#333'; cd.style.marginTop='6px'; cd.textContent = 'وصف بسيط للخدمة أو العنصر.';
+          card.appendChild(ch); card.appendChild(cd);
+          grid.appendChild(card);
+        });
+        content.appendChild(grid);
       }
-      function loop(){
-        ctx.clearRect(0,0,c.width,c.height);
-        ctx.fillStyle = 'rgba(10,6,12,0.9)';
-        ctx.fillRect(0,0,c.width,c.height);
-        for (const s of stars) {
-          ctx.globalAlpha = 0.8 * (Math.random()*0.6+0.4);
-          ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fillStyle = '#ffffff'; ctx.fill();
-          s.y += s.s;
-          if (s.y > c.height) s.y = 0;
-        }
-        requestAnimationFrame(loop);
+
+      // lists
+      if(spec.lists && spec.lists.length){
+        spec.lists.forEach(lst=>{
+          const ul = document.createElement('ul'); ul.style.marginTop='12px';
+          lst.slice(0,6).forEach(it=>{
+            const li = document.createElement('li'); li.style.padding='8px 6px'; li.style.borderBottom='1px solid rgba(0,0,0,0.03)'; li.textContent = it;
+            ul.appendChild(li);
+          });
+          content.appendChild(ul);
+        });
       }
-      loop();
+
+      // images
+      if(spec.images && spec.images.length){
+        const img = document.createElement('div'); img.style.height='120px'; img.style.borderRadius='8px'; img.style.background='#eee'; img.style.display='flex'; img.style.alignItems='center'; img.style.justifyContent='center'; img.style.color='#222'; img.textContent = spec.images[0];
+        content.appendChild(img);
+      }
+
+      // fallback small message if nothing found
+      if(!spec.header && !spec.hero.title && spec.cards.length===0 && spec.form.length===0 && spec.buttons.length===0){
+        const note = document.createElement('div'); note.style.color='#333'; note.style.background='#fff'; note.style.padding='10px'; note.style.borderRadius='8px'; note.textContent = 'لا توجد عناصر واجهة قابلة للاستخلاص — جرّب كتابة وصف أقصر مثل: "header:تطبيق, button:ابدأ, form:name,email"';
+        content.appendChild(note);
+      }
+
+      mockup.appendChild(content);
+
+      // footer inside mockup
+      const foot = document.createElement('div'); foot.style.marginTop='auto'; foot.style.padding='12px'; foot.style.borderTop='1px solid rgba(0,0,0,0.04)'; foot.style.display='flex'; foot.style.justifyContent='space-between'; foot.style.alignItems='center';
+      const leftf = document.createElement('div'); leftf.style.fontSize='13px'; leftf.style.color='#222'; leftf.textContent = spec.footer || '© 2025';
+      const rightf = document.createElement('div'); rightf.style.fontSize='12px'; rightf.style.color='#666'; rightf.textContent = 'Mockup · BW';
+      foot.appendChild(leftf); foot.appendChild(rightf);
+      mockup.appendChild(foot);
+
+      // set background color in monotone
+      mockup.style.background = '#fff';
+      mockup.style.color = '#000';
     }
 
-    // ------- UI Animations using GSAP (buttons, hero, cards) -------
-    // Wait DOM loaded
-    window.addEventListener('DOMContentLoaded', () => {
-      // simple stagger entrance
-      gsap.from('header .logo-mark, header .nav-pill, main h1, main p, .neon-frame', {
-        y: 18, opacity:0, duration:0.9, ease: 'power3.out', stagger: 0.08
-      });
-
-      // button micro interactions
-      const btns = document.querySelectorAll('.btn-press');
-      btns.forEach((b) => {
-        b.addEventListener('pointerenter', () => gsap.to(b, { scale: 1.03, duration:0.15 }));
-        b.addEventListener('pointerleave', () => gsap.to(b, { scale: 1.0, duration:0.12 }));
-        b.addEventListener('pointerdown', () => gsap.to(b, { scale: 0.98, duration:0.06 }));
-        b.addEventListener('pointerup', () => gsap.to(b, { scale: 1.02, duration:0.08, yoyo:true, repeat:0 }));
-      });
-
-      // subtle floating for neon frame
-      gsap.to('.neon-frame', { y: 6, repeat: -1, yoyo: true, duration: 4, ease:'sine.inOut', opacity:1 });
-
-      // hero CTA pulse loop
-      gsap.to('#downloadHero', { boxShadow: '0 12px 40px rgba(128,60,231,0.14)', repeat:-1, yoyo:true, duration:2.5, ease:'sine.inOut' });
+    // generate action
+    genBtn.addEventListener('click', ()=>{
+      const text = codeArea.value || '';
+      const lang = (langSel.value || '').toLowerCase();
+      const spec = parseCodeToSpec(text, lang);
+      renderMockup(spec);
     });
 
-    // Accessibility: enable reduced motion respect
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mediaQuery.matches) {
-      // freeze heavy animations if user prefers reduced motion
-      // (handled by GSAP prefersReducedMotion automatically in many cases; we also remove frame loops)
-      const heroPulse = document.getElementById('downloadHero');
-      if (heroPulse) heroPulse.style.boxShadow = 'none';
+    // initial render
+    genBtn.click();
+
+    // export full mockup (PNG)
+    async function exportPNG(scale=2){
+      // temporarily remove entrance class to avoid opacity transition
+      mockup.classList.remove('mockup-enter','show');
+      const origWidth = mockup.offsetWidth;
+      const origHeight = mockup.offsetHeight;
+      // clone node to avoid overlays
+      const clone = mockup.cloneNode(true);
+      clone.style.transform = 'none';
+      clone.style.margin = '0';
+      clone.style.position = 'relative';
+      clone.style.left = '0';
+      clone.style.top = '0';
+      clone.style.boxShadow = 'none';
+      const wrapper = document.createElement('div');
+      wrapper.style.width = origWidth + 'px';
+      wrapper.style.height = origHeight + 'px';
+      wrapper.style.display = 'inline-block';
+      wrapper.appendChild(clone);
+      document.body.appendChild(wrapper);
+      // use html2canvas
+      const canvas = await html2canvas(wrapper, { scale: scale, backgroundColor: null, useCORS:true, logging:false });
+      const url = canvas.toDataURL('image/png');
+      // cleanup
+      document.body.removeChild(wrapper);
+      mockup.classList.add('mockup-enter','show');
+      // download
+      const a = document.createElement('a'); a.href = url; a.download = 'mockup.png'; document.body.appendChild(a); a.click(); a.remove();
     }
-  </script>
 
-  <!-- Optional: small inline script to auto-scroll reveal behavior (polish) -->
-  <script>
-    // smooth reveal on scroll for cards (lightweight)
-    (function(){
-      const io = new IntersectionObserver((entries)=>{
-        entries.forEach(e=>{
-          if (e.isIntersecting) {
-            e.target.style.transform = 'translateY(0)';
-            e.target.style.opacity = '1';
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.08 });
-      document.querySelectorAll('.glass-card').forEach(el=>{
-        el.style.transform = 'translateY(12px)';
-        el.style.opacity = '0';
-        el.style.transition = 'all 600ms cubic-bezier(.2,.9,.2,1)';
-        io.observe(el);
-      });
-    })();
-  </script>
+    exportBtn.addEventListener('click', ()=> exportPNG(2));
+    smallExport.addEventListener('click', ()=> exportPNG(1));
 
+    resetBtn.addEventListener('click', ()=>{
+      codeArea.value = `# مثال سريع (يمكنك لصق كود أو وصف)
+header: تطبيق حجوزات
+nav: الرئيسية, الخدمات, تواصل
+hero-title: احجز رحلتك الآن
+hero-sub: أفضل الأسعار وخدمة 24/7
+button: احجز الآن
+card: خدمة المطار, خدمة السائق, تأمين
+form: name,email,password,submit
+footer: © 2025`;
+      genBtn.click();
+    });
+
+    // small UX: Ctrl/Cmd+Enter to generate
+    codeArea.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); genBtn.click(); }
+    });
+
+  </script>
 </body>
 </html>
