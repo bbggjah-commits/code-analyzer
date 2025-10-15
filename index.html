@@ -1,120 +1,166 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Krnl-style Landing (Demo)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Krnl — Landing (Enhanced)</title>
 
-  <!-- Tailwind via CDN (for quick demo) -->
+  <!-- Tailwind quick (for layout utilities). Optional for production: build Tailwind locally. -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Small custom styles -->
+  <!-- GSAP for smooth UI animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="" crossorigin="anonymous"></script>
+
+  <!-- Three.js module for starfield (WebGL) -->
+  <script type="module" defer>
+    // We'll import inside the main script tag in body to keep head small.
+  </script>
+
   <style>
     :root{
-      --bg1:#0b0710;
-      --bg2:#11061b;
+      --bg-1: #090510;    /* dark */
+      --accent: #271a34;  /* deep purple */
+      --muted: #86719c;   /* soft purple */
+      --light: #f2f1f4;   /* light text */
       --glass: rgba(255,255,255,0.04);
     }
+
     html,body{height:100%}
     body{
       margin:0;
-      font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,var(--bg1),var(--bg2));
-      color:#fff;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,var(--bg-1), #06040a 120%);
+      color:var(--light);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
       overflow-x:hidden;
     }
 
-    /* nav pill */
+    /* Background canvas (Three.js or fallback) */
+    #bg-canvas, #bg-fallback { position: fixed; inset:0; z-index:0; pointer-events:none; display:block; }
+    #app { position: relative; z-index:10; }
+
+    /* header pill */
     .nav-pill{
-      background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      backdrop-filter: blur(6px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      backdrop-filter: blur(8px);
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.06);
-      padding:10px 14px;
+      padding:8px 12px;
       display:flex;
       align-items:center;
-      gap:12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+      gap:10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
-    /* neon glow around preview */
-    .neon {
-      box-shadow: 0 10px 40px rgba(128,60,231,0.12);
-      border-radius: 16px;
-      padding:6px;
-      background: linear-gradient(90deg, rgba(128,60,231,0.08), rgba(90,40,160,0.04));
+    .logo-mark{
+      width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.06));
       border: 1px solid rgba(255,255,255,0.03);
     }
 
-    /* card style */
+    /* neon frame for preview */
+    .neon-frame{
+      border-radius: 16px;
+      padding: 6px;
+      background: linear-gradient(90deg, rgba(128,60,231,0.06), rgba(90,40,160,0.03));
+      box-shadow: 0 20px 60px rgba(128,60,231,0.09), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
     .glass-card{
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2));
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.24));
       border: 1px solid rgba(255,255,255,0.04);
-      padding:18px;
+      padding:16px;
       backdrop-filter: blur(6px);
     }
 
-    /* small stars under content for mobile bottom */
-    footer .mini-star{opacity:0.06}
-
-    /* make canvas fill full page behind content */
-    #bg-canvas { position: fixed; inset:0; z-index:0; pointer-events:none; }
-    #app { position:relative; z-index:10; }
-
-    /* smooth anchor scroll and section spacing */
-    html { scroll-behavior: smooth; }
-
-    /* responsive tweaks */
-    @media (max-width:640px){
-      .nav-pill{ padding:10px; border-radius:12px; }
-      .neon { padding:4px; border-radius:12px; }
+    /* nice button */
+    .btn-primary{
+      background: linear-gradient(90deg,var(--light), #dcd9df);
+      color: #0b0b0b;
+      font-weight:700;
+      padding:10px 18px;
+      border-radius:12px;
+      box-shadow: 0 8px 30px rgba(16,12,20,0.6);
+      border: none;
     }
+    .btn-ghost{
+      background: transparent;
+      border-radius:12px;
+      padding:10px 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--light);
+    }
+
+    /* responsive & layout tweaks */
+    header .container, main .container { max-width: 1100px; margin-inline:auto; padding-inline:16px; }
+
+    h1 { line-height:1.02; }
+    pre.codebox { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; font-size:13px; color:#9EE5B3; background: linear-gradient(90deg,#06121a,#13021b); padding:12px; border-radius:8px; overflow:auto; }
+
+    /* small screens adjustments */
+    @media (max-width: 640px){
+      .logo-mark { width:36px; height:36px; }
+      .nav-pill { padding:8px; gap:8px; border-radius:12px; }
+      .btn-primary, .btn-ghost { padding:10px 14px; font-size:14px; }
+      main { padding-top: 28px; }
+    }
+
+    /* decorative SVG icon sizes */
+    .icon { width:20px; height:20px; display:inline-block; vertical-align:middle; }
+
+    /* subtle touch animation for buttons (GSAP will enhance) */
+    .btn-press { transform: translateZ(0); will-change: transform; }
   </style>
 </head>
 <body>
 
-  <!-- THREE.JS canvas -->
-  <canvas id="bg-canvas"></canvas>
+  <!-- WebGL canvas (Three.js). We'll attempt to use it; fallback below -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-  <div id="app">
-    <!-- Top navigation -->
-    <header class="max-w-4xl mx-auto px-4 sm:px-6 py-6">
-      <div class="flex items-center justify-between">
+  <!-- Fallback canvas if WebGL not available (2D starfield) -->
+  <canvas id="bg-fallback" aria-hidden="true" style="display:none"></canvas>
+
+  <div id="app" class="relative">
+    <!-- Header -->
+    <header class="py-6">
+      <div class="container flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-md bg-white/8 flex items-center justify-center">
-            <!-- simple K mark -->
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 18L14 6L18 10L10 22L6 18Z" fill="white" /></svg>
+          <div class="logo-mark" role="img" aria-label="Krnl logo">
+            <!-- inline SVG logo (crisp on mobile) -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 18L14 6L18 10L10 22L6 18Z" fill="white"/>
+            </svg>
           </div>
-          <div class="text-lg font-medium">Krnl</div>
+          <div class="text-lg font-semibold">Krnl</div>
         </div>
 
         <div class="nav-pill">
-          <button id="downloadBtn" class="px-4 py-2 rounded-full bg-white text-black font-semibold shadow">⬇ Download</button>
-          <button class="h-10 w-10 rounded-md bg-white/6 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="white" stroke-opacity="0.85" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <button id="downloadTop" class="btn-primary btn-press" aria-label="Download">⬇ تحميل</button>
+          <button id="menuBtn" class="p-2 rounded-md" aria-label="Menu" title="القائمة">
+            <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
           </button>
         </div>
       </div>
     </header>
 
-    <!-- Hero -->
-    <main class="max-w-3xl mx-auto px-4 text-center mt-4">
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">Krnl's back,<br/> better than ever</h1>
-      <p class="mt-4 text-lg text-white/70 max-w-2xl mx-auto">A powerful multi-platform Luau scripting engine, complete with a text editor and built-in script database.</p>
+    <!-- Hero / Main -->
+    <main class="container text-center mt-2 px-2">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold">Krnl's back — أفضل نسخة حتى الآن</h1>
+      <p class="mt-4 text-white/70 max-w-2xl mx-auto">محرك سكربتات قوي متعدد المنصات مع واجهة حديثة، محرّر نصوص، ومكتبة سكربتات مدمجة.</p>
 
-      <div class="mt-8 flex flex-col sm:flex-row gap-4 items-center justify-center">
-        <button class="px-8 py-3 rounded-xl bg-white text-black font-semibold shadow-lg">Download</button>
-        <button class="px-8 py-3 rounded-xl bg-transparent border border-white/10 text-white/90 font-medium backdrop-blur-sm">Join Discord</button>
+      <div class="mt-6 flex flex-col sm:flex-row gap-4 items-center justify-center">
+        <button id="downloadHero" class="btn-primary btn-press">⬇ تحميل الآن</button>
+        <button id="discord" class="btn-ghost btn-press">انضم إلى ديسكورد</button>
       </div>
 
-      <!-- preview neon card -->
-      <div class="mt-10 relative">
-        <div class="neon mx-auto max-w-3xl p-4">
-          <div class="glass-card flex gap-4 items-stretch">
-            <aside class="w-48 p-3 rounded-md bg-gradient-to-b from-[#0f0720] to-[#120824]">
+      <!-- Preview card with neon/glow -->
+      <div class="mt-8 mx-auto max-w-3xl relative">
+        <div class="neon-frame mx-auto">
+          <div class="glass-card flex gap-3 items-stretch">
+            <aside class="w-44 p-3 rounded-md bg-gradient-to-b from-[#0f0720] to-[#120824] hidden sm:block">
               <div class="text-sm font-semibold text-white/90">Editor</div>
               <ul class="mt-3 text-sm text-white/60 space-y-2">
                 <li class="bg-white/3 px-3 py-1 rounded">New tab</li>
@@ -123,43 +169,43 @@
               </ul>
             </aside>
 
-            <div class="flex-1 bg-[#040306] rounded-md p-4">
-              <pre class="h-36 bg-gradient-to-r from-[#0b1220] to-[#2a0233] rounded-md p-3 text-xs font-mono text-green-300 overflow-auto">
--- sample code
+            <div class="flex-1 p-3">
+              <pre class="codebox h-36">
+-- مثال سريع
 local function hello()
-  print("hello world")
+  print("hello from krnl")
 end
               </pre>
             </div>
           </div>
         </div>
-        <!-- neon glow -->
-        <div style="position:absolute;inset:-8px;border-radius:18px;pointer-events:none;box-shadow:0 0 40px 6px rgba(128,60,231,0.12)"></div>
+
+        <!-- purple halo (CSS only) -->
+        <div aria-hidden="true" style="position:absolute; inset:-10px; border-radius:18px; pointer-events:none; box-shadow:0 24px 80px rgba(128,60,231,0.12)"></div>
       </div>
     </main>
 
-    <!-- Platform cards -->
-    <section class="max-w-4xl mx-auto px-4 mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 pb-10">
-      <!-- Android -->
-      <div class="glass-card">
+    <!-- platform cards -->
+    <section class="container grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8 px-2 pb-12">
+      <!-- Card template -->
+      <article class="glass-card">
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-lg bg-white/6 flex items-center justify-center">
-            <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-opacity="0.06"/></svg>
+            <!-- inline icon -->
+            <svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-opacity="0.06"/></svg>
           </div>
           <div>
             <div class="text-lg font-semibold">Android</div>
-            <div class="text-sm text-white/60">All Android devices</div>
+            <div class="text-sm text-white/60">جميع أجهزة Android</div>
           </div>
         </div>
         <div class="mt-4 flex flex-col gap-3">
-          <button class="w-full py-3 rounded-lg bg-white text-black font-semibold">⬇ Download Regular</button>
-          <button class="w-full py-3 rounded-lg bg-transparent border border-white/10 text-white/80">⬇ Download VNG</button>
-          <div class="mt-2 p-3 rounded-lg bg-yellow-900/20 text-yellow-300 text-sm">Only use VNG if you have a Vietnamese region locked account</div>
+          <button class="btn-primary btn-press">⬇ تحميل APK</button>
+          <button class="btn-ghost">⬇ VNG</button>
         </div>
-      </div>
+      </article>
 
-      <!-- iOS -->
-      <div class="glass-card">
+      <article class="glass-card">
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-lg bg-white/6 flex items-center justify-center">🍎</div>
           <div>
@@ -168,181 +214,295 @@ end
           </div>
         </div>
         <div class="mt-4 flex flex-col gap-3">
-          <button class="w-full py-3 rounded-lg bg-white text-black font-semibold">⬇ Download IPA</button>
-          <button class="w-full py-3 rounded-lg bg-transparent border border-white/10 text-white/80">⬇ Download VNG IPA</button>
-          <button class="w-full py-3 rounded-lg bg-transparent border border-white/10 text-white/80">Direct Install</button>
+          <button class="btn-primary btn-press">⬇ تحميل IPA</button>
+          <button class="btn-ghost">Direct Install</button>
         </div>
-      </div>
+      </article>
 
-      <!-- Windows -->
-      <div class="glass-card">
+      <article class="glass-card">
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-lg bg-white/6 flex items-center justify-center">🖥️</div>
           <div>
             <div class="text-lg font-semibold">Windows</div>
-            <div class="text-sm text-white/60">All Windows versions</div>
+            <div class="text-sm text-white/60">كل إصدارات Windows</div>
           </div>
         </div>
         <div class="mt-4 flex flex-col gap-3">
-          <button class="w-full py-3 rounded-lg bg-slate-700/60 text-white/90 font-semibold">⬇ Download New UI</button>
-          <button class="w-full py-3 rounded-lg bg-transparent border border-white/10 text-white/80">⬇ Download Legacy</button>
-          <div class="mt-2 p-3 rounded-lg bg-blue-900/20 text-blue-300 text-sm">Coming soon! Windows support is currently in development</div>
+          <button class="btn-primary btn-press">⬇ تحميل New UI</button>
+          <button class="btn-ghost">⬇ Legacy</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- Help / CTA -->
+    <section class="container mx-auto max-w-2xl px-2">
+      <div class="glass-card text-center py-8">
+        <h3 class="text-2xl font-bold">تحتاج مساعدة؟</h3>
+        <p class="mt-2 text-white/70">انضم لقناتنا على ديسكورد للمساعدة والتحديثات.</p>
+        <div class="mt-4">
+          <button class="btn-ghost">انضم الآن</button>
         </div>
       </div>
     </section>
 
-    <!-- Help section -->
-    <section class="max-w-2xl mx-auto px-4 mt-8 mb-20">
-      <div class="glass-card text-center py-10">
-        <h3 class="text-2xl font-bold">Need help getting started?</h3>
-        <p class="mt-3 text-white/70">Join our Discord community for support, updates, and to connect with other users.</p>
-        <div class="mt-6">
-          <button class="px-6 py-3 rounded-xl bg-transparent border border-white/10">Join Discord</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="mt-8 pb-20 text-center text-white/60">
+    <footer class="mt-8 pb-10 text-center text-white/60">
       <div>© 2025 Krnl Inc.</div>
-      <div class="mt-4 mini-star">background-demo • stars powered by Three.js</div>
     </footer>
   </div>
 
-  <!-- Three.js (module) for starfield background -->
+  <!-- Main script: Three.js starfield + GSAP UI anims + fallback Canvas -->
   <script type="module">
     import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
+    // small helper check for WebGL support
+    function webglAvailable() {
+      try {
+        const canvas = document.createElement('canvas');
+        return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+      } catch(e) {
+        return false;
+      }
+    }
 
-    // Setup renderer
     const canvas = document.getElementById('bg-canvas');
-    const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    const fallback = document.getElementById('bg-fallback');
 
-    // Scene & camera
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x08060a, 0.0006);
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 2000);
-    camera.position.z = 80;
+    // Colors derived from your video (dominant palette)
+    const COLORS = {
+      dark: 0x090510,
+      accent: 0x271a34,
+      soft: 0x86719c,
+      light: 0xf2f1f4
+    };
 
-    // Resize handler
-    function onResize(){
+    // If WebGL is available — create Three.js starfield
+    if (webglAvailable()) {
+      fallback.style.display = 'none';
+      canvas.style.display = 'block';
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(window.innerWidth, window.innerHeight);
-      camera.aspect = window.innerWidth/window.innerHeight;
-      camera.updateProjectionMatrix();
-    }
-    window.addEventListener('resize', onResize);
 
-    // Create starfield (points)
-    const starCount = 1600;
-    const positions = new Float32Array(starCount * 3);
-    const sizes = new Float32Array(starCount);
-    for(let i=0;i<starCount;i++){
-      const i3 = i*3;
-      // distribute in a wide volume
-      positions[i3] = (Math.random()-0.5) * 1200;
-      positions[i3+1] = (Math.random()-0.5) * 800;
-      positions[i3+2] = -Math.random() * 1200;
-      sizes[i] = Math.random() * 1.5 + 0.3;
-    }
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x06030a, 0.0006);
 
-    // custom shader material for subtle twinkle
-    const material = new THREE.ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      uniforms: {
-        time: { value: 0 },
-        color: { value: new THREE.Color(0xffffff) },
-      },
-      vertexShader: `
-        attribute float size;
-        varying float vSize;
-        void main(){
-          vSize = size;
-          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = size * (200.0 / -mvPosition.z);
-          gl_Position = projectionMatrix * mvPosition;
-        }
-      `,
-      fragmentShader: `
-        uniform float time;
-        uniform vec3 color;
-        varying float vSize;
-        void main(){
-          float d = distance(gl_PointCoord, vec2(0.5));
-          float alpha = smoothstep(0.5, 0.0, d);
-          // subtle twinkle
-          float tw = 0.6 + 0.4 * sin(time * 2.0 + vSize * 10.0);
-          gl_FragColor = vec4(color * tw, alpha * 0.9);
-        }
-      `
-    });
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
+      camera.position.z = 90;
 
-    const points = new THREE.Points(geometry, material);
-    scene.add(points);
+      // star geometry
+      const STAR_COUNT = Math.min(1600, Math.floor((window.innerWidth * window.innerHeight) / 300)); // scale with screen
+      const positions = new Float32Array(STAR_COUNT * 3);
+      const sizes = new Float32Array(STAR_COUNT);
 
-    // Add a large, soft glow plane behind content (for purple halo)
-    const planeGeom = new THREE.PlaneGeometry(1200, 800);
-    const planeMat = new THREE.MeshBasicMaterial({ color: 0x220033, transparent:true, opacity: 0.02 });
-    const plane = new THREE.Mesh(planeGeom, planeMat);
-    plane.position.z = -600;
-    scene.add(plane);
-
-    // subtle camera movement based on pointer for parallax
-    let targetX = 0, targetY = 0;
-    window.addEventListener('mousemove', (e) => {
-      const nx = (e.clientX / window.innerWidth) - 0.5;
-      const ny = (e.clientY / window.innerHeight) - 0.5;
-      targetX = nx * 8;
-      targetY = -ny * 6;
-    });
-
-    // animate
-    const clock = new THREE.Clock();
-    function animate(){
-      requestAnimationFrame(animate);
-      const t = clock.getElapsedTime();
-      material.uniforms.time.value = t;
-
-      // slowly translate stars forward to create depth-motion
-      const pos = geometry.attributes.position.array;
-      for(let i=2;i<pos.length;i+=3){
-        pos[i] += 0.6 * (0.3 + Math.sin((i/3) * 0.001 + t*0.25) * 0.05);
-        if(pos[i] > 10) pos[i] = -1200 * Math.random();
+      for (let i = 0; i < STAR_COUNT; i++) {
+        const i3 = i * 3;
+        positions[i3] = (Math.random() - 0.5) * 1400;
+        positions[i3 + 1] = (Math.random() - 0.5) * 900;
+        positions[i3 + 2] = -Math.random() * 1400;
+        sizes[i] = Math.random() * 1.6 + 0.4;
       }
-      geometry.attributes.position.needsUpdate = true;
 
-      // camera lerp to target
-      camera.position.x += (targetX - camera.position.x) * 0.05;
-      camera.position.y += (targetY - camera.position.y) * 0.05;
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-      // very slow rotation for interest
-      points.rotation.y = Math.sin(t*0.05) * 0.02;
+      // shader for twinkling stars
+      const material = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        uniforms: {
+          time: { value: 0 },
+          color: { value: new THREE.Color(COLORS.light) }
+        },
+        vertexShader: `
+          attribute float size;
+          varying float vSize;
+          void main(){
+            vSize = size;
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = size * (200.0 / -mvPosition.z);
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `,
+        fragmentShader: `
+          uniform float time;
+          uniform vec3 color;
+          varying float vSize;
+          void main(){
+            float d = distance(gl_PointCoord, vec2(0.5));
+            float alpha = smoothstep(0.5, 0.0, d);
+            float tw = 0.7 + 0.5 * sin(time * 2.0 + vSize * 10.0);
+            gl_FragColor = vec4(color * tw, alpha * 0.95);
+          }
+        `
+      });
 
-      renderer.render(scene, camera);
+      const points = new THREE.Points(geometry, material);
+      scene.add(points);
+
+      // soft purple glow plane
+      const planeGeom = new THREE.PlaneGeometry(1600, 1000);
+      const planeMat = new THREE.MeshBasicMaterial({ color: COLORS.accent, opacity: 0.02, transparent: true });
+      const plane = new THREE.Mesh(planeGeom, planeMat);
+      plane.position.z = -800;
+      scene.add(plane);
+
+      // pointer parallax (touch and mouse)
+      let targetX = 0, targetY = 0;
+      const supportsTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      function onPointerMove(e){
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) / window.innerWidth - 0.5;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) / window.innerHeight - 0.5;
+        targetX = x * 6;
+        targetY = -y * 5;
+      }
+      window.addEventListener('mousemove', onPointerMove, {passive:true});
+      window.addEventListener('touchmove', onPointerMove, {passive:true});
+
+      // responsive resize
+      function resize() {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      }
+      window.addEventListener('resize', resize);
+
+      // performance guard: lower update rate for low-power devices
+      const lowPower = (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 3) || /Mobi|Android/i.test(navigator.userAgent) && navigator.deviceMemory && navigator.deviceMemory < 2;
+
+      const clock = new THREE.Clock();
+      function animate() {
+        if (!lowPower) requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+        material.uniforms.time.value = t;
+
+        // move stars toward camera slightly to create depth loop
+        const pos = geometry.attributes.position.array;
+        for (let i = 2; i < pos.length; i += 3) {
+          pos[i] += 0.45 * (0.3 + Math.sin((i / 3) * 0.001 + t * 0.2) * 0.05);
+          if (pos[i] > 20) pos[i] = -1400 * Math.random();
+        }
+        geometry.attributes.position.needsUpdate = true;
+
+        // camera lerp
+        camera.position.x += (targetX - camera.position.x) * 0.06;
+        camera.position.y += (targetY - camera.position.y) * 0.06;
+
+        points.rotation.y = Math.sin(t * 0.04) * 0.01;
+
+        renderer.render(scene, camera);
+      }
+
+      if (lowPower) {
+        // throttle frames for low-power devices
+        let last = 0;
+        function lowAnimate(now){
+          if (now - last > 70) {
+            last = now;
+            const t = clock.getElapsedTime();
+            material.uniforms.time.value = t;
+            const pos = geometry.attributes.position.array;
+            for (let i = 2; i < pos.length; i += 3) {
+              pos[i] += 0.35 * (0.3 + Math.sin((i / 3) * 0.001 + t * 0.18) * 0.04);
+              if (pos[i] > 20) pos[i] = -1400 * Math.random();
+            }
+            geometry.attributes.position.needsUpdate = true;
+            renderer.render(scene, camera);
+          }
+          requestAnimationFrame(lowAnimate);
+        }
+        lowAnimate(performance.now());
+      } else {
+        animate();
+      }
+
+      // pause when tab hidden
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) renderer.setAnimationLoop(null);
+        else animate();
+      });
+    } else {
+      // fallback: simple 2D canvas starfield (very light)
+      canvas.style.display = 'none';
+      fallback.style.display = 'block';
+      const c = fallback;
+      const ctx = c.getContext('2d');
+      function fit() { c.width = innerWidth; c.height = innerHeight; }
+      window.addEventListener('resize', fit); fit();
+
+      const stars = [];
+      for (let i = 0; i < 200; i++) {
+        stars.push({ x: Math.random()*c.width, y: Math.random()*c.height, r: Math.random()*1.8+0.2, s: Math.random()*0.6+0.1 });
+      }
+      function loop(){
+        ctx.clearRect(0,0,c.width,c.height);
+        ctx.fillStyle = 'rgba(10,6,12,0.9)';
+        ctx.fillRect(0,0,c.width,c.height);
+        for (const s of stars) {
+          ctx.globalAlpha = 0.8 * (Math.random()*0.6+0.4);
+          ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fillStyle = '#ffffff'; ctx.fill();
+          s.y += s.s;
+          if (s.y > c.height) s.y = 0;
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
     }
-    animate();
 
-    // small optimization when page hidden
-    document.addEventListener('visibilitychange', () => {
-      if(document.hidden) renderer.setAnimationLoop(null);
-      else animate();
+    // ------- UI Animations using GSAP (buttons, hero, cards) -------
+    // Wait DOM loaded
+    window.addEventListener('DOMContentLoaded', () => {
+      // simple stagger entrance
+      gsap.from('header .logo-mark, header .nav-pill, main h1, main p, .neon-frame', {
+        y: 18, opacity:0, duration:0.9, ease: 'power3.out', stagger: 0.08
+      });
+
+      // button micro interactions
+      const btns = document.querySelectorAll('.btn-press');
+      btns.forEach((b) => {
+        b.addEventListener('pointerenter', () => gsap.to(b, { scale: 1.03, duration:0.15 }));
+        b.addEventListener('pointerleave', () => gsap.to(b, { scale: 1.0, duration:0.12 }));
+        b.addEventListener('pointerdown', () => gsap.to(b, { scale: 0.98, duration:0.06 }));
+        b.addEventListener('pointerup', () => gsap.to(b, { scale: 1.02, duration:0.08, yoyo:true, repeat:0 }));
+      });
+
+      // subtle floating for neon frame
+      gsap.to('.neon-frame', { y: 6, repeat: -1, yoyo: true, duration: 4, ease:'sine.inOut', opacity:1 });
+
+      // hero CTA pulse loop
+      gsap.to('#downloadHero', { boxShadow: '0 12px 40px rgba(128,60,231,0.14)', repeat:-1, yoyo:true, duration:2.5, ease:'sine.inOut' });
     });
 
-    // optional: pause animation on low-power devices (simple check)
-    if(navigator.hardwareConcurrency && navigator.hardwareConcurrency < 3){
-      // reduce star count visual (not creating dynamic here for simplicity) but reduce frame rate
-      let last = 0;
-      function throttledAnimate(){
-        const now = performance.now();
-        if(now - last > 50) { last = now; renderer.render(scene,camera); material.uniforms.time.value = clock.getElapsedTime(); }
-        requestAnimationFrame(throttledAnimate);
-      }
-      throttledAnimate();
+    // Accessibility: enable reduced motion respect
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) {
+      // freeze heavy animations if user prefers reduced motion
+      // (handled by GSAP prefersReducedMotion automatically in many cases; we also remove frame loops)
+      const heroPulse = document.getElementById('downloadHero');
+      if (heroPulse) heroPulse.style.boxShadow = 'none';
     }
+  </script>
+
+  <!-- Optional: small inline script to auto-scroll reveal behavior (polish) -->
+  <script>
+    // smooth reveal on scroll for cards (lightweight)
+    (function(){
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if (e.isIntersecting) {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.opacity = '1';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.glass-card').forEach(el=>{
+        el.style.transform = 'translateY(12px)';
+        el.style.opacity = '0';
+        el.style.transition = 'all 600ms cubic-bezier(.2,.9,.2,1)';
+        io.observe(el);
+      });
+    })();
   </script>
 
 </body>
