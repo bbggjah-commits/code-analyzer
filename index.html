@@ -1,65 +1,92 @@
 <!doctype html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>صفحة تجريبية - تأثير نجوم وأنيميشن</title>
+  <title>نسخة طبق الأصل</title>
 
-  <!-- خط -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <!-- خط عربي مناسب -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
-  <!-- أيقونات من الإنترنت (Font Awesome free CDN) -->
+  <!-- أيقونات من الإنترنت (Font Awesome) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-k6RqeWeci5ZR/Lv4MR0sA0FfDOM6G0sVZJp7aT9e4nqQfJ3z0tG6zv7Q7R5QG5qT1s0e4YJ7X0b1rGk5X2Z0cw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- GSAP for precise animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <link rel="stylesheet" href="style.css" />
 </head>
-<body dir="rtl">
-  <!-- قماش النجوم تحت كل شيء -->
-  <canvas id="star-canvas" class="star-canvas" aria-hidden="true"></canvas>
+<body>
 
-  <header class="nav">
-    <div class="container">
-      <div class="logo" data-anim>
-        <i class="fa-solid fa-rocket"></i>
-        <span>اسم الموقع</span>
+  <!-- Canvas النجوم (z-index تحت المحتوى) -->
+  <canvas id="star-canvas" aria-hidden="true"></canvas>
+
+  <!-- خلفية تأثير لامع/شبكي -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="wrap">
+      <div class="brand" id="brand">
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nNDAnIGhlaWdodD0nNDAnIHZpZXdCb3g9JzAgMCA1MCA1MCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48Y2lyY2xlIGN4PScyNScgY3k9JzI1JyByPScyNScgZmlsbD0nI2ZmZicvPjx0ZXh0IHg9JzI1JyB5PScyOCcgdGV4dC1hbmNob3I9J21pZGRsZScgZm9udC1zaXplPScxMCcgZmlsbD0nIzAzMjM0NicgZm9udC1mYW1pbHk9J0NhcmFvLCBIZWx2ZXRpY2EnPktybmw8L3RleHQ+PC9zdmc+" alt="logo" />
+        <span class="brand-title">KRNL</span>
       </div>
-      <nav class="nav-links" data-anim>
-        <a href="#">الرئيسية</a>
-        <a href="#">الصفحات</a>
-        <a href="#">اتصل</a>
+
+      <nav class="main-nav">
+        <ul>
+          <li><a href="#">الرئيسية</a></li>
+          <li><a href="#">المعرض</a></li>
+          <li><a href="#">المدونة</a></li>
+        </ul>
       </nav>
-      <div class="nav-actions" data-anim>
-        <button class="btn ghost"><i class="fa-regular fa-user"></i> تسجيل</button>
-        <button class="btn primary"><i class="fa-solid fa-download"></i> تنزيل</button>
+
+      <div class="actions">
+        <button class="icon-btn" title="بحث"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button class="cta"><i class="fa-solid fa-download"></i> تنزيل</button>
       </div>
     </div>
   </header>
 
   <main>
     <section class="hero">
-      <div class="container hero-inner">
-        <div class="hero-text" data-anim>
-          <h1>واجهة حديثة مع تأثير نجوم متحركة</h1>
-          <p>قالب جاهز للتعديل. تحريك سلس. أيقونات من الإنترنت. 11 نجمة تتحرك من اليسار إلى اليمين.</p>
+      <div class="wrap hero-inner">
+        <div class="left-panel">
+          <h1 class="hero-title">عنوان قوي مطابق للفيديو</h1>
+          <p class="hero-sub">وصف موجز مع تأثيرات دخول متتابعة وطبقات شفافة كما في المصدر.</p>
           <div class="hero-cta">
-            <button class="btn primary" data-anim><i class="fa-solid fa-play"></i> جرب الآن</button>
-            <button class="btn outline" data-anim><i class="fa-solid fa-code"></i> الشيفرة</button>
+            <button class="btn-primary"><i class="fa-solid fa-play"></i> تشغيل</button>
+            <button class="btn-ghost"><i class="fa-solid fa-code"></i> الشيفرة</button>
           </div>
         </div>
 
-        <div class="hero-card" data-anim>
-          <div class="card-top">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-          </div>
-          <div class="card-body">
-            <h3>لوحة عرض</h3>
-            <p>عناصر تفاعلية وأنيميشن عند الظهور. اضغط الأزرار لتجربة التأثيرات.</p>
-            <div class="card-actions">
-              <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-              <button class="icon-btn"><i class="fa-solid fa-share-nodes"></i></button>
-              <button class="icon-btn"><i class="fa-solid fa-star"></i></button>
+        <div class="right-panel">
+          <div class="mock-card">
+            <div class="mock-top">
+              <div class="dot red"></div>
+              <div class="dot yellow"></div>
+              <div class="dot green"></div>
+            </div>
+            <div class="mock-body">
+              <h3>لوحة تحكم</h3>
+              <div class="stats">
+                <div class="stat">
+                  <span class="num">1,248</span>
+                  <span class="label">زائر</span>
+                </div>
+                <div class="stat">
+                  <span class="num">98%</span>
+                  <span class="label">نجاح</span>
+                </div>
+                <div class="stat">
+                  <span class="num">22</span>
+                  <span class="label">مهمات</span>
+                </div>
+              </div>
+              <div class="card-actions">
+                <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+                <button class="icon-btn"><i class="fa-solid fa-share-nodes"></i></button>
+                <button class="icon-btn"><i class="fa-solid fa-star"></i></button>
+              </div>
             </div>
           </div>
         </div>
@@ -67,32 +94,32 @@
     </section>
 
     <section class="features">
-      <div class="container grid">
-        <article class="feature" data-anim>
-          <i class="fa-solid fa-bolt fa-2x"></i>
-          <h4>أداء</h4>
-          <p>تحسين تحميل وانتقالات سلسة.</p>
+      <div class="wrap features-grid">
+        <article class="feature">
+          <i class="fa-solid fa-bolt"></i>
+          <h4>أداء عالي</h4>
+          <p>تحسينات للتحميل والأنيميشن.</p>
         </article>
-        <article class="feature" data-anim>
-          <i class="fa-solid fa-paintbrush fa-2x"></i>
-          <h4>تصميم</h4>
-          <p>مظهر عصري وقابل للتعديل بسهولة.</p>
+        <article class="feature">
+          <i class="fa-solid fa-palette"></i>
+          <h4>تصميم مطابق</h4>
+          <p>طبقات، ظلال، وأنيميشن دقيقة.</p>
         </article>
-        <article class="feature" data-anim>
-          <i class="fa-solid fa-cubes fa-2x"></i>
-          <h4>مكونات</h4>
-          <p>بطاقات وأزرار وأيقونات جاهزة.</p>
+        <article class="feature">
+          <i class="fa-solid fa-code"></i>
+          <h4>شيفرة منسقة</h4>
+          <p>منفصلة وقابلة لإعادة الاستخدام.</p>
         </article>
       </div>
     </section>
   </main>
 
-  <footer class="footer" data-anim>
-    <div class="container">
-      <p>&copy; <span id="year"></span> كل الحقوق محفوظة.</p>
-      <div class="socials">
-        <a href="#"><i class="fa-brands fa-github"></i></a>
-        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="left">&copy; <span id="year"></span> KRNL — نسخة مطابقة</div>
+      <div class="right social">
+        <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
       </div>
     </div>
   </footer>
