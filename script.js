@@ -1,157 +1,106 @@
-/* script.js
-   - يحاكي الأنيميشن من الفيديو بدقة عالية
-   - يرسم 11 نجمة تتحرك من اليسار إلى اليمين
-   - يستخدم GSAP لتوقيت متطابق لتأثيرات الدخول والحركات الدقيقة
-*/
+:root{
+  --bg-dark:#05070a;
+  --bg-mid:#071027;
+  --accent:#66e0ff;
+  --muted:#97b0c6;
+  --card:#0b1220;
+  --glass: rgba(255,255,255,0.03);
+  --radius:14px;
+  --text:#e8f6ff;
+  font-family: 'Cairo', system-ui, Arial, sans-serif;
+}
 
-(() => {
-  // ==== year footer ====
-  document.getElementById('year').textContent = new Date().getFullYear();
+/* reset */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  min-height:100vh;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(34,58,90,0.20), transparent),
+              linear-gradient(180deg,var(--bg-dark),var(--bg-mid));
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
 
-  // ==== Canvas النجوم (11 نجمة) ====
-  const canvas = document.getElementById('star-canvas');
-  const ctx = canvas.getContext('2d');
-  let W = canvas.width = innerWidth;
-  let H = canvas.height = innerHeight;
-  const STAR_COUNT = 11;
-  // تحكم بالسرعات لتطابق حركة الفيديو
-  class Star {
-    constructor(i){
-      this.i = i;
-      this.init();
-    }
-    init(){
-      this.size = 0.8 + Math.random()*3.2;
-      // توزيع X يبدأ من -random حتى داخل الشاشة ل stagger
-      this.x = -Math.random() * (W * 0.6) - (this.i * 20);
-      this.y = Math.random() * (H * 0.72) + H * 0.06;
-      this.speed = 0.4 + Math.random() * 1.1;
-      this.alphaBase = 0.35 + Math.random()*0.7;
-      this.phase = Math.random() * Math.PI * 2;
-      this.halo = this.size * (2.8 + Math.random()*1.6);
-    }
-    update(dt){
-      this.x += this.speed * dt * 0.06;
-      this.phase += 0.03 * dt * 0.06;
-      this.alpha = this.alphaBase * (0.9 + Math.sin(this.phase)*0.12);
-      if(this.x - this.size > W + 80) {
-        this.x = -60 - Math.random()*260;
-        this.y = Math.random() * (H * 0.72) + H * 0.06;
-      }
-    }
-    draw(){
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      // core
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
-      // halo
-      const g = ctx.createRadialGradient(this.x, this.y, this.size*0.2, this.x, this.y, this.halo);
-      g.addColorStop(0, 'rgba(102,224,255,0.12)');
-      g.addColorStop(1, 'rgba(102,224,255,0.0)');
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.halo, 0, Math.PI*2);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
+/* canvas under everything */
+#star-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-  const stars = [];
-  for(let i=0;i<STAR_COUNT;i++) stars.push(new Star(i));
+/* subtle grid overlay like الموقع */
+.bg-grid{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:
+    linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+  background-size: 160px 160px;
+  mix-blend-mode:overlay;
+  opacity:0.45;
+}
 
-  let last = performance.now();
-  function loop(now){
-    const dt = now - last;
-    last = now;
-    ctx.clearRect(0,0,W,H);
+/* wrapper */
+.wrap{width:min(1200px,94%);margin-inline:auto;position:relative;z-index:2;display:flex;align-items:center;gap:16px}
 
-    // subtle top-to-bottom gradient overlay
-    const grad = ctx.createLinearGradient(0,0,0,H);
-    grad.addColorStop(0,'rgba(255,255,255,0.00)');
-    grad.addColorStop(1,'rgba(2,6,12,0.06)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0,0,W,H);
+/* header */
+.site-header{padding:18px 0;position:sticky;top:8px;z-index:6}
+.site-header .wrap{display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700}
+.brand img{width:40px;height:40px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
+.brand-title{font-size:16px}
+.main-nav ul{display:flex;gap:18px;list-style:none}
+.main-nav a{color:var(--muted);text-decoration:none;font-size:15px;padding:6px 8px;border-radius:8px}
+.main-nav a:hover{color:var(--text);background:rgba(255,255,255,0.02)}
 
-    for(const s of stars){
-      s.update(dt);
-      s.draw();
-    }
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
+/* actions */
+.actions{display:flex;gap:12px;align-items:center}
+.icon-btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:10px;color:var(--muted);cursor:pointer;backdrop-filter:blur(6px)}
+.cta{background:linear-gradient(90deg,var(--accent),#6fb9ff);color:#02212b;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
 
-  window.addEventListener('resize', () => {
-    W = canvas.width = innerWidth;
-    H = canvas.height = innerHeight;
-  });
+/* hero */
+.hero{padding:80px 0 40px;position:relative;z-index:2}
+.hero-inner{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center}
+.left-panel{padding:12px}
+.hero-title{font-size:40px;line-height:1.02;margin-bottom:12px}
+.hero-sub{color:var(--muted);margin-bottom:18px;max-width:600px}
+.hero-cta{display:flex;gap:12px}
+.btn-primary{background:linear-gradient(90deg,var(--accent),#6fb9ff);color:#02212b;padding:12px 16px;border-radius:12px;border:0;font-weight:700;cursor:pointer}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:12px 16px;border-radius:12px;color:var(--muted);cursor:pointer}
 
-  // ==== GSAP entrance animations متطابقة توقيتياً ====
-  const brand = document.getElementById('brand');
-  const heroTitle = document.querySelector('.hero-title');
-  const heroSub = document.querySelector('.hero-sub');
-  const leftBtns = document.querySelectorAll('.left-panel .btn-primary, .left-panel .btn-ghost');
-  const mock = document.querySelector('.mock-card');
-  const navItems = document.querySelectorAll('.main-nav a');
-  const features = document.querySelectorAll('.feature');
+/* mock card */
+.mock-card{
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding:12px;border:1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 16px 46px rgba(2,8,18,0.7);
+  backdrop-filter: blur(8px);
+  width:100%;
+}
+.mock-top{display:flex;gap:8px;margin-bottom:10px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.red{background:#ff6b6b}
+.dot.yellow{background:#ffd166}
+.dot.green{background:#8ce99a}
+.mock-body h3{margin-bottom:8px}
+.stats{display:flex;gap:10px;margin-top:8px}
+.stat{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:8px;border-radius:10px;flex:1;text-align:center}
+.stat .num{display:block;font-weight:800;font-size:18px}
+.card-actions{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
 
-  gsap.registerPlugin(ScrollTrigger);
+/* features */
+.features{padding:40px 0}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.feature{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));padding:20px;border-radius:12px;text-align:center;box-shadow:0 8px 30px rgba(3,9,20,0.6)}
+.feature i{font-size:28px;color:var(--accent);margin-bottom:8px}
 
-  const tl = gsap.timeline({defaults:{duration:0.8, ease:"power3.out"}});
+/* footer */
+.site-footer{padding:24px 0;border-top:1px solid rgba(255,255,255,0.02);color:var(--muted)}
+.site-footer .wrap{display:flex;justify-content:space-between;align-items:center}
 
-  // header items
-  tl.from(brand, {y:-10, autoAlpha:0, duration:0.8}, 0);
-  tl.from('.actions .icon-btn', {y:-6, autoAlpha:0, stagger:0.06}, 0.05);
-  tl.from('.actions .cta', {scale:0.95, autoAlpha:0, duration:0.6}, 0.08);
-  tl.from(navItems, {y:-8, autoAlpha:0, stagger:0.05}, 0.12);
+/* entrance helpers (used by JS/GSAP) */
+.reveal{opacity:0;transform:translateY(18px) scale(.995)}
 
-  // hero sequence matching video timing
-  tl.from(heroTitle, {y:18, autoAlpha:0, duration:0.9, ease:"power4.out"}, 0.28);
-  tl.from(heroSub, {y:12, autoAlpha:0, duration:0.7}, 0.36);
-  tl.from(leftBtns, {y:10, autoAlpha:0, stagger:0.08, duration:0.6}, 0.44);
-
-  // right mock card (3D subtle pop)
-  tl.from(mock, {x:40, rotationX:6, autoAlpha:0, transformOrigin:"left center", duration:0.9, ease:"power4.out"}, 0.38);
-
-  // features reveal on scroll
-  features.forEach((f,i) => {
-    gsap.from(f, {
-      y: 18,
-      autoAlpha: 0,
-      duration: 0.8,
-      ease: "power3.out",
-      scrollTrigger: {trigger: f, start: "top 85%"},
-      delay: i * 0.06
-    });
-  });
-
-  // small hover micro-interactions
-  const iconBtns = document.querySelectorAll('.icon-btn');
-  iconBtns.forEach(b=>{
-    b.addEventListener('mouseenter', ()=> gsap.to(b, {scale:1.06, duration:0.18}));
-    b.addEventListener('mouseleave', ()=> gsap.to(b, {scale:1, duration:0.18}));
-  });
-
-  // subtle floating for mock-card to match الفيديو vibe
-  gsap.to(mock, {y:6, rotation:-0.3, duration:4.6, yoyo:true, repeat:-1, ease:"sine.inOut", delay:1.2});
-
-  // clickable press feedback
-  document.addEventListener('pointerdown', e=>{
-    const btn = e.target.closest('button, .icon-btn, .cta');
-    if(!btn) return;
-    gsap.to(btn, {scale:0.97, duration:0.08});
-  });
-  document.addEventListener('pointerup', e=>{
-    const btn = e.target.closest('button, .icon-btn, .cta');
-    if(!btn) return;
-    gsap.to(btn, {scale:1, duration:0.12});
-  });
-
-  // ensure elements that should initially be visible are shown if JS loads late
-  [brand, heroTitle, heroSub, mock].forEach(el=>{
-    if(el) el.style.opacity = 1;
-  });
-
-})();
+/* responsive */
+@media (max-width:980px){
+  .hero-inner{grid-template-columns:1fr;gap:20px}
+  .features-grid{grid-template-columns:1fr}
+  .main-nav{display:none}
+}
