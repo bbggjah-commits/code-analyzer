@@ -1,17 +1,15 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>نسخة طبق الأصل</title>
+  <title>Krnl — Replica</title>
 
-  <!-- خط عربي مناسب -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <!-- fonts & icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
 
-  <!-- أيقونات من الإنترنت (Font Awesome) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-k6RqeWeci5ZR/Lv4MR0sA0FfDOM6G0sVZJp7aT9e4nqQfJ3z0tG6zv7Q7R5QG5qT1s0e4YJ7X0b1rGk5X2Z0cw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <!-- GSAP for precise animations -->
+  <!-- gsap (animations) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
@@ -19,73 +17,46 @@
 </head>
 <body>
 
-  <!-- Canvas النجوم (z-index تحت المحتوى) -->
+  <!-- canvas for stars (under content) -->
   <canvas id="star-canvas" aria-hidden="true"></canvas>
 
-  <!-- خلفية تأثير لامع/شبكي -->
-  <div class="bg-grid" aria-hidden="true"></div>
-
-  <header class="site-header">
-    <div class="wrap">
-      <div class="brand" id="brand">
-        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nNDAnIGhlaWdodD0nNDAnIHZpZXdCb3g9JzAgMCA1MCA1MCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJz48Y2lyY2xlIGN4PScyNScgY3k9JzI1JyByPScyNScgZmlsbD0nI2ZmZicvPjx0ZXh0IHg9JzI1JyB5PScyOCcgdGV4dC1hbmNob3I9J21pZGRsZScgZm9udC1zaXplPScxMCcgZmlsbD0nIzAzMjM0NicgZm9udC1mYW1pbHk9J0NhcmFvLCBIZWx2ZXRpY2EnPktybmw8L3RleHQ+PC9zdmc+" alt="logo" />
-        <span class="brand-title">KRNL</span>
+  <!-- top nav pill -->
+  <header class="topbar">
+    <div class="topbar-wrap">
+      <div class="brand">
+        <div class="logo">K</div>
+        <div class="brand-text">Krnl</div>
       </div>
 
-      <nav class="main-nav">
-        <ul>
-          <li><a href="#">الرئيسية</a></li>
-          <li><a href="#">المعرض</a></li>
-          <li><a href="#">المدونة</a></li>
-        </ul>
-      </nav>
-
-      <div class="actions">
-        <button class="icon-btn" title="بحث"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <button class="cta"><i class="fa-solid fa-download"></i> تنزيل</button>
+      <div class="top-actions">
+        <button class="pill-download"><i class="fa-solid fa-download"></i> Download</button>
+        <button class="hamburger" aria-label="menu"><i class="fa-solid fa-bars"></i></button>
       </div>
     </div>
   </header>
 
   <main>
     <section class="hero">
-      <div class="wrap hero-inner">
-        <div class="left-panel">
-          <h1 class="hero-title">عنوان قوي مطابق للفيديو</h1>
-          <p class="hero-sub">وصف موجز مع تأثيرات دخول متتابعة وطبقات شفافة كما في المصدر.</p>
-          <div class="hero-cta">
-            <button class="btn-primary"><i class="fa-solid fa-play"></i> تشغيل</button>
-            <button class="btn-ghost"><i class="fa-solid fa-code"></i> الشيفرة</button>
-          </div>
+      <div class="container">
+        <h1 class="title">Krnl's back, better than ever</h1>
+        <p class="subtitle">
+          A powerful multi-platform Luau scripting engine, complete with a text editor and built-in script database.
+        </p>
+
+        <div class="cta-row">
+          <button class="btn primary"><i class="fa-solid fa-download"></i> Download</button>
+          <button class="btn outline"><i class="fa-brands fa-discord"></i> Join Discord</button>
         </div>
 
-        <div class="right-panel">
-          <div class="mock-card">
-            <div class="mock-top">
-              <div class="dot red"></div>
-              <div class="dot yellow"></div>
-              <div class="dot green"></div>
-            </div>
-            <div class="mock-body">
-              <h3>لوحة تحكم</h3>
-              <div class="stats">
-                <div class="stat">
-                  <span class="num">1,248</span>
-                  <span class="label">زائر</span>
-                </div>
-                <div class="stat">
-                  <span class="num">98%</span>
-                  <span class="label">نجاح</span>
-                </div>
-                <div class="stat">
-                  <span class="num">22</span>
-                  <span class="label">مهمات</span>
-                </div>
-              </div>
-              <div class="card-actions">
-                <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-                <button class="icon-btn"><i class="fa-solid fa-share-nodes"></i></button>
-                <button class="icon-btn"><i class="fa-solid fa-star"></i></button>
+        <div class="mock-wrap">
+          <div class="device-mock">
+            <!-- placeholder image block -->
+            <div class="screen">
+              <div class="editor-top">K Editor</div>
+              <div class="code-lines">
+                <pre><code>local function hello()
+  print("hello world")
+end</code></pre>
               </div>
             </div>
           </div>
@@ -93,34 +64,68 @@
       </div>
     </section>
 
-    <section class="features">
-      <div class="wrap features-grid">
-        <article class="feature">
-          <i class="fa-solid fa-bolt"></i>
-          <h4>أداء عالي</h4>
-          <p>تحسينات للتحميل والأنيميشن.</p>
-        </article>
-        <article class="feature">
-          <i class="fa-solid fa-palette"></i>
-          <h4>تصميم مطابق</h4>
-          <p>طبقات، ظلال، وأنيميشن دقيقة.</p>
-        </article>
-        <article class="feature">
-          <i class="fa-solid fa-code"></i>
-          <h4>شيفرة منسقة</h4>
-          <p>منفصلة وقابلة لإعادة الاستخدام.</p>
-        </article>
+    <section class="platforms">
+      <div class="container grid">
+        <div class="card">
+          <div class="card-head">
+            <div class="icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+            <h3>Android</h3>
+            <p class="muted">All Android devices</p>
+          </div>
+          <div class="card-body">
+            <button class="btn white">Download Regular</button>
+            <button class="btn ghost">Download VNG</button>
+            <div class="note warning"><i class="fa-solid fa-triangle-exclamation"></i> Only use VNG if you have a Vietnamese region locked account</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="icon"><i class="fa-solid fa-desktop"></i></div>
+            <h3>Windows</h3>
+            <p class="muted">All Windows versions</p>
+          </div>
+          <div class="card-body">
+            <button class="btn teal">Download New UI</button>
+            <button class="btn ghost">Download Legacy</button>
+            <div class="note info"><i class="fa-regular fa-clock"></i> Coming soon! Windows support is currently in development</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="icon"><i class="fa-brands fa-apple"></i></div>
+            <h3>iOS</h3>
+            <p class="muted">iPhone &amp; iPad</p>
+          </div>
+          <div class="card-body">
+            <button class="btn white">Download IPA</button>
+            <button class="btn ghost">Direct Install</button>
+            <div class="note"><i class="fa-solid fa-circle-info"></i> Direct install is provided by a third party distributor</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="help">
+      <div class="container help-card">
+        <h2>Need help getting started?</h2>
+        <p class="muted">Join our Discord community for support, updates, and to connect with other users.</p>
+        <button class="btn outline large"><i class="fa-brands fa-discord"></i> Join Discord</button>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="wrap">
-      <div class="left">&copy; <span id="year"></span> KRNL — نسخة مطابقة</div>
-      <div class="right social">
-        <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-        <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+    <div class="container footer-grid">
+      <div class="brand-tn">
+        <div class="logo small">K</div>
+        <div>Krnl</div>
+        <div class="muted">© <span id="year"></span> Krnl Inc.</div>
       </div>
+      <nav class="footer-links">
+        <a>Android</a><a>iOS</a><a>Windows</a>
+      </nav>
     </div>
   </footer>
 
