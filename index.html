@@ -1,166 +1,102 @@
-<!DOCTYPE html><html lang="en">
+<!doctype html>
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stellar Showcase</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif;}
-    body {
-      background: radial-gradient(circle at top, #000 20%, #111);
-      color: #fff;
-      overflow-x: hidden;
-      position: relative;
-    }header {
-  text-align: center;
-  padding: 4rem 2rem;
-}
-header h1 {
-  font-size: 3rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  background: linear-gradient(90deg, #fff, #aaa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>صفحة تجريبية - تأثير نجوم وأنيميشن</title>
 
-/* Floating stars */
-.stars {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0; left: 0;
-  z-index: -1;
-  overflow: hidden;
-}
-.star {
-  position: absolute;
-  width: 2px; height: 2px;
-  background: white;
-  animation: twinkle 5s infinite ease-in-out;
-}
-@keyframes twinkle {
-  0%, 100% {opacity: 0.2; transform: scale(1);}
-  50% {opacity: 1; transform: scale(1.5);}
-}
+  <!-- خط -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-/* Floating balloons */
-.balloon {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.15;
-  animation: float 12s infinite ease-in-out;
-}
-@keyframes float {
-  0% {transform: translateY(0) scale(1);}
-  50% {transform: translateY(-40px) scale(1.1);}
-  100% {transform: translateY(0) scale(1);}
-}
-.balloon.white {background: #fff;}
-.balloon.black {background: #000; border: 1px solid #fff;}
+  <!-- أيقونات من الإنترنت (Font Awesome free CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-k6RqeWeci5ZR/Lv4MR0sA0FfDOM6G0sVZJp7aT9e4nqQfJ3z0tG6zv7Q7R5QG5qT1s0e4YJ7X0b1rGk5X2Z0cw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-.container {
-  padding: 2rem;
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.card {
-  backdrop-filter: blur(12px);
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 1.5rem;
-  border-radius: 1.5rem;
-  text-align: center;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-.card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 10px 25px rgba(255,255,255,0.1);
-}
-
-.card i {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: #fff;
-}
-
-.card img {
-  width: 100%;
-  border-radius: 1rem;
-  margin-bottom: 1rem;
-  filter: none;
-  transition: transform 0.5s ease;
-}
-.card img:hover {
-  transform: scale(1.05);
-}
-
-.card h3 {font-size: 1.3rem; margin-bottom: .5rem;}
-.card p {font-size: 0.9rem; color: #ddd;}
-
-footer {
-  text-align: center;
-  padding: 2rem;
-  font-size: 0.9rem;
-  color: #aaa;
-}
-
-@media (max-width: 768px) {
-  header h1 {font-size: 2.2rem;}
-  .container {padding: 1rem; gap: 1rem;}
-  .card {padding: 1rem;}
-  .card h3 {font-size: 1.1rem;}
-}
-
-@media (orientation: landscape) and (max-width: 900px) {
-  .container {grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));}
-  header h1 {font-size: 2rem;}
-}
-
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="stars"></div>
-  <div class="balloon white" style="width:80px; height:80px; top:60%; left:10%; animation-delay:0s;"></div>
-  <div class="balloon black" style="width:100px; height:100px; top:30%; left:70%; animation-delay:3s;"></div>
-  <div class="balloon white" style="width:50px; height:50px; top:80%; left:50%; animation-delay:5s;"></div>  <header>
-    <h1>Stellar Showcase</h1>
-    <p>Experience smooth elegance, powerful visuals, and responsive design.</p>
-  </header>  <section class="container">
-    <div class="card">
-      <i class="fa-solid fa-code"></i>
-      <img src="https://picsum.photos/400/250?random=1" alt="script example">
-      <h3>Clean Code</h3>
-      <p>Organized and optimized scripts that run smoothly on any platform.</p>
-    </div><div class="card">
-  <i class="fa-solid fa-bolt"></i>
-  <img src="https://picsum.photos/400/250?random=2" alt="script example">
-  <h3>Fast Performance</h3>
-  <p>Optimized animations and transitions for a seamless experience.</p>
-</div>
+<body dir="rtl">
+  <!-- قماش النجوم تحت كل شيء -->
+  <canvas id="star-canvas" class="star-canvas" aria-hidden="true"></canvas>
 
-<div class="card">
-  <i class="fa-solid fa-star"></i>
-  <img src="https://picsum.photos/400/250?random=3" alt="script example">
-  <h3>Elegant Effects</h3>
-  <p>Subtle animations and starry backgrounds create immersive visuals.</p>
-</div>
+  <header class="nav">
+    <div class="container">
+      <div class="logo" data-anim>
+        <i class="fa-solid fa-rocket"></i>
+        <span>اسم الموقع</span>
+      </div>
+      <nav class="nav-links" data-anim>
+        <a href="#">الرئيسية</a>
+        <a href="#">الصفحات</a>
+        <a href="#">اتصل</a>
+      </nav>
+      <div class="nav-actions" data-anim>
+        <button class="btn ghost"><i class="fa-regular fa-user"></i> تسجيل</button>
+        <button class="btn primary"><i class="fa-solid fa-download"></i> تنزيل</button>
+      </div>
+    </div>
+  </header>
 
-  </section>  <footer>© 2025 Stellar Showcase. Crafted with passion and precision.</footer>  <script>
-    // Generate random stars
-    const starsContainer = document.querySelector('.stars');
-    for (let i = 0; i < 120; i++) {
-      const star = document.createElement('div');
-      star.classList.add('star');
-      star.style.top = Math.random() * 100 + '%';
-      star.style.left = Math.random() * 100 + '%';
-      star.style.animationDelay = Math.random() * 5 + 's';
-      starsContainer.appendChild(star);
-    }
-  </script></body>
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-text" data-anim>
+          <h1>واجهة حديثة مع تأثير نجوم متحركة</h1>
+          <p>قالب جاهز للتعديل. تحريك سلس. أيقونات من الإنترنت. 11 نجمة تتحرك من اليسار إلى اليمين.</p>
+          <div class="hero-cta">
+            <button class="btn primary" data-anim><i class="fa-solid fa-play"></i> جرب الآن</button>
+            <button class="btn outline" data-anim><i class="fa-solid fa-code"></i> الشيفرة</button>
+          </div>
+        </div>
+
+        <div class="hero-card" data-anim>
+          <div class="card-top">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="card-body">
+            <h3>لوحة عرض</h3>
+            <p>عناصر تفاعلية وأنيميشن عند الظهور. اضغط الأزرار لتجربة التأثيرات.</p>
+            <div class="card-actions">
+              <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+              <button class="icon-btn"><i class="fa-solid fa-share-nodes"></i></button>
+              <button class="icon-btn"><i class="fa-solid fa-star"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container grid">
+        <article class="feature" data-anim>
+          <i class="fa-solid fa-bolt fa-2x"></i>
+          <h4>أداء</h4>
+          <p>تحسين تحميل وانتقالات سلسة.</p>
+        </article>
+        <article class="feature" data-anim>
+          <i class="fa-solid fa-paintbrush fa-2x"></i>
+          <h4>تصميم</h4>
+          <p>مظهر عصري وقابل للتعديل بسهولة.</p>
+        </article>
+        <article class="feature" data-anim>
+          <i class="fa-solid fa-cubes fa-2x"></i>
+          <h4>مكونات</h4>
+          <p>بطاقات وأزرار وأيقونات جاهزة.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" data-anim>
+    <div class="container">
+      <p>&copy; <span id="year"></span> كل الحقوق محفوظة.</p>
+      <div class="socials">
+        <a href="#"><i class="fa-brands fa-github"></i></a>
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
 </html>
