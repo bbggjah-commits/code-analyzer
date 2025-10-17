@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محسِّن الأكواد البرمجية</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #1a1a1a;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .code-editor {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .code-editor h2 {
+            margin-top: 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 400px;
+            background-color: #1a1a1a;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            resize: vertical;
+            box-sizing: border-box; /* To ensure padding doesn't affect the width */
+        }
+
+        .controls {
+            text-align: center;
+        }
+
+        button {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ccc;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            background-color: #1a1a1a;
+            border-top: 1px solid #333;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>محسِّن الأكواد البرمجية</h1>
+        <p>قم بتحسين جودة الكود الخاص بك وجعله أكثر كفاءة وسهولة في القراءة.</p>
+    </header>
+    <main>
+        <div class="container">
+            <div class="code-editor">
+                <h2>الكود الأصلي</h2>
+                <textarea id="originalCode" placeholder="الصق الكود هنا..."></textarea>
+            </div>
+            <div class="controls">
+                <button id="improveButton">تحسين الكود</button>
+            </div>
+            <div class="code-editor">
+                <h2>الكود المحسَّن</h2>
+                <textarea id="improvedCode" placeholder="سيظهر الكود المحسَّن هنا..." readonly></textarea>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 محسِّن الأكواد البرمجية. تم التطوير بواسطة Gemini.</p>
+    </footer>
+
+    <script>
+        document.getElementById('improveButton').addEventListener('click', () => {
+            const originalCode = document.getElementById('originalCode').value;
+
+            // هذه دالة وهمية لتحسين الكود. في تطبيق حقيقي،
+            // ستحتاج إلى ربط هذه الواجهة بنموذج لغوي كبير (مثلي) عبر واجهة برمجة تطبيقات (API).
+            const improvedCode = improveCode(originalCode);
+
+            document.getElementById('improvedCode').value = improvedCode;
+        });
+
+        function improveCode(code) {
+            if (!code.trim()) {
+                return "الرجاء إدخال بعض الأكواد للتحسين.";
+            }
+
+            // مثال بسيط جداً على "التحسين".
+            // في الواقع، ستكون عملية التحسين أكثر تعقيدًا وتتطلب منطقًا برمجيًا متقدمًا.
+            let improvement = `/*
+  الكود المحسَّن بواسطة Gemini:
+  - تمت مراجعة الكود وإضافة تعليقات توضيحية لتحسين القراءة.
+  - تم فحص الأخطاء المنطقية المحتملة.
+  - تم تنسيق الكود ليتوافق مع أفضل الممارسات.
+*/
+
+${code}`;
+
+            // يمكنك إضافة المزيد من المنطق هنا، مثل:
+            // - إزالة المسافات الزائدة
+            // - تنسيق المسافات البادئة
+            // - اقتراح أسماء متغيرات أفضل (هذا يتطلب تحليلاً متقدمًا)
+
+            return improvement;
+        }
+    </script>
+</body>
+</html>```
+
+**شرح التغييرات:**
+
+*   **كود CSS:** تم نقله بالكامل ووضعه داخل وسم `<style>` في قسم `<head>` من ملف HTML.
+*   **كود JavaScript:** تم نقله بالكامل ووضعه داخل وسم `<script>` مباشرة قبل إغلاق وسم `</body>`. هذه هي الممارسة الأفضل لضمان تحميل جميع عناصر الصفحة (HTML) قبل أن يبدأ تشغيل الجافاسكريبت الذي قد يتفاعل مع هذه العناصر.
