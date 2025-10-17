@@ -3,397 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VX Community - Krnl Executor</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=BBH+Sans+Hegarty&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>The Infinite Code - Excellence in Programming</title>
+
     <style>
+        /* --- General Reset & Black/White Theme --- */
+        :root {
+            --color-primary: #000000;
+            --color-secondary: #ffffff;
+            --color-accent: #333333; /* For subtle borders/lines */
+        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Arial', sans-serif; /* Use a clean, modern font */
         }
-
-        body {
-            font-family: "PT Sans", sans-serif;
-            background: linear-gradient(-45deg, #000000, #1a1a1a, #0d0d0d, #262626);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            color: white;
-            min-height: 100vh;
+        body, html {
+            height: 100%;
             overflow-x: hidden;
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
         }
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 100px 20px 50px;
-        }
-
-        header {
-            position: fixed;
+        /* --- Moving Background Effect (Pseudo-element) --- */
+        .hero-section::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            padding: 15px 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            background: rgba(0, 0, 0, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            width: 300%; /* Wider than viewport for movement */
+            height: 100%;
+            /* Simple moving gradient (replace with a background image/video for real beauty) */
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.05),
+                rgba(255, 255, 255, 0.05) 50px,
+                transparent 50px,
+                transparent 100px
+            );
+            background-size: 100% 100%;
+            animation: moveBackground 60s linear infinite; /* Slow, continuous movement */
+            opacity: 0.1; /* Very subtle */
+            z-index: -1;
         }
 
-        .nav-container {
+        @keyframes moveBackground {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-66.666%); /* Move the background across its width */
+            }
+        }
+
+        /* --- Layout & Styling --- */
+        header {
+            padding: 20px 5vw;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            border-bottom: 1px solid var(--color-accent);
         }
-
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-btn {
-            padding: 10px 25px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-family: "PT Sans", sans-serif;
-            font-weight: 700;
-        }
-
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
         .logo {
-            height: 60px;
+            font-size: 1.8em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: var(--color-secondary);
+        }
+        nav a {
+            color: var(--color-secondary);
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 1.1em;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: var(--color-accent);
         }
 
-        .logo img {
-            height: 100%;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
-        }
-
-        .executor-container {
-            background: rgba(30, 30, 30, 0.9);
-            border-radius: 15px;
-            padding: 40px;
-            margin: 30px 0;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .executor-header {
+        .hero-section {
+            position: relative;
+            height: 80vh;
             display: flex;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 30px;
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            padding: 0 10vw;
         }
-
-        .executor-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            flex-shrink: 0;
+        .hero-section h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
         }
-
-        .executor-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .executor-info h1 {
-            font-family: "BBH Sans Hegarty", sans-serif;
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            color: white;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-        }
-
-        .executor-info .description {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 700px;
-            line-height: 1.6;
-        }
-
-        .executor-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+        .hero-section p {
+            font-size: 1.4em;
+            max-width: 600px;
+            line-height: 1.5;
             margin-bottom: 40px;
         }
 
-        .features, .negatives {
-            background: rgba(40, 40, 40, 0.8);
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            border: 2px solid var(--color-secondary);
+            color: var(--color-secondary);
+            transition: all 0.3s;
+        }
+        .cta-button:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
         }
 
-        .features h3, .negatives h3 {
-            font-family: "BBH Sans Hegarty", sans-serif;
-            font-size: 2rem;
-            margin-bottom: 25px;
-            color: white;
+        .services-section {
+            padding: 80px 5vw;
             text-align: center;
         }
-
-        .features ul, .negatives ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .features li, .negatives li {
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .service-cards {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 1.1rem;
-        }
-
-        .features li:last-child, .negatives li:last-child {
-            border-bottom: none;
-        }
-
-        .features li::before {
-            content: "✓";
-            color: #ffffff;
-            font-weight: bold;
-            font-size: 1.3rem;
-        }
-
-        .negatives li::before {
-            content: "✗";
-            color: #ffffff;
-            font-weight: bold;
-            font-size: 1.3rem;
-        }
-
-        .download-section {
-            text-align: center;
+            justify-content: space-around;
             margin-top: 40px;
         }
-
-        .download-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            padding: 18px 40px;
-            background: white;
-            color: black;
-            text-decoration: none;
-            border-radius: 12px;
-            font-size: 1.4rem;
+        .card {
+            width: 45%;
+            padding: 40px;
+            border: 1px solid var(--color-accent);
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+        .card:hover {
+            background-color: var(--color-accent);
+        }
+        .card h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .card .service-type {
+            display: block;
+            font-size: 1.5em;
             font-weight: bold;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            font-family: "PT Sans", sans-serif;
+            margin-bottom: 10px;
         }
 
-        .download-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.2);
-            background: #e0e0e0;
+        .language-support {
+            text-align: center;
+            padding: 50px 0;
+            border-top: 1px solid var(--color-accent);
+        }
+        .language-support p {
+            font-size: 1.1em;
+            opacity: 0.7;
         }
 
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .star {
-            position: absolute;
-            background-color: white;
-            border-radius: 50%;
-            animation: twinkle linear infinite, move linear infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes move {
-            from { transform: translateX(-100px); }
-            to { transform: translateX(calc(100vw + 100px)); }
-        }
-
-        .wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: url('https://i.ibb.co/rQZ7LJ2/wave.png');
-            background-size: 1000px 100px;
-            animation: wave 15s linear infinite;
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid var(--color-accent);
+            font-size: 0.9em;
             opacity: 0.5;
-        }
-
-        .wave:nth-child(2) {
-            animation: wave 10s linear infinite;
-            opacity: 0.3;
-            animation-delay: -5s;
-            bottom: 10px;
-        }
-
-        @keyframes wave {
-            0% { background-position-x: 0; }
-            100% { background-position-x: 1000px; }
-        }
-
-        @media (max-width: 768px) {
-            .executor-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-            }
-            
-            .executor-details {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-            
-            .executor-info h1 {
-                font-size: 2.5rem;
-            }
-            
-            .nav-buttons {
-                gap: 10px;
-            }
-            
-            .nav-btn {
-                padding: 8px 15px;
-                font-size: 0.9rem;
-            }
-            
-            .executor-container {
-                padding: 25px;
-            }
-            
-            .features, .negatives {
-                padding: 20px;
-            }
-            
-            .download-btn {
-                padding: 15px 30px;
-                font-size: 1.2rem;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    
+
     <header>
-        <div class="nav-container">
-            <div class="nav-buttons">
-                <a href="https://inggroupkeyless.vercel.app/" class="nav-btn">Home</a>
-                <a href="https://inggroup.vercel.app/" class="nav-btn">Scripts</a>
-                <a href="#" class="nav-btn" onclick="location.reload()">Executors</a>
-            </div>
-            <div class="logo">
-                <img src="https://imagizer.imageshack.com/v2/320xq70/r/924/qBbOtR.png" alt="VX Community Logo">
-            </div>
-        </div>
+        <div class="logo">THE INFINITE CODE</div>
+        <nav>
+            <a href="#services">Services</a>
+            <a href="#request">Request Code</a>
+            <a href="#contact">Contact</a>
+        </nav>
     </header>
 
-    <div class="container">
-        <div class="executor-container">
-            <div class="executor-header">
-                <div class="executor-image">
-                    <img src="https://imagizer.imageshack.com/v2/320xq70/r/923/Akgl06.png" alt="Krnl Executor">
-                </div>
-                <div class="executor-info">
-                    <h1>Krnl Executor</h1>
-                    <p class="description">A powerful Android executor with beautiful interface and huge script library for enhanced Roblox experience.</p>
-                </div>
-            </div>
-
-            <div class="executor-details">
-                <div class="features">
-                    <h3>Features</h3>
-                    <ul>
-                        <li>Beautiful and unique interface design</li>
-                        <li>Powerful and well-organized</li>
-                        <li>Huge script library with search functionality</li>
-                    </ul>
-                </div>
-                
-                <div class="negatives">
-                    <h3>Negatives</h3>
-                    <ul>
-                        <li>Interface is somewhat heavy</li>
-                        <li>Slower updates than competitors due to delayed development</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="download-section">
-                <a href="https://www.mediafire.com/file/2w8zl4nun4rvd7c/%25E3%2580%2594ING_GROUP%25E3%2580%2595_KRNL_Executor%25E3%2580%25982.693.868%25E3%2580%2599.apk/file" class="download-btn" target="_blank">
-                    <i class="fas fa-download"></i>
-                    Download
-                </a>
-            </div>
-        </div>
+    <div class="hero-section">
+        <h1>Solutions Without Limits</h1>
+        <p>Your ultimate partner for complex code requests, problem-solving, and professional development services, available in every language.</p>
+        <a href="#services" class="cta-button">Explore Services</a>
     </div>
 
-    <div class="wave"></div>
-    <div class="wave"></div>
+    <section id="services" class="services-section">
+        <h2 style="font-size: 3em; margin-bottom: 60px;">OUR OFFERINGS</h2>
 
-    <script>
-        const starsContainer = document.getElementById('stars');
-        const starCount = 100;
-        
-        for (let i = 0; i < starCount; i++) {
-            const star = document.createElement('div');
-            star.classList.add('star');
-            
-            const size = Math.random() * 3 + 1;
-            const duration = Math.random() * 20 + 10;
-            const delay = Math.random() * 20;
-            
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            star.style.top = `${Math.random() * 100}vh`;
-            star.style.left = `${Math.random() * 100}vw`;
-            star.style.animationDuration = `${duration}s, ${duration}s`;
-            star.style.animationDelay = `${delay}s`;
-            
-            starsContainer.appendChild(star);
-        }
-    </script>
+        <div class="service-cards">
+            <div class="card">
+                <span class="service-type" style="color: var(--color-secondary);">FREE SERVICE</span>
+                <h2>Immediate Solutions</h2>
+                <p>Submit a small, specific problem and receive a quick, targeted code snippet or a direct solution from our community-powered knowledge base.</p>
+                <ul style="margin-top: 20px; list-style-type: '— ';">
+                    <li>Code Problem Solving</li>
+                    <li>Syntax/Debugging Help</li>
+                    <li>General Inquiry (Other Services)</li>
+                </ul>
+                <a href="#" class="cta-button" style="margin-top: 30px; border-color: var(--color-accent); color: var(--color-accent);">Get Free Help</a>
+            </div>
+
+            <div class="card">
+                <span class="service-type" style="color: var(--color-secondary);">PAID SERVICE</span>
+                <h2>Expert Development & Requests</h2>
+                <p>For complex projects, custom code creation, or dedicated one-on-one problem solving. Get guaranteed, high-quality results from a senior developer.</p>
+                <ul style="margin-top: 20px; list-style-type: '— ';">
+                    <li>Full Code Creation/Modification</li>
+                    <li>System Architecture Review</li>
+                    <li>Dedicated 24/7 Support</li>
+                </ul>
+                <a href="#" class="cta-button" style="margin-top: 30px;">Send Custom Request</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="language" class="language-support">
+        <p>— **GLOBAL SUPPORT** —</p>
+        <p>Our commitment transcends borders. We proudly offer support and services for **all programming languages** and human languages.</p>
+    </section>
+
+    <footer id="contact">
+        <p>The Infinite Code &copy; 2025 | Precision. Excellence. Every Language.</p>
+    </footer>
+
 </body>
 </html>
