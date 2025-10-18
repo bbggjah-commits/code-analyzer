@@ -1,140 +1,602 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقع عرض النصوص البرمجية - Syntax Highlighter</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/atom-one-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Professional Programming Consultations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        pre { 
-            direction: ltr; 
-            text-align: left; 
-            background: #282c34 !important;
-            border-radius: 8px;
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        code { font-family: 'Courier New', monospace; }
-        #preview { min-height: 400px; }
-        .form-label { font-weight: bold; }
+
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --text: #ffffff;
+            --text-light: #a8a8a8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            background-attachment: fixed;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--highlight);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--highlight);
+        }
+
+        .logo i {
+            color: #00d4ff;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.7rem 1.5rem;
+            background: rgba(233, 69, 96, 0.2);
+            color: var(--text);
+            border: 2px solid var(--highlight);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-weight: 600;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .nav-btn:hover {
+            background: var(--highlight);
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            margin-top: 80px;
+            padding: 6rem 2rem;
+            text-align: center;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--highlight);
+            text-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-main {
+            padding: 1rem 2rem;
+            background: var(--highlight);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.4);
+        }
+
+        .btn-secondary {
+            padding: 1rem 2rem;
+            background: transparent;
+            color: var(--highlight);
+            border: 2px solid var(--highlight);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 700;
+        }
+
+        .btn-secondary:hover {
+            background: var(--highlight);
+            color: white;
+        }
+
+        .section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--highlight);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: rgba(22, 33, 62, 0.8);
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            border-color: var(--highlight);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.2);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--highlight);
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #00d4ff;
+        }
+
+        .service-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .portfolio-item {
+            background: rgba(22, 33, 62, 0.8);
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .portfolio-item:hover {
+            border-color: var(--highlight);
+            transform: scale(1.05);
+        }
+
+        .portfolio-tech {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            background: var(--highlight);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(22, 33, 62, 0.8);
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(15, 52, 96, 0.5);
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--highlight);
+            box-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--highlight);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        footer {
+            background: var(--primary);
+            border-top: 2px solid var(--highlight);
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--highlight);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-light);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--highlight);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            background: var(--highlight);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
     </style>
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">💻 Syntax Highlighter</a>
-        </div>
-    </nav>
-
-    <div class="container my-5">
-        <h1 class="text-center mb-4">عرض النصوص البرمجية مع تلوين الصيغة التلقائي</h1>
-        <p class="text-center text-muted">أدخل الكود في المربع الأيمن، اختر اللغة، ثم اضغط "عرض" لترى التلوين الجميل!</p>
-
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <label class="form-label">اختر اللغة البرمجية:</label>
-                        <select id="lang" class="form-select mb-3">
-                            <option value="javascript">JavaScript</option>
-                            <option value="python">Python</option>
-                            <option value="java">Java</option>
-                            <option value="cpp">C++</option>
-                            <option value="csharp">C#</option>
-                            <option value="php">PHP</option>
-                            <option value="html">HTML</option>
-                            <option value="css">CSS</option>
-                            <option value="sql">SQL</option>
-                            <option value="json">JSON</option>
-                            <option value="xml">XML</option>
-                            <option value="bash">Bash</option>
-                            <option value="go">Go</option>
-                            <option value="rust">Rust</option>
-                        </select>
-                        <label class="form-label">أدخل الكود هنا:</label>
-                        <textarea id="code" class="form-control" rows="15" placeholder="اكتب كودك هنا...">console.log('مرحباً بالعالم!');
-function hello() {
-    return 'Hello Syntax Highlighter!';
-}
-hello();</textarea>
-                        <button onclick="highlightCode()" class="btn btn-primary mt-3 w-100">🖼️ عرض الكود</button>
-                    </div>
-                </div>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <span>DevConsult</span>
             </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <pre><code id="preview"></code></pre>
-                        <button id="copyBtn" class="btn btn-outline-secondary">📋 نسخ الكود</button>
-                    </div>
-                </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="scrollTo('services')">
+                    <i class="fas fa-briefcase"></i> Services
+                </button>
+                <button class="nav-btn" onclick="scrollTo('portfolio')">
+                    <i class="fas fa-project-diagram"></i> Portfolio
+                </button>
+                <button class="nav-btn" onclick="scrollTo('contact')">
+                    <i class="fas fa-envelope"></i> Contact
+                </button>
             </div>
         </div>
+    </header>
 
-        <div class="row mt-5">
-            <div class="col-12">
-                <h3>أمثلة جاهزة:</h3>
-                <div class="row">
-                    <div class="col-md-6">
-                        <pre><code class="language-python">def hello_world():
-    print('Hello, World!')
-    for i in range(5):
-        print(f'عدد: {i}')
-hello_world()</code></pre>
-                    </div>
-                    <div class="col-md-6">
-                        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-    &lt;title&gt;مثال&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;h1&gt;مرحبا&lt;/h1&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
-                    </div>
+    <section class="hero">
+        <h1>Professional Programming Consultations</h1>
+        <p>Helping you with all your programming needs from web development to mobile apps and backend systems</p>
+        <div class="hero-buttons">
+            <button class="btn-main" onclick="scrollTo('contact')">
+                <i class="fas fa-phone"></i> Free Consultation
+            </button>
+            <button class="btn-secondary" onclick="scrollTo('services')">
+                <i class="fas fa-arrow-down"></i> Explore Services
+            </button>
+        </div>
+    </section>
+
+    <section class="section" id="services">
+        <h2 class="section-title">Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-globe"></i></div>
+                <h3>Web Development</h3>
+                <p>Professional websites using HTML, CSS, JavaScript, React, Vue and more</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
+                <h3>Mobile Development</h3>
+                <p>Professional mobile applications using React Native and Flutter</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-server"></i></div>
+                <h3>Backend Development</h3>
+                <p>Server and backend systems using Node.js, Python, PHP and more</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-database"></i></div>
+                <h3>Database Design</h3>
+                <p>Database design and management with MySQL, MongoDB, PostgreSQL and more</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-rocket"></i></div>
+                <h3>DevOps & Deployment</h3>
+                <p>Application deployment on servers and cloud with Docker, AWS, Heroku and more</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-bug"></i></div>
+                <h3>Bug Fixing</h3>
+                <p>Diagnosis and fixing of errors and issues in existing code</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="portfolio">
+        <h2 class="section-title">Previous Projects</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <h3>Krnl Executor Website</h3>
+                <p>Professional website for script execution platform</p>
+                <div class="portfolio-tech">
+                    <span class="tech-tag">HTML</span>
+                    <span class="tech-tag">CSS</span>
+                    <span class="tech-tag">JavaScript</span>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <h3>VX Community Platform</h3>
+                <p>Integrated platform for programming community</p>
+                <div class="portfolio-tech">
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">Node.js</span>
+                    <span class="tech-tag">MongoDB</span>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <h3>Mobile App Project</h3>
+                <p>Multi-platform mobile application</p>
+                <div class="portfolio-tech">
+                    <span class="tech-tag">React Native</span>
+                    <span class="tech-tag">Firebase</span>
+                    <span class="tech-tag">REST API</span>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <h3>E-commerce System</h3>
+                <p>Complete online store system</p>
+                <div class="portfolio-tech">
+                    <span class="tech-tag">PHP</span>
+                    <span class="tech-tag">MySQL</span>
+                    <span class="tech-tag">jQuery</span>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <h3>Dashboard Analytics</h3>
+                <p>Advanced dashboard with charts and analytics</p>
+                <div class="portfolio-tech">
+                    <span class="tech-tag">Vue.js</span>
+                    <span class="tech-tag">Chart.js</span>
+                    <span class="tech-tag">API</span>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <h3>AI Chatbot Integration</h3>
+                <p>Integration of smart chatbot in websites</p>
+                <div class="portfolio-tech">
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">TensorFlow</span>
+                    <span class="tech-tag">WebSocket</span>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <footer class="bg-dark text-light text-center py-4 mt-5">
-        <p>مُنشأ بواسطة <a href="https://oceanai.co" class="text-light">Ocean AI</a> | استخدم <a href="https://highlightjs.org" class="text-light">Highlight.js</a></p>
+    <section class="section" id="contact">
+        <h2 class="section-title">Contact Us</h2>
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone">
+            </div>
+            <div class="form-group">
+                <label for="service">Service Type</label>
+                <select id="service" required>
+                    <option value="">Select a service</option>
+                    <option>Web Development</option>
+                    <option>Mobile Development</option>
+                    <option>Backend Development</option>
+                    <option>Database Design</option>
+                    <option>DevOps & Deployment</option>
+                    <option>Bug Fixing</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" required></textarea>
+            </div>
+            <button type="submit" class="form-submit">Send Consultation Request</button>
+        </form>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Services</h4>
+                <a href="#services">Web Development</a>
+                <a href="#services">Mobile Development</a>
+                <a href="#services">Backend Development</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="#">About Us</a>
+                <a href="#contact">Contact Us</a>
+                <a href="#">Terms & Conditions</a>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+        <p>© 2025 Professional Programming Consultations. All rights reserved</p>
     </footer>
 
     <script>
-        hljs.highlightAll(); // تلوين الأمثلة الجاهزة
-
-        function highlightCode() {
-            const lang = document.getElementById('lang').value;
-            const code = document.getElementById('code').value;
-            const preview = document.getElementById('preview');
-            
-            preview.className = `language-${lang}`;
-            preview.textContent = code;
-            hljs.highlightElement(preview);
+        function scrollTo(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
-        // نسخ الكود
-        document.getElementById('copyBtn').onclick = () => {
-            navigator.clipboard.writeText(document.getElementById('preview').textContent).then(() => {
-                const btn = document.getElementById('copyBtn');
-                const original = btn.innerHTML;
-                btn.innerHTML = '✅ تم النسخ!';
-                btn.classList.remove('btn-outline-secondary');
-                btn.classList.add('btn-success');
-                setTimeout(() => {
-                    btn.innerHTML = original;
-                    btn.classList.remove('btn-success');
-                    btn.classList.add('btn-outline-secondary');
-                }, 2000);
-            });
-        };
-
-        // عرض تلقائي عند التحميل
-        window.onload = highlightCode;
+        function handleSubmit(event) {
+            event.preventDefault();
+            alert('Thank you for contacting us! We will get back to you soon');
+            event.target.reset();
+        }
     </script>
 </body>
 </html>
