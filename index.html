@@ -1,46 +1,719 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>موقعي الجميل جداً</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(to right, #ffecd2, #fcb69f);
-      color: #333;
-      text-align: center;
-    }
-    header {
-      padding: 50px 20px;
-    }
-    h1 {
-      font-size: 3em;
-      margin-bottom: 10px;
-    }
-    p {
-      font-size: 1.2em;
-    }
-    .button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 15px 30px;
-      background-color: #ff6f61;
-      color: white;
-      border-radius: 30px;
-      text-decoration: none;
-      transition: background 0.3s;
-    }
-    .button:hover {
-      background-color: #ff3b2e;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأستاذ أحمد الجاف - الأحياء</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding: 0 2rem;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), #f8fafc, rgba(34, 197, 94, 0.05));
+            padding: 4rem 0;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .hero {
+                padding: 6rem 0;
+            }
+        }
+
+        .hero-content {
+            display: grid;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .hero-text {
+            text-align: center;
+            order: 2;
+        }
+
+        @media (min-width: 768px) {
+            .hero-text {
+                text-align: right;
+                order: 1;
+            }
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        @media (min-width: 768px) {
+            .hero h1 {
+                font-size: 3.75rem;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        @media (min-width: 768px) {
+            .hero-buttons {
+                justify-content: flex-start;
+            }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #15803d;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #16a34a;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-outline:hover {
+            border-color: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            order: 1;
+        }
+
+        @media (min-width: 768px) {
+            .hero-image {
+                order: 2;
+            }
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            max-width: 28rem;
+        }
+
+        .hero-image-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.05));
+            border-radius: 1.5rem;
+            filter: blur(60px);
+        }
+
+        .hero-image img {
+            position: relative;
+            width: 100%;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Section */
+        .section {
+            padding: 4rem 0;
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                padding: 6rem 0;
+            }
+        }
+
+        .section-bg {
+            background: rgba(241, 245, 249, 0.3);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .section h2 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .section h2 {
+                font-size: 2.25rem;
+            }
+        }
+
+        .section-description {
+            font-size: 1.125rem;
+            color: #64748b;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .cards-grid-2 {
+            display: grid;
+            gap: 1.5rem;
+            max-width: 56rem;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .cards-grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Card */
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            border: 2px solid #e2e8f0;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+        }
+
+        .card-header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-badge {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #16a34a;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: #64748b;
+        }
+
+        .card-content {
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .card-button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(241, 245, 249, 0.5);
+            padding: 3rem 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .footer-description {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn-icon {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .footer-copyright {
+            font-size: 0.875rem;
+            color: #64748b;
+            padding-top: 2rem;
+        }
+
+        /* Icons */
+        .icon {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .icon-lg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        /* Loading */
+        .loading {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 4px solid #e2e8f0;
+            border-top-color: #16a34a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 1rem;
+            color: #64748b;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>مرحباً بك في موقعي الجميل جداً جداً جداً جداً جداً</h1>
-    <p>هنا تجد كل ما هو رائع ومميز</p>
-    <a href="#" class="button">اكتشف المزيد</a>
-  </header>
+    <div id="app">
+        <div class="loading">
+            <div style="text-align: center;">
+                <div class="spinner"></div>
+                <p class="loading-text">جاري التحميل...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SVG Icons
+        const icons = {
+            users: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>',
+            youtube: '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="icon"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+            send: '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="icon"><path d="M.707 8.475C-.243 8.161-.243 6.839.707 6.525l22-6.5a.75.75 0 0 1 .968.968l-6.5 22c-.314.95-1.636.95-1.95 0l-3.5-9.5-9.5-3.5a.75.75 0 0 1-.518-.518z"/></svg>',
+            instagram: '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="icon"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
+            book: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-lg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>',
+            graduation: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" /></svg>'
+        };
+
+        // Data
+        const data = {
+            teacher: {
+                name: "الأستاذ أحمد الجاف",
+                name_english: "Ahmed Al-Jaf",
+                subject: "الأحياء",
+                country: "العراق",
+                youtube_channel: "https://www.youtube.com/@ahmedjaleell",
+                subscribers: "603K",
+                total_videos: 369,
+                telegram: "https://t.me/ahmedjaleell",
+                instagram: "https://www.instagram.com/ahmedjaleell",
+                description: "قناة خاصة بنشر الدروس التعليمية",
+                image: "https://iraqmlzm.com/wp-content/uploads/2024/09/%D9%85%D9%84%D8%B2%D9%85%D8%A9-%D8%A7%D8%AD%D9%8A%D8%A7%D8%A1-%D8%A7%D8%AD%D9%85%D8%AF-%D8%A7%D9%84%D8%AC%D8%A7%D9%81-%D8%A7%D9%84%D8%AB%D8%A7%D9%84%D8%AB-%D8%A7%D9%84%D9%85%D8%AA%D9%88%D8%B3%D8%B7-2026-pdf.jpg"
+            },
+            middle_school: [
+                {
+                    grade: "الأول المتوسط",
+                    lessons_count: 30,
+                    playlist_url: "https://www.youtube.com/playlist?list=PLuvOOlnWcj1nxJuDHBp2GtP4rEDDdfgdd",
+                    description: "المنهج الجديد 2026"
+                },
+                {
+                    grade: "الثاني المتوسط",
+                    lessons_count: 10,
+                    playlist_url: "https://www.youtube.com/playlist?list=PLuvOOlnWcj1lf_0fgw31zFRgsBFjKttFp",
+                    description: "المنهج الجديد 2026"
+                },
+                {
+                    grade: "الثالث المتوسط",
+                    lessons_count: 47,
+                    playlist_url: "https://www.youtube.com/playlist?list=PLuvOOlnWcj1kZmEzKP-dghrKg_JzP2gyY",
+                    description: "الكتاب الجديد 2026"
+                }
+            ],
+            high_school: [
+                {
+                    grade: "الرابع العلمي",
+                    lessons_count: 44,
+                    playlist_url: "https://www.youtube.com/@ahmedjaleell/playlists",
+                    description: "المنهج الكامل 2026"
+                },
+                {
+                    grade: "الخامس العلمي",
+                    lessons_count: 47,
+                    playlist_url: "https://www.youtube.com/@ahmedjaleell/playlists",
+                    description: "المنهج الكامل 2026"
+                },
+                {
+                    grade: "السادس العلمي",
+                    lessons_count: 38,
+                    playlist_url: "https://www.youtube.com/@ahmedjaleell/playlists",
+                    description: "المنهج الكامل 2026"
+                }
+            ],
+            additional_resources: [
+                {
+                    title: "المراجعة المركزة 2025 | احياء الثالث متوسط",
+                    lessons_count: 10,
+                    playlist_url: "https://www.youtube.com/@ahmedjaleell/playlists"
+                },
+                {
+                    title: "رسومات الثالث متوسط",
+                    lessons_count: 11,
+                    playlist_url: "https://www.youtube.com/@ahmedjaleell/playlists"
+                }
+            ]
+        };
+
+        // Render functions
+        function renderHero() {
+            return `
+                <section class="hero">
+                    <div class="container">
+                        <div class="hero-content">
+                            <div class="hero-text">
+                                <div class="badge">
+                                    ${icons.users}
+                                    <span>${data.teacher.subscribers} متابع</span>
+                                </div>
+                                <h1>${data.teacher.name}</h1>
+                                <p class="hero-subtitle">مدرس مادة ${data.teacher.subject}</p>
+                                <p class="hero-description">
+                                    ${data.teacher.description} • ${data.teacher.total_videos} فيديو تعليمي
+                                </p>
+                                <div class="hero-buttons">
+                                    <a href="${data.teacher.youtube_channel}" target="_blank" class="btn btn-primary">
+                                        ${icons.youtube}
+                                        قناة اليوتيوب
+                                    </a>
+                                    <a href="${data.teacher.telegram}" target="_blank" class="btn btn-outline">
+                                        ${icons.send}
+                                        تليجرام
+                                    </a>
+                                    <a href="${data.teacher.instagram}" target="_blank" class="btn btn-outline">
+                                        ${icons.instagram}
+                                        انستغرام
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="hero-image">
+                                <div class="hero-image-wrapper">
+                                    <div class="hero-image-bg"></div>
+                                    <img src="${data.teacher.image}" alt="${data.teacher.name}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderCard(course) {
+            return `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-top">
+                            <div class="card-icon">
+                                ${icons.book}
+                            </div>
+                            <span class="card-badge">${course.lessons_count} درس</span>
+                        </div>
+                        <h3 class="card-title">${course.grade}</h3>
+                        <p class="card-description">${course.description}</p>
+                    </div>
+                    <div class="card-content">
+                        <a href="${course.playlist_url}" target="_blank" class="btn btn-primary card-button">
+                            ${icons.youtube}
+                            مشاهدة المحاضرات
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderResourceCard(resource) {
+            return `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-top">
+                            <div class="card-icon">
+                                ${icons.book}
+                            </div>
+                            <span class="card-badge">${resource.lessons_count} فيديو</span>
+                        </div>
+                        <h3 class="card-title">${resource.title}</h3>
+                    </div>
+                    <div class="card-content">
+                        <a href="${resource.playlist_url}" target="_blank" class="btn btn-primary card-button">
+                            ${icons.youtube}
+                            مشاهدة
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMiddleSchool() {
+            return `
+                <section class="section">
+                    <div class="container">
+                        <div class="section-header">
+                            <div class="section-badge">
+                                ${icons.graduation}
+                                <span>المرحلة المتوسطة</span>
+                            </div>
+                            <h2>محاضرات المرحلة المتوسطة</h2>
+                            <p class="section-description">
+                                جميع محاضرات الأحياء للصفوف المتوسطة منظمة ومرتبة
+                            </p>
+                        </div>
+                        <div class="cards-grid">
+                            ${data.middle_school.map(renderCard).join('')}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderHighSchool() {
+            return `
+                <section class="section section-bg">
+                    <div class="container">
+                        <div class="section-header">
+                            <div class="section-badge">
+                                ${icons.graduation}
+                                <span>المرحلة الإعدادية</span>
+                            </div>
+                            <h2>محاضرات المرحلة الإعدادية</h2>
+                            <p class="section-description">
+                                محاضرات شاملة للفرع العلمي من الرابع إلى السادس
+                            </p>
+                        </div>
+                        <div class="cards-grid">
+                            ${data.high_school.map(renderCard).join('')}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderAdditionalResources() {
+            return `
+                <section class="section">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2>موارد إضافية</h2>
+                            <p class="section-description">
+                                مراجعات مركزة ورسومات توضيحية لمساعدتك في الدراسة
+                            </p>
+                        </div>
+                        <div class="cards-grid-2">
+                            ${data.additional_resources.map(renderResourceCard).join('')}
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderFooter() {
+            return `
+                <footer class="footer">
+                    <div class="container">
+                        <div class="footer-content">
+                            <h3>${data.teacher.name}</h3>
+                            <p class="footer-description">
+                                مدرس مادة ${data.teacher.subject} • ${data.teacher.country}
+                            </p>
+                            <div class="footer-social">
+                                <a href="${data.teacher.youtube_channel}" target="_blank" class="btn btn-outline btn-icon">
+                                    ${icons.youtube}
+                                </a>
+                                <a href="${data.teacher.telegram}" target="_blank" class="btn btn-outline btn-icon">
+                                    ${icons.send}
+                                </a>
+                                <a href="${data.teacher.instagram}" target="_blank" class="btn btn-outline btn-icon">
+                                    ${icons.instagram}
+                                </a>
+                            </div>
+                            <p class="footer-copyright">
+                                © 2024 ${data.teacher.name}. جميع الحقوق محفوظة.
+                            </p>
+                        </div>
+                    </div>
+                </footer>
+            `;
+        }
+
+        // Main render
+        function render() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                ${renderHero()}
+                ${renderMiddleSchool()}
+                ${renderHighSchool()}
+                ${renderAdditionalResources()}
+                ${renderFooter()}
+            `;
+        }
+
+        // Initialize
+        setTimeout(render, 500);
+    </script>
 </body>
 </html>
