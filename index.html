@@ -14,7 +14,7 @@
         body {
             background-color: #000;
             color: #fff;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -22,11 +22,15 @@
             min-height: 100vh;
             padding: 20px;
             text-align: center;
+            line-height: 1.6;
         }
         
         .container {
             max-width: 800px;
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .image-container {
@@ -38,42 +42,52 @@
         .image-container img {
             max-width: 100%;
             height: auto;
-            border: 2px solid #fff;
-            border-radius: 8px;
-        }
-        
-        .message {
-            margin: 30px 0;
-            line-height: 1.6;
+            border: 3px solid #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
         
         .name {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: bold;
             margin: 20px 0;
             color: #fff;
             text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+        }
+        
+        .special-text {
+            font-size: 2rem;
+            margin: 15px 0;
+            color: #fff;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
         }
         
         .gift-from {
-            font-size: 1.5rem;
-            margin-top: 20px;
+            font-size: 1.8rem;
+            margin-top: 25px;
             color: #fff;
-        }
-        
-        .date {
-            font-size: 1.2rem;
-            margin-top: 15px;
-            color: #ccc;
+            padding: 10px;
+            border-top: 1px solid #fff;
+            border-bottom: 1px solid #fff;
+            width: 100%;
         }
         
         @media (max-width: 600px) {
             .name {
-                font-size: 1.8rem;
+                font-size: 2.2rem;
+            }
+            
+            .special-text {
+                font-size: 1.5rem;
             }
             
             .gift-from {
-                font-size: 1.2rem;
+                font-size: 1.4rem;
             }
         }
     </style>
@@ -84,21 +98,9 @@
             <img src="https://g.top4top.io/p_3610t709x0.jpg" alt="صورة الهدية">
         </div>
         
-        <div class="message">
-            <div class="name">رضا وسام حسن</div>
-            <div class="gift-from">هدية من أخوك الكبير مصطفى</div>
-            <div class="date">أكبر عطفي بتاريخ: <span id="current-date"></span></div>
-        </div>
+        <div class="name">رضا وسام حسن</div>
+        <div class="special-text">أكبر عطفي في التاريخ</div>
+        <div class="gift-from">هدية من أخوك الكبير مصطفى</div>
     </div>
-
-    <script>
-        // إضافة التاريخ الحالي تلقائياً
-        document.addEventListener('DOMContentLoaded', function() {
-            const now = new Date();
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            const dateString = now.toLocaleDateString('ar-EG', options);
-            document.getElementById('current-date').textContent = dateString;
-        });
-    </script>
 </body>
 </html>
