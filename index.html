@@ -55,6 +55,27 @@
         #mainContent {
             display: none;
         }
+        
+        /* تحسينات للزر */
+        .agree-btn-enabled {
+            background: linear-gradient(to right, #2563eb, #4f46e5) !important;
+            color: white !important;
+            cursor: pointer !important;
+            transform: scale(1);
+            transition: all 0.3s ease;
+        }
+        
+        .agree-btn-enabled:hover {
+            background: linear-gradient(to right, #1d4ed8, #4338ca) !important;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+        }
+        
+        .agree-btn-disabled {
+            background: #4b5563 !important;
+            color: #9ca3af !important;
+            cursor: not-allowed !important;
+        }
     </style>
 </head>
 <body class="bg-black text-white font-arabic min-h-screen dir-rtl">
@@ -68,6 +89,7 @@
 
     <!-- Main Content -->
     <div id="mainContent" class="hidden">
+        <!-- المحتوى الرئيسي يبقى كما هو -->
         <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
             <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[#0a1128] rounded-full blur-[120px] opacity-40 animate-pulse"></div>
             <div class="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] bg-[#1e40af] rounded-full blur-[100px] opacity-20"></div>
@@ -325,7 +347,7 @@
             </div>
 
             <div class="p-6 border-t border-white/10 bg-gradient-to-r from-gray-900 to-black space-y-3">
-                <button id="agreeBtn" class="w-full py-3 bg-gray-600 text-gray-300 font-bold rounded-xl transition-all duration-300 cursor-not-allowed" disabled>
+                <button id="agreeBtn" class="w-full py-3 bg-gray-600 text-gray-300 font-bold rounded-xl transition-all duration-300 cursor-not-allowed agree-btn-disabled">
                     فهمت واوافق
                 </button>
                 <p class="text-red-400 text-xs text-center">
@@ -367,17 +389,30 @@
                 checkIcon.classList.add('animate-checkmark');
                 
                 // Enable agree button
-                agreeBtn.classList.remove('bg-gray-600', 'text-gray-300', 'cursor-not-allowed');
-                agreeBtn.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'hover:from-blue-500', 'hover:to-indigo-500', 'hover:scale-105', 'hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]', 'cursor-pointer');
+                agreeBtn.classList.remove('agree-btn-disabled');
+                agreeBtn.classList.add('agree-btn-enabled');
                 agreeBtn.disabled = false;
                 
                 isChecked = true;
+            } else {
+                // Uncheck the box
+                this.classList.remove('border-green-500', 'bg-green-500');
+                this.classList.add('border-gray-400', 'hover:border-blue-500', 'hover:bg-blue-500/20');
+                checkIcon.classList.add('hidden');
+                checkIcon.classList.remove('animate-checkmark');
+                
+                // Disable agree button
+                agreeBtn.classList.remove('agree-btn-enabled');
+                agreeBtn.classList.add('agree-btn-disabled');
+                agreeBtn.disabled = true;
+                
+                isChecked = false;
             }
         });
 
-        // Agree button functionality
+        // Agree button functionality - تم التصحيح هنا
         document.getElementById('agreeBtn').addEventListener('click', function() {
-            if (isChecked) {
+            if (!this.disabled && isChecked) {
                 // Save agreement to localStorage
                 localStorage.setItem('termsAgreed', 'true');
                 
@@ -387,6 +422,7 @@
                 // Show main content after a short delay
                 setTimeout(() => {
                     document.getElementById('mainContent').classList.remove('hidden');
+                    document.getElementById('mainContent').style.display = 'block';
                 }, 400);
             }
         });
@@ -435,7 +471,11 @@
             }, 400);
         }
 
-        termsBtn.addEventListener('click', openModal);
+        // Only add event listener for termsBtn if it exists (in main content)
+        if (termsBtn) {
+            termsBtn.addEventListener('click', openModal);
+        }
+
         closeModal.addEventListener('click', closeModalFunc);
         modalOverlay.addEventListener('click', closeModalFunc);
 
