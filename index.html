@@ -56,7 +56,6 @@
             display: none;
         }
         
-        /* تحسينات للزر */
         .agree-btn-enabled {
             background: linear-gradient(to right, #2563eb, #4f46e5) !important;
             color: white !important;
@@ -76,6 +75,11 @@
             color: #9ca3af !important;
             cursor: not-allowed !important;
         }
+
+        /* إخفاء الشاشة الرئيسية في البداية */
+        .hidden-content {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="bg-black text-white font-arabic min-h-screen dir-rtl">
@@ -87,153 +91,7 @@
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div id="mainContent" class="hidden">
-        <!-- المحتوى الرئيسي يبقى كما هو -->
-        <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
-            <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[#0a1128] rounded-full blur-[120px] opacity-40 animate-pulse"></div>
-            <div class="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] bg-[#1e40af] rounded-full blur-[100px] opacity-20"></div>
-        </div>
-
-        <div class="relative z-10 container mx-auto px-6 py-12 flex flex-col items-center justify-center min-h-screen">
-            
-            <header class="flex flex-col items-center mb-16 text-center animate-fade-in-down">
-                <div class="relative group mb-8">
-                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                    <img 
-                        src="https://g.top4top.io/p_36155s9os0.jpg" 
-                        alt="VNDXS Logo" 
-                        class="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-2 border-white/10 shadow-2xl object-cover transform transition duration-500 hover:scale-105"
-                    />
-                    <div class="absolute inset-0 rounded-full ring-2 ring-blue-500/20 animate-pulse"></div>
-                </div>
-
-                <h1 class="text-5xl md:text-7xl font-bold font-orbitron tracking-wider mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-500">
-                    VNDXS Group
-                </h1>
-                
-                <p class="text-xl md:text-2xl text-gray-400 font-light tracking-wide animate-fade-in-up delay-200">
-                    نحن نبني المستقبل
-                </p>
-            </header>
-
-            <section class="w-full max-w-5xl mb-20">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
-                        <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-blue-500/30 transition-colors">
-                            <i data-lucide="code" class="w-8 h-8 text-blue-400"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2 text-gray-100 group-hover:text-white">تطوير متخصص</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">مبرمج متخصص في تطوير الويب والتطبيقات بأحدث المعايير.</p>
-                        <div class="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
-                            <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div class="absolute top-0 right-0 h-[1px] w-full bg-gradient-to-l from-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                    </div>
-
-                    <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
-                        <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-indigo-500/30 transition-colors">
-                            <i data-lucide="cpu" class="w-8 h-8 text-indigo-400"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2 text-gray-100 group-hover:text-white">تقنيات المستقبل</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">خبرة عميقة في التقنيات الحديثة والمستقبلية لضمان الريادة.</p>
-                        <div class="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
-                            <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-indigo-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div class="absolute top-0 right-0 h-[1px] w-full bg-gradient-to-l from-indigo-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                    </div>
-
-                    <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
-                        <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-yellow-500/30 transition-colors">
-                            <i data-lucide="zap" class="w-8 h-8 text-yellow-300"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2 text-gray-100 group-hover:text-white">جودة وابتكار</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">التزام صارم بالجودة والابتكار المستمر في كل سطر برمجي.</p>
-                        <div class="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
-                            <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-yellow-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div class="absolute top-0 right-0 h-[1px] w-full bg-gradient-to-l from-yellow-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                    </div>
-
-                    <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
-                        <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-cyan-500/30 transition-colors">
-                            <i data-lucide="users" class="w-8 h-8 text-cyan-400"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2 text-gray-100 group-hover:text-white">فريق متخصص</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">فريق متخصص في VNDXS Group يعمل بتناغم لتحقيق الرؤية.</p>
-                        <div class="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
-                            <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-cyan-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div class="absolute top-0 right-0 h-[1px] w-full bg-gradient-to-l from-cyan-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                    </div>
-
-                    <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
-                        <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-emerald-500/30 transition-colors">
-                            <i data-lucide="shield-check" class="w-8 h-8 text-emerald-400"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2 text-gray-100 group-hover:text-white">جاهزية للتعاون</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">جاهزون للتعاون الفوري والعمل على مشاريع جديدة ومبتكرة.</p>
-                        <div class="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
-                            <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-emerald-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <div class="absolute top-0 right-0 h-[1px] w-full bg-gradient-to-l from-emerald-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="w-full max-w-2xl text-center mb-16">
-                <div class="flex flex-wrap justify-center gap-4">
-                    <a 
-                        href="https://t.me/UING10" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        class="flex items-center gap-3 px-8 py-4 bg-[#0088cc]/10 text-[#0088cc] border border-[#0088cc]/30 rounded-xl hover:bg-[#0088cc] hover:text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,136,204,0.4)] hover:scale-105"
-                    >
-                        <i data-lucide="send" class="w-5 h-5"></i>
-                        <span class="font-semibold font-inter">Telegram</span>
-                    </a>
-
-                    <button 
-                        id="discordBtn"
-                        class="flex items-center gap-3 px-8 py-4 bg-[#5865F2]/10 text-[#5865F2] border border-[#5865F2]/30 rounded-xl hover:bg-[#5865F2] hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(88,101,242,0.4)] relative overflow-hidden group"
-                    >
-                        <i data-lucide="message-square" class="w-5 h-5"></i>
-                        <span class="font-semibold font-inter dir-ltr" id="discordText">1_ing1</span>
-                        <span class="absolute inset-0 flex items-center justify-center bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            <span class="text-xs text-white font-arabic">نسخ</span>
-                        </span>
-                    </button>
-
-                    <a 
-                        href="mailto:vndxs.group@gmail.com" 
-                        class="flex items-center gap-3 px-8 py-4 bg-gray-100/10 text-gray-300 border border-white/10 rounded-xl hover:bg-white hover:text-black transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105"
-                    >
-                        <i data-lucide="mail" class="w-5 h-5"></i>
-                        <span class="font-semibold font-inter">Email</span>
-                    </a>
-                </div>
-                
-                <div class="mt-8 text-sm text-gray-500 font-inter">
-                    vndxs.group@gmail.com
-                </div>
-            </section>
-
-            <footer class="w-full text-center border-t border-white/5 pt-8 pb-4">
-                <p class="text-gray-500 text-sm font-arabic mb-2">
-                    جميع الحقوق محفوظة © 2025 VNDXS Group
-                </p>
-                <button 
-                    id="termsBtn"
-                    class="text-gray-600 text-xs hover:text-blue-400 transition-colors flex items-center justify-center gap-1 mx-auto"
-                >
-                    <i data-lucide="file-text" class="w-3 h-3"></i>
-                    شروط الخدمة
-                </button>
-            </footer>
-        </div>
-    </div>
-
-    <!-- Terms Modal -->
+    <!-- Terms Modal - يظهر أولاً -->
     <div id="termsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" id="modalOverlay"></div>
         
@@ -350,84 +208,260 @@
                 <button id="agreeBtn" class="w-full py-3 bg-gray-600 text-gray-300 font-bold rounded-xl transition-all duration-300 cursor-not-allowed agree-btn-disabled">
                     فهمت واوافق
                 </button>
-                <p class="text-red-400 text-xs text-center">
+                <p id="errorMessage" class="text-red-400 text-xs text-center">
                     يجب الموافقة على الشروط أولاً
                 </p>
             </div>
         </div>
     </div>
 
+    <!-- Main Content - مخفي في البداية -->
+    <div id="mainContent" class="hidden-content">
+        <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
+            <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[#0a1128] rounded-full blur-[120px] opacity-40 animate-pulse"></div>
+            <div class="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] bg-[#1e40af] rounded-full blur-[100px] opacity-20"></div>
+        </div>
+
+        <div class="relative z-10 container mx-auto px-6 py-12 flex flex-col items-center justify-center min-h-screen">
+            
+            <header class="flex flex-col items-center mb-16 text-center animate-fade-in-down">
+                <div class="relative group mb-8">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                    <img 
+                        src="https://g.top4top.io/p_36155s9os0.jpg" 
+                        alt="VNDXS Logo" 
+                        class="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-2 border-white/10 shadow-2xl object-cover transform transition duration-500 hover:scale-105"
+                    />
+                    <div class="absolute inset-0 rounded-full ring-2 ring-blue-500/20 animate-pulse"></div>
+                </div>
+
+                <h1 class="text-5xl md:text-7xl font-bold font-orbitron tracking-wider mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-500">
+                    VNDXS Group
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-gray-400 font-light tracking-wide animate-fade-in-up delay-200">
+                    نحن نبني المستقبل
+                </p>
+            </header>
+
+            <section class="w-full max-w-5xl mb-20">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- البطاقات تبقى كما هي -->
+                    <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
+                        <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-blue-500/30 transition-colors">
+                            <i data-lucide="code" class="w-8 h-8 text-blue-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-gray-100 group-hover:text-white">تطوير متخصص</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">مبرمج متخصص في تطوير الويب والتطبيقات بأحدث المعايير.</p>
+                        <div class="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
+                            <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div class="absolute top-0 right-0 h-[1px] w-full bg-gradient-to-l from-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </div>
+                    </div>
+
+                    <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
+                        <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-indigo-500/30 transition-colors">
+                            <i data-lucide="cpu" class="w-8 h-8 text-indigo-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-gray-100 group-hover:text-white">تقنيات المستقبل</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">خبرة عميقة في التقنيات الحديثة والمستقبلية لضمان الريادة.</p>
+                        <div class="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
+                            <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-indigo-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div class="absolute top-0 right-0 h-[1px] w-full bg-gradient-to-l from-indigo-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </div>
+                    </div>
+
+                    <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
+                        <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-yellow-500/30 transition-colors">
+                            <i data-lucide="zap" class="w-8 h-8 text-yellow-300"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-gray-100 group-hover:text-white">جودة وابتكار</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">التزام صارم بالجودة والابتكار المستمر في كل سطر برمجي.</p>
+                        <div class="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
+                            <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-yellow-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div class="absolute top-0 right-0 h-[1px] w-full bg-gradient-to-l from-yellow-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </div>
+                    </div>
+
+                    <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
+                        <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-cyan-500/30 transition-colors">
+                            <i data-lucide="users" class="w-8 h-8 text-cyan-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-gray-100 group-hover:text-white">فريق متخصص</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">فريق متخصص في VNDXS Group يعمل بتناغم لتحقيق الرؤية.</p>
+                        <div class="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
+                            <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-cyan-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div class="absolute top-0 right-0 h-[1px] w-full bg-gradient-to-l from-cyan-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </div>
+                    </div>
+
+                    <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
+                        <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-emerald-500/30 transition-colors">
+                            <i data-lucide="shield-check" class="w-8 h-8 text-emerald-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-gray-100 group-hover:text-white">جاهزية للتعاون</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">جاهزون للتعاون الفوري والعمل على مشاريع جديدة ومبتكرة.</p>
+                        <div class="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-2xl">
+                            <div class="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-emerald-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div class="absolute top-0 right-0 h-[1px] w-full bg-gradient-to-l from-emerald-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="w-full max-w-2xl text-center mb-16">
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a 
+                        href="https://t.me/UING10" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        class="flex items-center gap-3 px-8 py-4 bg-[#0088cc]/10 text-[#0088cc] border border-[#0088cc]/30 rounded-xl hover:bg-[#0088cc] hover:text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,136,204,0.4)] hover:scale-105"
+                    >
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                        <span class="font-semibold font-inter">Telegram</span>
+                    </a>
+
+                    <button 
+                        id="discordBtn"
+                        class="flex items-center gap-3 px-8 py-4 bg-[#5865F2]/10 text-[#5865F2] border border-[#5865F2]/30 rounded-xl hover:bg-[#5865F2] hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(88,101,242,0.4)] relative overflow-hidden group"
+                    >
+                        <i data-lucide="message-square" class="w-5 h-5"></i>
+                        <span class="font-semibold font-inter dir-ltr" id="discordText">1_ing1</span>
+                        <span class="absolute inset-0 flex items-center justify-center bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <span class="text-xs text-white font-arabic">نسخ</span>
+                        </span>
+                    </button>
+
+                    <a 
+                        href="mailto:vndxs.group@gmail.com" 
+                        class="flex items-center gap-3 px-8 py-4 bg-gray-100/10 text-gray-300 border border-white/10 rounded-xl hover:bg-white hover:text-black transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105"
+                    >
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                        <span class="font-semibold font-inter">Email</span>
+                    </a>
+                </div>
+                
+                <div class="mt-8 text-sm text-gray-500 font-inter">
+                    vndxs.group@gmail.com
+                </div>
+            </section>
+
+            <footer class="w-full text-center border-t border-white/5 pt-8 pb-4">
+                <p class="text-gray-500 text-sm font-arabic mb-2">
+                    جميع الحقوق محفوظة © 2025 VNDXS Group
+                </p>
+                <button 
+                    id="termsBtn"
+                    class="text-gray-600 text-xs hover:text-blue-400 transition-colors flex items-center justify-center gap-1 mx-auto"
+                >
+                    <i data-lucide="file-text" class="w-3 h-3"></i>
+                    شروط الخدمة
+                </button>
+            </footer>
+        </div>
+    </div>
+
     <script>
+        // تهيئة الأيقونات
         lucide.createIcons();
 
-        // Check if user already agreed to terms
+        // حالة الموافقة
+        let isChecked = false;
+
+        // التحقق إذا كان المستخدم وافق مسبقاً
         const hasAgreed = localStorage.getItem('termsAgreed');
         
         if (hasAgreed) {
-            // User already agreed, show main content immediately
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('mainContent').classList.remove('hidden');
-            document.getElementById('termsModal').style.display = 'none';
+            // إذا وافق مسبقاً، إظهار المحتوى الرئيسي وإخفاء الشروط
+            showMainContent();
         } else {
-            // First time user, show terms modal
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('termsModal').classList.remove('hidden');
+            // إذا لم يوافق، إظهار شروط الخدمة
+            showTermsModal();
         }
 
-        let isChecked = false;
+        // دالة إظهار المحتوى الرئيسي
+        function showMainContent() {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('termsModal').style.display = 'none';
+            document.getElementById('mainContent').classList.remove('hidden-content');
+            document.getElementById('mainContent').style.display = 'block';
+        }
 
-        // Checkbox functionality
+        // دالة إظهار شروط الخدمة
+        function showTermsModal() {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('termsModal').style.display = 'flex';
+            document.getElementById('mainContent').classList.add('hidden-content');
+        }
+
+        // حدث المربع - تم التبسيط
         document.getElementById('agreeCheckbox').addEventListener('click', function() {
             const checkIcon = this.querySelector('i');
             const agreeBtn = document.getElementById('agreeBtn');
+            const errorMessage = document.getElementById('errorMessage');
             
             if (!isChecked) {
-                // Check the box
+                // تفعيل المربع
                 this.classList.remove('border-gray-400', 'hover:border-blue-500', 'hover:bg-blue-500/20');
                 this.classList.add('border-green-500', 'bg-green-500');
                 checkIcon.classList.remove('hidden');
                 checkIcon.classList.add('animate-checkmark');
                 
-                // Enable agree button
+                // تفعيل الزر
                 agreeBtn.classList.remove('agree-btn-disabled');
                 agreeBtn.classList.add('agree-btn-enabled');
                 agreeBtn.disabled = false;
                 
+                // إخفاء رسالة الخطأ
+                errorMessage.style.display = 'none';
+                
                 isChecked = true;
             } else {
-                // Uncheck the box
+                // إلغاء التفعيل
                 this.classList.remove('border-green-500', 'bg-green-500');
                 this.classList.add('border-gray-400', 'hover:border-blue-500', 'hover:bg-blue-500/20');
                 checkIcon.classList.add('hidden');
                 checkIcon.classList.remove('animate-checkmark');
                 
-                // Disable agree button
+                // تعطيل الزر
                 agreeBtn.classList.remove('agree-btn-enabled');
                 agreeBtn.classList.add('agree-btn-disabled');
                 agreeBtn.disabled = true;
+                
+                // إظهار رسالة الخطأ
+                errorMessage.style.display = 'block';
                 
                 isChecked = false;
             }
         });
 
-        // Agree button functionality - تم التصحيح هنا
+        // حدث زر الموافقة - مبسط
         document.getElementById('agreeBtn').addEventListener('click', function() {
-            if (!this.disabled && isChecked) {
-                // Save agreement to localStorage
+            if (isChecked && !this.disabled) {
+                // حفظ الموافقة
                 localStorage.setItem('termsAgreed', 'true');
                 
-                // Close modal and show main content
-                closeModalFunc();
-                
-                // Show main content after a short delay
-                setTimeout(() => {
-                    document.getElementById('mainContent').classList.remove('hidden');
-                    document.getElementById('mainContent').style.display = 'block';
-                }, 400);
+                // إظهار المحتوى الرئيسي
+                showMainContent();
             }
         });
 
-        // Discord copy functionality
+        // أحداث إضافية
+        document.getElementById('closeModal').addEventListener('click', function() {
+            // لا يمكن إغلاق النافذة إلا بالموافقة
+            if (!isChecked) {
+                alert('يجب الموافقة على الشروط أولاً');
+            }
+        });
+
+        document.getElementById('modalOverlay').addEventListener('click', function() {
+            // لا يمكن إغلاق النافذة إلا بالموافقة
+            if (!isChecked) {
+                alert('يجب الموافقة على الشروط أولاً');
+            }
+        });
+
+        // أحداث المحتوى الرئيسي
         document.getElementById('discordBtn').addEventListener('click', function() {
             const discordUser = "1_ing1";
             const discordText = document.getElementById('discordText');
@@ -449,40 +483,10 @@
             });
         });
 
-        const termsModal = document.getElementById('termsModal');
-        const modalContent = document.getElementById('modalContent');
-        const termsBtn = document.getElementById('termsBtn');
-        const closeModal = document.getElementById('closeModal');
-        const modalOverlay = document.getElementById('modalOverlay');
-
-        function openModal() {
-            termsModal.classList.remove('hidden');
-            modalContent.classList.remove('animate-fade-out-down');
-            modalContent.classList.add('animate-fade-in-up');
-        }
-
-        function closeModalFunc() {
-            modalContent.classList.remove('animate-fade-in-up');
-            modalContent.classList.add('animate-fade-out-down');
-            
-            setTimeout(() => {
-                termsModal.classList.add('hidden');
-                modalContent.classList.remove('animate-fade-out-down');
-            }, 400);
-        }
-
-        // Only add event listener for termsBtn if it exists (in main content)
-        if (termsBtn) {
-            termsBtn.addEventListener('click', openModal);
-        }
-
-        closeModal.addEventListener('click', closeModalFunc);
-        modalOverlay.addEventListener('click', closeModalFunc);
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModalFunc();
-            }
+        // زر شروط الخدمة في المحتوى الرئيسي
+        document.getElementById('termsBtn').addEventListener('click', function() {
+            // إظهار شروط الخدمة مرة أخرى
+            showTermsModal();
         });
     </script>
 </body>
