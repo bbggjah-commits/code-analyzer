@@ -42,43 +42,30 @@
             from { opacity: 1; transform: translateY(0); }
             to { opacity: 0; transform: translateY(20px); }
         }
-        @keyframes checkmark {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
         .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
         .animate-fade-in-down { animation: fade-in-down 0.6s ease-out forwards; }
         .animate-fade-out-down { animation: fade-out-down 0.4s ease-in forwards; }
-        .animate-checkmark { animation: checkmark 0.5s ease-out forwards; }
 
         #mainContent {
             display: none;
         }
         
-        .agree-btn-enabled {
-            background: linear-gradient(to right, #2563eb, #4f46e5) !important;
-            color: white !important;
-            cursor: pointer !important;
+        .hidden-content {
+            display: none !important;
+        }
+        
+        .agree-btn {
+            background: linear-gradient(to right, #2563eb, #4f46e5);
+            color: white;
+            cursor: pointer;
             transform: scale(1);
             transition: all 0.3s ease;
         }
         
-        .agree-btn-enabled:hover {
-            background: linear-gradient(to right, #1d4ed8, #4338ca) !important;
+        .agree-btn:hover {
+            background: linear-gradient(to right, #1d4ed8, #4338ca);
             transform: scale(1.05);
             box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
-        }
-        
-        .agree-btn-disabled {
-            background: #4b5563 !important;
-            color: #9ca3af !important;
-            cursor: not-allowed !important;
-        }
-
-        /* إخفاء الشاشة الرئيسية في البداية */
-        .hidden-content {
-            display: none !important;
         }
     </style>
 </head>
@@ -93,7 +80,7 @@
 
     <!-- Terms Modal - يظهر أولاً -->
     <div id="termsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" id="modalOverlay"></div>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
         
         <div id="modalContent" class="relative bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl animate-fade-in-up backdrop-blur-sm">
             <div class="p-6 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-gray-900 to-black">
@@ -103,9 +90,6 @@
                     </div>
                     شروط الخدمة
                 </h2>
-                <button id="closeModal" class="text-gray-400 hover:text-white transition-colors bg-white/5 p-2 rounded-xl hover:bg-white/10 hover:scale-105">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
             </div>
 
             <div class="p-6 max-h-[50vh] overflow-y-auto custom-scrollbar space-y-6">
@@ -192,31 +176,22 @@
                         </p>
                     </div>
                 </div>
-
-                <!-- Agreement Checkbox -->
-                <div class="flex items-center gap-3 p-4 bg-white/5 rounded-lg border border-white/10 mt-4">
-                    <button id="agreeCheckbox" class="w-6 h-6 border-2 border-gray-400 rounded flex items-center justify-center transition-all duration-300 hover:border-blue-500 hover:bg-blue-500/20">
-                        <i data-lucide="check" class="w-4 h-4 text-white hidden"></i>
-                    </button>
-                    <span class="text-gray-300 text-sm flex-1">
-                        عند ضغطك على هذا المربع يعني أنك وافقت على الشروط أعلاه
-                    </span>
-                </div>
             </div>
 
-            <div class="p-6 border-t border-white/10 bg-gradient-to-r from-gray-900 to-black space-y-3">
-                <button id="agreeBtn" class="w-full py-3 bg-gray-600 text-gray-300 font-bold rounded-xl transition-all duration-300 cursor-not-allowed agree-btn-disabled">
+            <div class="p-6 border-t border-white/10 bg-gradient-to-r from-gray-900 to-black">
+                <p class="text-gray-400 text-sm text-center mb-4">
+                    بالضغط على الزر أدناه، فإنك توافق على جميع الشروط والأحكام المذكورة أعلاه
+                </p>
+                <button id="agreeBtn" class="w-full py-3 agree-btn font-bold rounded-xl transition-all duration-300">
                     فهمت واوافق
                 </button>
-                <p id="errorMessage" class="text-red-400 text-xs text-center">
-                    يجب الموافقة على الشروط أولاً
-                </p>
             </div>
         </div>
     </div>
 
     <!-- Main Content - مخفي في البداية -->
     <div id="mainContent" class="hidden-content">
+        <!-- المحتوى الرئيسي يبقى كما هو -->
         <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
             <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-[#0a1128] rounded-full blur-[120px] opacity-40 animate-pulse"></div>
             <div class="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] bg-[#1e40af] rounded-full blur-[100px] opacity-20"></div>
@@ -246,7 +221,6 @@
 
             <section class="w-full max-w-5xl mb-20">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- البطاقات تبقى كما هي -->
                     <div class="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(30,64,175,0.3)] flex flex-col items-start">
                         <div class="mb-4 p-3 rounded-lg bg-black/40 border border-white/5 group-hover:border-blue-500/30 transition-colors">
                             <i data-lucide="code" class="w-8 h-8 text-blue-400"></i>
@@ -365,9 +339,6 @@
         // تهيئة الأيقونات
         lucide.createIcons();
 
-        // حالة الموافقة
-        let isChecked = false;
-
         // التحقق إذا كان المستخدم وافق مسبقاً
         const hasAgreed = localStorage.getItem('termsAgreed');
         
@@ -394,71 +365,13 @@
             document.getElementById('mainContent').classList.add('hidden-content');
         }
 
-        // حدث المربع - تم التبسيط
-        document.getElementById('agreeCheckbox').addEventListener('click', function() {
-            const checkIcon = this.querySelector('i');
-            const agreeBtn = document.getElementById('agreeBtn');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            if (!isChecked) {
-                // تفعيل المربع
-                this.classList.remove('border-gray-400', 'hover:border-blue-500', 'hover:bg-blue-500/20');
-                this.classList.add('border-green-500', 'bg-green-500');
-                checkIcon.classList.remove('hidden');
-                checkIcon.classList.add('animate-checkmark');
-                
-                // تفعيل الزر
-                agreeBtn.classList.remove('agree-btn-disabled');
-                agreeBtn.classList.add('agree-btn-enabled');
-                agreeBtn.disabled = false;
-                
-                // إخفاء رسالة الخطأ
-                errorMessage.style.display = 'none';
-                
-                isChecked = true;
-            } else {
-                // إلغاء التفعيل
-                this.classList.remove('border-green-500', 'bg-green-500');
-                this.classList.add('border-gray-400', 'hover:border-blue-500', 'hover:bg-blue-500/20');
-                checkIcon.classList.add('hidden');
-                checkIcon.classList.remove('animate-checkmark');
-                
-                // تعطيل الزر
-                agreeBtn.classList.remove('agree-btn-enabled');
-                agreeBtn.classList.add('agree-btn-disabled');
-                agreeBtn.disabled = true;
-                
-                // إظهار رسالة الخطأ
-                errorMessage.style.display = 'block';
-                
-                isChecked = false;
-            }
-        });
-
-        // حدث زر الموافقة - مبسط
+        // حدث زر الموافقة - مبسط جداً
         document.getElementById('agreeBtn').addEventListener('click', function() {
-            if (isChecked && !this.disabled) {
-                // حفظ الموافقة
-                localStorage.setItem('termsAgreed', 'true');
-                
-                // إظهار المحتوى الرئيسي
-                showMainContent();
-            }
-        });
-
-        // أحداث إضافية
-        document.getElementById('closeModal').addEventListener('click', function() {
-            // لا يمكن إغلاق النافذة إلا بالموافقة
-            if (!isChecked) {
-                alert('يجب الموافقة على الشروط أولاً');
-            }
-        });
-
-        document.getElementById('modalOverlay').addEventListener('click', function() {
-            // لا يمكن إغلاق النافذة إلا بالموافقة
-            if (!isChecked) {
-                alert('يجب الموافقة على الشروط أولاً');
-            }
+            // حفظ الموافقة
+            localStorage.setItem('termsAgreed', 'true');
+            
+            // إظهار المحتوى الرئيسي
+            showMainContent();
         });
 
         // أحداث المحتوى الرئيسي
@@ -490,4 +403,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
