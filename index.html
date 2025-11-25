@@ -38,8 +38,13 @@
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes fade-out-down {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+        }
         .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
         .animate-fade-in-down { animation: fade-in-down 0.6s ease-out forwards; }
+        .animate-fade-out-down { animation: fade-out-down 0.4s ease-in forwards; }
     </style>
 </head>
 <body class="bg-black text-white font-arabic min-h-screen dir-rtl">
@@ -188,7 +193,7 @@
     <div id="termsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" id="modalOverlay"></div>
         
-        <div class="relative bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-fade-in-up">
+        <div id="modalContent" class="relative bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-fade-in-up">
             <div class="p-6 border-b border-white/10 flex justify-between items-center bg-[#0f0f0f]">
                 <h2 class="text-xl font-bold text-white flex items-center gap-2">
                     <i data-lucide="file-text" class="w-5 h-5 text-blue-500"></i>
@@ -208,7 +213,7 @@
                     <ul class="space-y-2 text-gray-300 text-sm">
                         <li class="flex items-center gap-2">
                             <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                            بطاقات الائتمان (Credit Card)
+                            عمله الكردت "الدسكورد"
                         </li>
                         <li class="flex items-center gap-2">
                             <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
@@ -252,6 +257,7 @@
                         <li>• نلتزم بالحفاظ على خصوصية بيانات العملاء بشكل تام.</li>
                         <li>• حقوق الملكية الفكرية للمشروع تنتقل للعميل بعد الدفع الكامل.</li>
                         <li>• نحتفظ بحق إلغاء أي مشروع يتبين أنه يخالف الشروط أعلاه.</li>
+                        <li>• يمكننا تغيير أو التعديل على أي شرط وسنعلم المستخدمين بالشروط الجديدة في حسابنا على انستجرام.</li>
                     </ul>
                 </div>
             </div>
@@ -289,6 +295,7 @@
         });
 
         const termsModal = document.getElementById('termsModal');
+        const modalContent = document.getElementById('modalContent');
         const termsBtn = document.getElementById('termsBtn');
         const closeModal = document.getElementById('closeModal');
         const modalOverlay = document.getElementById('modalOverlay');
@@ -296,10 +303,18 @@
 
         function openModal() {
             termsModal.classList.remove('hidden');
+            modalContent.classList.remove('animate-fade-out-down');
+            modalContent.classList.add('animate-fade-in-up');
         }
 
         function closeModalFunc() {
-            termsModal.classList.add('hidden');
+            modalContent.classList.remove('animate-fade-in-up');
+            modalContent.classList.add('animate-fade-out-down');
+            
+            setTimeout(() => {
+                termsModal.classList.add('hidden');
+                modalContent.classList.remove('animate-fade-out-down');
+            }, 400);
         }
 
         termsBtn.addEventListener('click', openModal);
